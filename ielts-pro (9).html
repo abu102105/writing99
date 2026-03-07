@@ -1,0 +1,2498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Writing Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --ink:    #0D1117;
+  --ink2:   #1C2333;
+  --ink3:   #2D3748;
+  --surface:#F8F7F4;
+  --white:  #FFFFFF;
+  --muted:  #6B7280;
+  --faint:  #E5E7EB;
+  --faint2: #F3F4F6;
+
+  --accent: #2563EB;
+  --accent2:#1D4ED8;
+  --accentl:#EFF6FF;
+
+  --red:    #DC2626;
+  --redl:   #FEF2F2;
+  --green:  #059669;
+  --greenl: #ECFDF5;
+  --amber:  #D97706;
+  --amberl: #FFFBEB;
+  --purple: #7C3AED;
+  --purpl:  #F5F3FF;
+  --teal:   #0891B2;
+  --teall:  #ECFEFF;
+
+  --r: 10px;
+  --r2: 16px;
+  --sh: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --sh2: 0 4px 20px rgba(0,0,0,.09), 0 2px 6px rgba(0,0,0,.04);
+  --sh3: 0 12px 40px rgba(0,0,0,.14);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ━━━ TOPBAR ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.topbar {
+  position: sticky; top: 0; z-index: 300;
+  background: var(--ink);
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  box-shadow: 0 2px 24px rgba(0,0,0,.3);
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-mark {
+  background: var(--accent);
+  width: 34px; height: 34px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 11px; color: #fff; letter-spacing: .5px;
+}
+.logo-text { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: -.2px; }
+.logo-text span { color: #60A5FA; }
+
+/* Timer */
+.timer-wrap { display: flex; align-items: center; gap: 10px; }
+.timer-chip {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 8px;
+  padding: 6px 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.timer-ring { position: relative; width: 30px; height: 30px; flex-shrink: 0; }
+.timer-ring svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.timer-ring-bg { fill: none; stroke: rgba(255,255,255,.12); stroke-width: 3; }
+.timer-ring-fg { fill: none; stroke: #60A5FA; stroke-width: 3;
+  stroke-linecap: round; stroke-dasharray: 75.4; stroke-dashoffset: 0;
+  transition: stroke-dashoffset .5s, stroke .5s; }
+.timer-ring-fg.warn { stroke: #FCD34D; }
+.timer-ring-fg.danger { stroke: #FCA5A5; animation: ringpulse 1s infinite; }
+@keyframes ringpulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.timer-digits {
+  font-size: 18px; font-weight: 800; color: #fff;
+  letter-spacing: 2px; font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.timer-digits.warn { color: #FCD34D; }
+.timer-digits.danger { color: #FCA5A5; }
+.timer-sub { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,.4); margin-top: 2px; }
+.tctrl {
+  width: 32px; height: 32px; border-radius: 7px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16);
+  color: #fff; cursor: pointer; font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s; flex-shrink: 0;
+}
+.tctrl:hover { background: rgba(255,255,255,.2); }
+
+/* API Strip */
+.api-strip {
+  background: var(--amberl); border-bottom: 2px solid var(--amber);
+  padding: 10px 32px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.api-strip.gone { display: none; }
+.api-strip-lbl { font-size: 13px; color: #92400E; flex:1; font-weight: 500; }
+.api-strip-lbl a { color: var(--amber); font-weight: 700; }
+.api-field {
+  background: #fff; border: 1.5px solid #D97706; border-radius: 7px;
+  padding: 8px 14px; font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px; width: 260px; outline: none; color: var(--ink);
+}
+.api-field:focus { border-color: var(--accent); }
+.btn-api {
+  background: var(--amber); color: #fff; border: none; border-radius: 7px;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700;
+  padding: 9px 20px; cursor: pointer; transition: background .15s;
+}
+.btn-api:hover { background: #B45309; }
+.api-ok {
+  background: var(--green); color: #fff; font-size: 11px; font-weight: 700;
+  padding: 5px 14px; border-radius: 20px; display: none;
+}
+.api-ok.on { display: inline-block; }
+
+/* ━━━ LAYOUT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.page { max-width: 1140px; margin: 0 auto; padding: 32px 32px 80px; }
+
+/* Progress Steps */
+.stepbar {
+  display: flex; margin-bottom: 28px;
+  background: var(--white); border: 1px solid var(--faint);
+  border-radius: var(--r2); overflow: hidden; box-shadow: var(--sh);
+}
+.sb-step {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px; cursor: pointer;
+  border-right: 1px solid var(--faint); transition: background .2s;
+}
+.sb-step:last-child { border-right: none; }
+.sb-step.active { background: var(--ink); }
+.sb-step.done { background: var(--greenl); }
+.sb-step:hover:not(.active):not(.done) { background: var(--faint2); }
+.sb-num {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800;
+  background: var(--faint); color: var(--muted);
+}
+.sb-step.active .sb-num { background: var(--accent); color: #fff; }
+.sb-step.done .sb-num { background: var(--green); color: #fff; }
+.sb-sub { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 1px; }
+.sb-step.active .sb-sub { color: rgba(255,255,255,.5); }
+.sb-step.done .sb-sub { color: var(--green); }
+.sb-name { font-size: 13px; font-weight: 700; color: var(--ink); }
+.sb-step.active .sb-name { color: #fff; }
+
+/* ━━━ PANEL 1: SELECT ━━━━━━━━━━━━━━━━━━━━━━━ */
+.ph { font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--ink); margin-bottom: 4px; }
+.ps { font-size: 14px; color: var(--muted); margin-bottom: 22px; line-height: 1.6; }
+
+.task-toggle {
+  display: flex; gap: 0; margin-bottom: 22px;
+  border: 1.5px solid var(--faint); border-radius: 9px; overflow: hidden;
+  width: fit-content; background: var(--white); box-shadow: var(--sh);
+}
+.tt {
+  padding: 10px 28px; border: none; background: transparent;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; color: var(--muted); transition: all .17s; letter-spacing: -.1px;
+}
+.tt.active { background: var(--ink); color: #fff; }
+.tt:hover:not(.active) { background: var(--faint2); color: var(--ink); }
+
+.type-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; margin-bottom: 26px; }
+@media(max-width:860px){ .type-grid{grid-template-columns:repeat(3,1fr)} }
+@media(max-width:560px){ .type-grid{grid-template-columns:repeat(2,1fr)} }
+
+.tcard {
+  background: var(--white); border: 2px solid var(--faint); border-radius: var(--r2);
+  padding: 20px 14px 16px; cursor: pointer; text-align: center;
+  transition: all .2s; box-shadow: var(--sh);
+  position: relative; overflow: hidden;
+}
+.tcard::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent 60%, rgba(37,99,235,.04));
+  opacity: 0; transition: opacity .2s;
+}
+.tcard:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--sh2); }
+.tcard:hover::before { opacity: 1; }
+.tcard.sel { border-color: var(--accent); background: var(--accentl); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+.tcard.sel::before { opacity: 1; }
+.tc-ico {
+  width: 48px; height: 48px; border-radius: 12px; margin: 0 auto 12px;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+  background: var(--faint2); transition: background .2s;
+}
+.tcard.sel .tc-ico { background: rgba(37,99,235,.1); }
+.tc-check {
+  position: absolute; top: 10px; right: 10px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  font-size: 10px; display: none;
+  align-items: center; justify-content: center;
+}
+.tcard.sel .tc-check { display: flex; }
+.tc-name { font-size: 12px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+.tcard.sel .tc-name { color: var(--accent2); }
+.tc-desc { font-size: 11px; color: var(--muted); line-height: 1.45; }
+
+/* ━━━ PANEL 2: WRITE ━━━━━━━━━━━━━━━━━━━━━━━━ */
+.editor-shell {
+  background: var(--white); border: 1.5px solid var(--faint);
+  border-radius: var(--r2); box-shadow: var(--sh2); overflow: hidden;
+}
+.ed-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; background: var(--ink); flex-wrap: wrap; gap: 8px;
+}
+.ed-tags { display: flex; gap: 8px; align-items: center; }
+.tag {
+  font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 5px;
+  letter-spacing: .5px; text-transform: uppercase;
+}
+.tag-task { background: var(--accent); color: #fff; }
+.tag-type { background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.2); }
+.wc-live { display: flex; align-items: center; gap: 12px; }
+.wc-num {
+  font-size: 22px; font-weight: 800; color: #fff;
+  font-variant-numeric: tabular-nums; line-height: 1;
+}
+.wc-num span { font-size: 13px; font-weight: 400; color: rgba(255,255,255,.5); }
+.wc-track { width: 100px; height: 4px; background: rgba(255,255,255,.15); border-radius: 2px; overflow:hidden; }
+.wc-prog { height: 100%; background: rgba(255,255,255,.4); border-radius: 2px; transition: width .3s, background .3s; }
+.wc-prog.half { background: #FCD34D; }
+.wc-prog.full { background: #34D399; }
+.essay-ta {
+  width: 100%; min-height: 360px; padding: 26px 28px;
+  border: none; outline: none; resize: vertical;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15.5px; line-height: 1.9; color: var(--ink);
+  background: var(--white);
+}
+.essay-ta::placeholder { color: var(--muted); font-style: italic; }
+.ed-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 20px; border-top: 1px solid var(--faint);
+  background: var(--faint2); flex-wrap: wrap; gap: 8px;
+}
+.wc-status { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.wc-status.ok { color: var(--green); font-weight: 600; }
+.wc-status.warn { color: var(--amber); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+/* Buttons */
+.brow { display: flex; gap: 8px; align-items: center; }
+.btn {
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700;
+  padding: 10px 22px; border-radius: 8px; cursor: pointer; transition: all .18s;
+  display: flex; align-items: center; gap: 7px; border: none;
+}
+.btn-main {
+  background: var(--accent); color: #fff;
+  box-shadow: 0 2px 10px rgba(37,99,235,.3);
+}
+.btn-main:hover:not(:disabled) { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(37,99,235,.4); }
+.btn-main:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-ghost {
+  background: transparent; color: var(--muted);
+  border: 1.5px solid var(--faint);
+}
+.btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+.spin {
+  width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin .7s linear infinite; display: none;
+}
+.spin.on { display: block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ━━━ PANEL 3: RESULTS ━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Hero score */
+.result-hero {
+  background: var(--ink);
+  border-radius: var(--r2);
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: var(--sh3);
+  position: relative;
+}
+.result-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 80% 50%, rgba(37,99,235,.2) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-body {
+  display: flex; align-items: stretch; flex-wrap: wrap;
+  position: relative;
+}
+
+/* Circular band score */
+.hero-score-side {
+  padding: 36px 40px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; flex-shrink: 0;
+  border-right: 1px solid rgba(255,255,255,.1);
+  min-width: 200px;
+}
+.score-donut { position: relative; width: 140px; height: 140px; }
+.score-donut svg { position: absolute; inset: 0; }
+.sd-bg { fill: none; stroke: rgba(255,255,255,.08); stroke-width: 10; }
+.sd-fg {
+  fill: none; stroke: var(--accent); stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 376.99;
+  stroke-dashoffset: 376.99;
+  transition: stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1);
+}
+.sd-fg.band9 { stroke: #34D399; }
+.sd-fg.band8 { stroke: #60A5FA; }
+.sd-fg.band7 { stroke: #818CF8; }
+.sd-fg.band6 { stroke: #FCD34D; }
+.sd-fg.band5 { stroke: #FB923C; }
+.sd-fg.band4 { stroke: #F87171; }
+.score-inner {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.si-num { font-family: 'Instrument Serif', serif; font-size: 48px; color: #fff; line-height: 1; }
+.si-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.4); margin-top: 2px; }
+.score-label {
+  font-size: 14px; font-weight: 700; color: rgba(255,255,255,.8); text-align: center;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  padding: 6px 18px; border-radius: 20px; letter-spacing: .3px;
+}
+
+/* Criteria bars side */
+.hero-criteria {
+  flex: 1; padding: 32px 36px;
+  display: flex; flex-direction: column; justify-content: center; gap: 18px;
+}
+.crit-row { display: flex; flex-direction: column; gap: 6px; }
+.crit-top { display: flex; align-items: center; justify-content: space-between; }
+.crit-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.6); letter-spacing: .3px; }
+.crit-score-badge {
+  font-size: 14px; font-weight: 800; color: #fff;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  padding: 2px 10px; border-radius: 5px;
+}
+.crit-track {
+  height: 8px; background: rgba(255,255,255,.08); border-radius: 4px; overflow: hidden;
+}
+.crit-bar {
+  height: 100%; border-radius: 4px;
+  transition: width 1.2s cubic-bezier(.16,1,.3,1);
+}
+
+/* Radar chart */
+.hero-radar {
+  padding: 20px 28px;
+  border-left: 1px solid rgba(255,255,255,.1);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+canvas#radar { display: block; }
+
+/* Stats strip */
+.hero-stats {
+  border-top: 1px solid rgba(255,255,255,.1);
+  padding: 14px 36px;
+  display: flex; gap: 32px; flex-wrap: wrap;
+  position: relative;
+}
+.hstat { display: flex; flex-direction: column; gap: 2px; }
+.hstat-val { font-size: 18px; font-weight: 800; color: #fff; }
+.hstat-key { font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: .5px; }
+
+/* Motivational banner */
+.moti-banner {
+  border-radius: var(--r2); padding: 22px 28px;
+  margin-bottom: 20px;
+  display: flex; align-items: flex-start; gap: 18px;
+  border: 1.5px solid transparent;
+}
+.moti-icon-wrap {
+  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.moti-content {}
+.moti-heading { font-size: 16px; font-weight: 800; margin-bottom: 5px; }
+.moti-body { font-size: 14px; line-height: 1.75; }
+.moti-tip {
+  margin-top: 10px; padding: 10px 14px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; display: flex; gap: 8px; align-items: flex-start;
+}
+
+/* moti variants */
+.moti-9 { background: var(--greenl); border-color: #6EE7B7; }
+.moti-9 .moti-icon-wrap { background: #D1FAE5; }
+.moti-9 .moti-heading { color: #065F46; }
+.moti-9 .moti-body { color: #047857; }
+.moti-9 .moti-tip { background: #A7F3D0; color: #065F46; }
+
+.moti-7 { background: var(--accentl); border-color: #BFDBFE; }
+.moti-7 .moti-icon-wrap { background: #DBEAFE; }
+.moti-7 .moti-heading { color: #1E40AF; }
+.moti-7 .moti-body { color: #1D4ED8; }
+.moti-7 .moti-tip { background: #BFDBFE; color: #1E3A8A; }
+
+.moti-5 { background: var(--amberl); border-color: #FDE68A; }
+.moti-5 .moti-icon-wrap { background: #FEF3C7; }
+.moti-5 .moti-heading { color: #92400E; }
+.moti-5 .moti-body { color: #B45309; }
+.moti-5 .moti-tip { background: #FDE68A; color: #78350F; }
+
+.moti-low { background: var(--redl); border-color: #FECACA; }
+.moti-low .moti-icon-wrap { background: #FEE2E2; }
+.moti-low .moti-heading { color: #991B1B; }
+.moti-low .moti-body { color: #B91C1C; }
+.moti-low .moti-tip { background: #FECACA; color: #7F1D1D; }
+
+/* Next steps */
+.next-steps {
+  background: var(--white); border: 1.5px solid var(--faint);
+  border-radius: var(--r2); padding: 24px 28px;
+  margin-bottom: 20px; box-shadow: var(--sh);
+}
+.ns-title { font-size: 13px; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.ns-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+@media(max-width:700px){ .ns-grid { grid-template-columns: 1fr; } }
+.ns-card {
+  border: 1.5px solid var(--faint); border-radius: var(--r);
+  padding: 16px; background: var(--faint2);
+  transition: all .18s;
+}
+.ns-card:hover { border-color: var(--accent); background: var(--accentl); }
+.ns-num {
+  width: 26px; height: 26px; border-radius: 6px; background: var(--accent);
+  color: #fff; font-size: 12px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 10px;
+}
+.ns-label { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.ns-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+/* Feedback cards */
+.fb-section { margin-bottom: 20px; }
+.section-hd {
+  font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--ink);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+}
+.section-hd::after { content: ''; flex: 1; height: 1px; background: var(--faint); }
+
+.fb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:720px){ .fb-grid { grid-template-columns: 1fr; } }
+
+.fb-card {
+  background: var(--white); border: 1.5px solid var(--faint);
+  border-radius: var(--r2); padding: 22px; box-shadow: var(--sh);
+  position: relative; overflow: hidden;
+  transition: box-shadow .2s;
+}
+.fb-card:hover { box-shadow: var(--sh2); }
+.fb-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.fb-card.c0::before { background: linear-gradient(90deg, var(--accent), #60A5FA); }
+.fb-card.c1::before { background: linear-gradient(90deg, var(--purple), #A78BFA); }
+.fb-card.c2::before { background: linear-gradient(90deg, var(--teal), #22D3EE); }
+.fb-card.c3::before { background: linear-gradient(90deg, var(--amber), #FCD34D); }
+
+.fb-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.fb-icon {
+  width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.fb-icon.c0 { background: var(--accentl); }
+.fb-icon.c1 { background: var(--purpl); }
+.fb-icon.c2 { background: var(--teall); }
+.fb-icon.c3 { background: var(--amberl); }
+.fb-title { font-size: 13px; font-weight: 800; color: var(--ink); }
+.fb-band-pill {
+  margin-left: auto; font-size: 13px; font-weight: 800;
+  padding: 4px 12px; border-radius: 6px;
+  background: var(--ink); color: #fff;
+}
+.fb-text { font-size: 14px; line-height: 1.8; color: #4B5563; }
+
+/* Strengths / Improvements */
+.si-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+@media(max-width:720px){ .si-grid { grid-template-columns: 1fr; } }
+.si-card {
+  background: var(--white); border: 1.5px solid var(--faint);
+  border-radius: var(--r2); padding: 22px; box-shadow: var(--sh);
+}
+.si-title {
+  font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+}
+.si-title.green { color: var(--green); }
+.si-title.red { color: var(--red); }
+.si-items { display: flex; flex-direction: column; gap: 10px; }
+.si-item { display: flex; gap: 10px; align-items: flex-start; }
+.si-bullet {
+  width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800;
+}
+.si-bullet.green { background: var(--greenl); color: var(--green); }
+.si-bullet.red { background: var(--redl); color: var(--red); }
+.si-text { font-size: 14px; line-height: 1.7; color: #4B5563; }
+
+/* Score scale */
+.scale-card {
+  background: var(--white); border: 1.5px solid var(--faint);
+  border-radius: var(--r2); padding: 22px 28px; margin-bottom: 20px;
+  box-shadow: var(--sh);
+}
+.scale-title { font-size: 12px; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+.scale-track {
+  height: 32px; border-radius: 8px; position: relative;
+  background: linear-gradient(90deg, #FEF2F2, #FEF3C7 20%, #FEF9C3 35%, #ECFDF5 60%, #EFF6FF 75%, #EEF2FF 88%, #F5F3FF);
+  border: 1px solid var(--faint); overflow: visible;
+}
+.scale-marker {
+  position: absolute; top: -8px; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  transition: left 1s cubic-bezier(.16,1,.3,1);
+}
+.sm-arrow {
+  width: 0; height: 0;
+  border-left: 8px solid transparent; border-right: 8px solid transparent;
+  border-top: 10px solid var(--accent);
+  filter: drop-shadow(0 2px 4px rgba(37,99,235,.4));
+}
+.sm-label {
+  background: var(--accent); color: #fff;
+  font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 5px;
+  white-space: nowrap; box-shadow: 0 2px 8px rgba(37,99,235,.3);
+}
+.scale-nums {
+  display: flex; justify-content: space-between; margin-top: 6px;
+  padding: 0 4px;
+}
+.sn-item { font-size: 10px; font-weight: 600; color: var(--muted); }
+
+/* Error */
+.err-card {
+  background: var(--redl); border: 1.5px solid #FECACA;
+  border-radius: var(--r2); padding: 20px 24px;
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.err-icon { font-size: 22px; }
+.err-body { font-size: 14px; line-height: 1.7; color: #991B1B; }
+.err-body strong { display: block; font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+
+/* Time Overlay */
+.time-overlay {
+  position: fixed; inset: 0;
+  background: rgba(13,17,23,.92);
+  z-index: 600; display: none;
+  align-items: center; justify-content: center;
+}
+.time-overlay.on { display: flex; }
+.to-box {
+  background: var(--white); border-radius: 20px; padding: 52px 56px;
+  text-align: center; max-width: 440px; width: 90%;
+  animation: popUp .4s cubic-bezier(.16,1,.3,1);
+  box-shadow: var(--sh3);
+}
+@keyframes popUp { from{opacity:0;transform:scale(.85) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+.to-badge {
+  width: 80px; height: 80px; border-radius: 20px;
+  background: var(--redl); margin: 0 auto 20px;
+  display: flex; align-items: center; justify-content: center; font-size: 36px;
+}
+.to-h { font-family: 'Instrument Serif', serif; font-size: 28px; color: var(--ink); margin-bottom: 8px; }
+.to-p { font-size: 15px; color: var(--muted); line-height: 1.65; margin-bottom: 28px; }
+.to-btns { display: flex; flex-direction: column; gap: 10px; }
+.to-btns .btn { justify-content: center; width: 100%; font-size: 14px; padding: 13px; }
+
+
+/* ━━━ NAME MODAL ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.name-modal-wrap {
+  position: fixed; inset: 0; z-index: 900;
+  background: radial-gradient(ellipse at 50% 40%, rgba(37,99,235,.18) 0%, rgba(13,17,23,.97) 60%);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.name-modal {
+  background: var(--white); border-radius: 24px;
+  padding: 48px 44px 40px;
+  max-width: 460px; width: 100%;
+  box-shadow: 0 32px 80px rgba(0,0,0,.35);
+  animation: modalIn .5s cubic-bezier(.16,1,.3,1);
+  position: relative; overflow: hidden;
+}
+.name-modal::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, #2563EB, #7C3AED, #06B6D4);
+}
+@keyframes modalIn { from{opacity:0;transform:scale(.88) translateY(24px)} to{opacity:1;transform:scale(1) translateY(0)} }
+@keyframes modalOut { to{opacity:0;transform:scale(.92) translateY(16px)} }
+.nm-logo {
+  width: 56px; height: 56px; border-radius: 16px;
+  background: linear-gradient(135deg, #1E3A8A, #2563EB);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; box-shadow: 0 8px 24px rgba(37,99,235,.35);
+}
+.nm-logo svg { width: 28px; height: 28px; }
+.nm-title {
+  font-family: 'Instrument Serif', serif; font-size: 26px;
+  color: var(--ink); text-align: center; margin-bottom: 6px; line-height: 1.2;
+}
+.nm-sub { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 32px; line-height: 1.6; }
+.nm-field-wrap { position: relative; margin-bottom: 14px; }
+.nm-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: block;
+}
+.nm-input {
+  width: 100%; background: var(--faint2); border: 2px solid var(--faint);
+  border-radius: 12px; padding: 14px 18px 14px 46px;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; color: var(--ink);
+  outline: none; transition: all .18s;
+}
+.nm-input:focus { border-color: var(--accent); background: var(--white); box-shadow: 0 0 0 4px rgba(37,99,235,.08); }
+.nm-input::placeholder { color: #CBD5E1; }
+.nm-field-icon {
+  position: absolute; left: 15px; bottom: 15px;
+  width: 20px; height: 20px; color: var(--muted); pointer-events: none;
+}
+.nm-btn {
+  width: 100%; margin-top: 8px;
+  background: linear-gradient(135deg, #1D4ED8, #2563EB);
+  color: #fff; border: none; border-radius: 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700;
+  padding: 15px; cursor: pointer; transition: all .18s;
+  box-shadow: 0 4px 20px rgba(37,99,235,.4);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.nm-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,.5); }
+.nm-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.nm-footer { text-align: center; margin-top: 18px; font-size: 12px; color: #94A3B8; }
+
+/* ━━━ ANALYSIS OVERLAY ━━━━━━━━━━━━━━━━━━━━━━ */
+.analysis-overlay {
+  position: fixed; inset: 0; z-index: 800;
+  background: rgba(13,17,23,.96);
+  display: none; align-items: center; justify-content: center;
+  flex-direction: column; gap: 0;
+}
+.analysis-overlay.on { display: flex; }
+.ao-card {
+  background: #111827; border: 1px solid rgba(255,255,255,.08);
+  border-radius: 24px; padding: 52px 56px;
+  max-width: 460px; width: 90%; text-align: center;
+  animation: modalIn .4s cubic-bezier(.16,1,.3,1);
+  position: relative; overflow: hidden;
+}
+.ao-card::before {
+  content: '';
+  position: absolute; top: 0; left: -100%; right: -100%; height: 2px;
+  background: linear-gradient(90deg, transparent, #3B82F6, #8B5CF6, #3B82F6, transparent);
+  animation: shimmerLine 2s linear infinite;
+}
+@keyframes shimmerLine { to { left: 100%; right: -200%; } }
+.ao-rings {
+  position: relative; width: 100px; height: 100px; margin: 0 auto 32px;
+}
+.ao-ring {
+  position: absolute; border-radius: 50%; border: 2px solid transparent;
+  animation: spinRing 2s linear infinite;
+}
+.ao-ring-1 { inset: 0; border-top-color: #3B82F6; animation-duration: 1.2s; }
+.ao-ring-2 { inset: 10px; border-right-color: #8B5CF6; animation-duration: 1.8s; animation-direction: reverse; }
+.ao-ring-3 { inset: 20px; border-bottom-color: #06B6D4; animation-duration: 2.4s; }
+@keyframes spinRing { to { transform: rotate(360deg); } }
+.ao-center {
+  position: absolute; inset: 30px;
+  background: rgba(37,99,235,.1); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.ao-title { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+.ao-name-tag {
+  font-size: 14px; color: #60A5FA; font-weight: 600; margin-bottom: 24px;
+}
+.ao-steps { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.ao-step {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 14px; border-radius: 10px;
+  background: rgba(255,255,255,.04);
+  transition: all .3s;
+}
+.ao-step.active { background: rgba(37,99,235,.12); }
+.ao-step.done { background: rgba(5,150,105,.1); }
+.ao-step-ico {
+  width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.06);
+}
+.ao-step.active .ao-step-ico { background: rgba(37,99,235,.2); }
+.ao-step.done .ao-step-ico { background: rgba(5,150,105,.2); }
+.ao-step-text { font-size: 13px; color: rgba(255,255,255,.6); font-weight: 500; }
+.ao-step.active .ao-step-text { color: #93C5FD; font-weight: 700; }
+.ao-step.done .ao-step-text { color: #6EE7B7; }
+.ao-step-check { margin-left: auto; font-size: 14px; opacity: 0; transition: opacity .3s; }
+.ao-step.done .ao-step-check { opacity: 1; }
+.ao-progress-bar {
+  margin-top: 24px; height: 4px; background: rgba(255,255,255,.08);
+  border-radius: 2px; overflow: hidden;
+}
+.ao-progress-fill {
+  height: 100%; width: 0%; border-radius: 2px;
+  background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+  transition: width .6s cubic-bezier(.16,1,.3,1);
+}
+
+/* ━━━ HISTORY & PDF ━━━━━━━━━━━━━━━━━━━━━━━━ */
+.hist-btn {
+  position: fixed; bottom: 28px; left: 28px; z-index: 400;
+  background: var(--ink); color: #fff;
+  border: 1.5px solid rgba(255,255,255,.15);
+  border-radius: 50px; padding: 11px 20px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: var(--sh3); transition: all .18s;
+}
+.hist-btn:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
+.hist-badge {
+  background: var(--accent); color: #fff; font-size: 10px; font-weight: 800;
+  padding: 2px 7px; border-radius: 10px; min-width: 20px; text-align: center;
+}
+.hist-drawer {
+  position: fixed; left: 0; top: 0; bottom: 0; z-index: 500;
+  width: 380px; max-width: 95vw;
+  background: var(--white); box-shadow: var(--sh3);
+  transform: translateX(-100%); transition: transform .3s cubic-bezier(.16,1,.3,1);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.hist-drawer.open { transform: translateX(0); }
+.hist-overlay { position: fixed; inset: 0; z-index: 499; background: rgba(0,0,0,.45); display: none; }
+.hist-overlay.on { display: block; }
+.hist-head { background: var(--ink); padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.hist-head-title { font-size: 16px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px; }
+.hist-close { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,.12); border: none; color: #fff; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+.hist-close:hover { background: rgba(255,255,255,.25); }
+.hist-body { flex: 1; overflow-y: auto; padding: 16px; }
+.hist-empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+.hist-empty-ico { font-size: 48px; margin-bottom: 12px; }
+.hist-empty-txt { font-size: 14px; line-height: 1.6; }
+.hist-item { background: var(--faint2); border: 1.5px solid var(--faint); border-radius: var(--r2); padding: 16px; margin-bottom: 10px; cursor: pointer; transition: all .18s; position: relative; }
+.hist-item:hover { border-color: var(--accent); background: var(--accentl); }
+.hist-item-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.hist-band { font-family: 'Instrument Serif', serif; font-size: 28px; color: var(--accent); line-height: 1; }
+.hist-band-lbl { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.hist-meta { font-size: 12px; color: var(--muted); text-align: right; }
+.hist-meta strong { display: block; font-size: 13px; font-weight: 700; color: var(--ink); }
+.hist-scores { display: flex; gap: 6px; flex-wrap: wrap; }
+.hist-score-chip { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 5px; background: var(--white); border: 1px solid var(--faint); color: var(--ink3); }
+.hist-del { position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; border-radius: 6px; background: var(--redl); border: 1px solid #FECACA; color: var(--red); font-size: 11px; cursor: pointer; display: none; align-items: center; justify-content: center; }
+.hist-item:hover .hist-del { display: flex; }
+.hist-foot { padding: 14px 16px; border-top: 1px solid var(--faint); display: flex; gap: 8px; flex-shrink: 0; }
+.hist-clear { flex: 1; padding: 10px; border-radius: 8px; border: 1.5px solid var(--faint); background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; color: var(--red); cursor: pointer; }
+.hist-clear:hover { background: var(--redl); border-color: #FECACA; }
+.btn-pdf { background: #059669; color: #fff; border: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 7px; transition: all .18s; box-shadow: 0 2px 10px rgba(5,150,105,.3); }
+.btn-pdf:hover { background: #047857; transform: translateY(-1px); }
+.btn-pdf:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+@media print {
+  .topbar,.api-strip,.stepbar,.hist-btn,.hist-drawer,.hist-overlay,.brow,#p1,#p2 { display:none!important; }
+  body { background:#fff; }
+  .page { padding:0; max-width:100%; }
+  #p3 { display:block!important; }
+}
+/* ━━━ RESPONSIVE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media(max-width:640px){
+  .topbar, .page, .api-strip { padding-left: 16px; padding-right: 16px; }
+  .hero-radar { display: none; }
+  .hero-score-side { border-right: none; border-bottom: 1px solid rgba(255,255,255,.1); width:100%; flex-direction:row; gap:24px; }
+  .hero-criteria { padding: 24px 20px; }
+  .hero-stats { padding: 14px 20px; gap: 20px; }
+  .stepbar { display: none; }
+  .ns-grid { grid-template-columns: 1fr; }
+}
+
+
+/* ━━━ CATEGORY & TOPIC SELECTION ━━━━━━━━━━━━━ */
+.cat-pills {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;
+}
+.cat-pill {
+  padding: 10px 20px; border-radius: 50px;
+  border: 2px solid var(--faint); background: var(--white);
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all .18s; color: var(--ink3);
+  display: flex; align-items: center; gap: 8px; box-shadow: var(--sh);
+}
+.cat-pill:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: var(--sh2); }
+.cat-pill.active { background: var(--ink); color: #fff; border-color: var(--ink); box-shadow: var(--sh2); }
+.cat-pill .cat-ico { font-size: 16px; }
+
+.topic-list-wrap {
+  background: var(--white); border: 1.5px solid var(--faint);
+  border-radius: var(--r2); overflow: hidden; box-shadow: var(--sh2);
+  animation: fadeSlide .25s ease;
+}
+@keyframes fadeSlide { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.topic-list-head {
+  background: var(--ink); padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.topic-list-title { font-size: 14px; font-weight: 800; color: #fff; }
+.topic-list-count { font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: 1px; }
+.topic-list { display: flex; flex-direction: column; }
+.topic-item {
+  padding: 16px 20px; border-bottom: 1px solid var(--faint);
+  cursor: pointer; transition: all .17s;
+  display: flex; align-items: flex-start; gap: 14px;
+  position: relative;
+}
+.topic-item:last-child { border-bottom: none; }
+.topic-item:hover { background: var(--accentl); }
+.topic-item.picked { background: var(--accentl); border-left: 4px solid var(--accent); }
+.topic-num {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  background: var(--faint2); border: 1.5px solid var(--faint);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: var(--muted);
+  transition: all .17s; margin-top: 1px;
+}
+.topic-item.picked .topic-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+.topic-item:hover .topic-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+.topic-q { font-size: 14px; line-height: 1.7; color: var(--ink3); }
+.topic-item.picked .topic-q { color: var(--accent2); font-weight: 600; }
+.topic-tag {
+  margin-left: auto; flex-shrink: 0; align-self: flex-start; margin-top: 3px;
+  font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px;
+  background: var(--faint2); color: var(--muted); letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+/* ━━━ TOPIC BOX ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.topic-box {
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  border: 1.5px solid rgba(96,165,250,.25);
+  border-radius: var(--r2); padding: 20px 24px;
+  margin-bottom: 16px; position: relative; overflow: hidden;
+}
+.topic-box::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 90% 50%, rgba(37,99,235,.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+.topic-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 2px;
+  text-transform: uppercase; color: #60A5FA;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.topic-label::before {
+  content: ''; display: inline-block;
+  width: 6px; height: 6px; border-radius: 50%; background: #60A5FA;
+  animation: topicpulse 2s infinite;
+}
+@keyframes topicpulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.topic-text {
+  font-size: 15px; line-height: 1.75; color: #E2E8F0;
+  font-style: italic; position: relative;
+}
+.topic-actions {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.topic-tip {
+  font-size: 11px; color: rgba(255,255,255,.35);
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-new-topic {
+  background: rgba(96,165,250,.15); color: #60A5FA;
+  border: 1px solid rgba(96,165,250,.3);
+  border-radius: 7px; padding: 7px 16px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: all .18s; display: flex; align-items: center; gap: 6px;
+}
+.btn-new-topic:hover { background: rgba(96,165,250,.25); border-color: #60A5FA; }
+
+
+/* ━━━ CHART DISPLAY ━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.chart-wrap {
+  background: #0F172A; border: 1.5px solid rgba(96,165,250,.2);
+  border-radius: var(--r2); padding: 20px 24px; margin-bottom: 16px;
+  position: relative;
+}
+.chart-wrap-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: #60A5FA; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.chart-wrap-title::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: #60A5FA; animation: topicpulse 2s infinite;
+}
+.chart-canvas-wrap { position: relative; }
+.chart-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.chart-table th {
+  background: rgba(96,165,250,.15); color: #60A5FA;
+  padding: 9px 14px; text-align: left; font-weight: 700;
+  font-size: 11px; letter-spacing: .5px; border-bottom: 1px solid rgba(96,165,250,.2);
+}
+.chart-table td {
+  padding: 9px 14px; color: #CBD5E1; border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.chart-table tr:last-child td { border-bottom: none; }
+.chart-table tr:hover td { background: rgba(255,255,255,.03); }
+.chart-table td:first-child { font-weight: 600; color: #E2E8F0; }
+
+/* Map diagram */
+.map-diagram { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.map-side { background: rgba(255,255,255,.04); border-radius: 10px; padding: 14px; }
+.map-side-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 10px; text-align: center;
+}
+.map-side-label.before { color: #F87171; }
+.map-side-label.after { color: #34D399; }
+.map-zone {
+  padding: 8px 12px; border-radius: 7px; margin-bottom: 6px;
+  font-size: 12px; font-weight: 600; text-align: center;
+}
+.map-zone.old { background: rgba(248,113,113,.12); color: #FCA5A5; border: 1px solid rgba(248,113,113,.2); }
+.map-zone.new { background: rgba(52,211,153,.12); color: #6EE7B7; border: 1px solid rgba(52,211,153,.2); }
+.map-arrow { text-align: center; color: rgba(255,255,255,.3); font-size: 20px; display: flex; align-items: center; justify-content: center; }
+
+/* Process diagram */
+.process-flow { display: flex; align-items: center; flex-wrap: wrap; gap: 0; }
+.process-step {
+  background: rgba(96,165,250,.12); border: 1.5px solid rgba(96,165,250,.25);
+  border-radius: 10px; padding: 10px 14px; text-align: center;
+  min-width: 90px; flex: 1;
+}
+.process-step-num {
+  width: 22px; height: 22px; border-radius: 6px; background: #2563EB;
+  color: #fff; font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 6px;
+}
+.process-step-lbl { font-size: 11px; font-weight: 700; color: #93C5FD; line-height: 1.3; }
+.process-arrow { color: rgba(96,165,250,.4); font-size: 18px; padding: 0 4px; flex-shrink: 0; }
+
+/* Letter task */
+.letter-task {
+  background: rgba(16,185,129,.08); border: 1.5px solid rgba(16,185,129,.2);
+  border-radius: 10px; padding: 16px 20px;
+}
+.letter-task-head { font-size: 11px; font-weight: 800; letter-spacing: 1px;
+  text-transform: uppercase; color: #34D399; margin-bottom: 10px; }
+.letter-task-points { list-style: none; }
+.letter-task-points li {
+  font-size: 13px; color: #A7F3D0; line-height: 1.7;
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.letter-task-points li::before {
+  content: '✓'; color: #34D399; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+}
+</style>
+</head>
+<body>
+
+<!-- NAME MODAL -->
+<div class="name-modal-wrap" id="nameModalWrap">
+  <div class="name-modal">
+    <div class="nm-logo">
+      <svg viewBox="0 0 28 28" fill="none">
+        <path d="M4 22L10 6l6 10 4-6 4 12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="nm-title">IELTS Writing Pro</div>
+    <div class="nm-sub">Boshlashdan oldin ismingizni kiriting — natijalar siz uchun shaxsiylashtiriladi</div>
+    <div class="nm-field-wrap">
+      <label class="nm-label">Ism</label>
+      <svg class="nm-field-icon" viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M3.5 17c0-3.314 2.91-6 6.5-6s6.5 2.686 6.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input class="nm-input" id="nmFirst" type="text" placeholder="Masalan: Kamol" maxlength="30" oninput="checkNmBtn()" onkeydown="if(event.key==='Enter')document.getElementById('nmLast').focus()">
+    </div>
+    <div class="nm-field-wrap">
+      <label class="nm-label">Familiya</label>
+      <svg class="nm-field-icon" viewBox="0 0 20 20" fill="none">
+        <rect x="3" y="4" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M7 8h6M7 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input class="nm-input" id="nmLast" type="text" placeholder="Masalan: Toshmatov" maxlength="30" oninput="checkNmBtn()" onkeydown="if(event.key==='Enter')startSession()">
+    </div>
+    <button class="nm-btn" id="nmBtn" onclick="startSession()" disabled>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M3 9h12M10 4l5 5-5 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Boshlash
+    </button>
+    <div class="nm-footer">🔒 Ma'lumotlaringiz faqat brauzeringizda saqlanadi</div>
+  </div>
+</div>
+
+<!-- ANALYSIS OVERLAY -->
+<div class="analysis-overlay" id="analysisOverlay">
+  <div class="ao-card">
+    <div class="ao-rings">
+      <div class="ao-ring ao-ring-1"></div>
+      <div class="ao-ring ao-ring-2"></div>
+      <div class="ao-ring ao-ring-3"></div>
+      <div class="ao-center">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M2 20L7 7l7 9 5-7 3 11" stroke="#60A5FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="ao-title">Tahlil qilinmoqda…</div>
+    <div class="ao-name-tag" id="aoNameTag"></div>
+    <div class="ao-steps">
+      <div class="ao-step" id="aostep0">
+        <div class="ao-step-ico">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 4h12M2 8h8M2 12h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+          </svg>
+        </div>
+        <div class="ao-step-text">Matn o'lchanmoqda va tayyorlanmoqda</div>
+        <div class="ao-step-check">✓</div>
+      </div>
+      <div class="ao-step" id="aostep1">
+        <div class="ao-step-ico">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 4v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="ao-step-text">AI examiner essayni o'qimoqda</div>
+        <div class="ao-step-check">✓</div>
+      </div>
+      <div class="ao-step" id="aostep2">
+        <div class="ao-step-ico">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <rect x="2" y="2" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="9" y="2" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="2" y="9" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="9" y="9" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="ao-step-text">4 ta mezon bo'yicha baholanmoqda</div>
+        <div class="ao-step-check">✓</div>
+      </div>
+      <div class="ao-step" id="aostep3">
+        <div class="ao-step-ico">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 12L5 6l4 6 3-4 2 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="ao-step-text">Band score va feedback tayyorlanmoqda</div>
+        <div class="ao-step-check">✓</div>
+      </div>
+    </div>
+    <div class="ao-progress-bar"><div class="ao-progress-fill" id="aoProgress"></div></div>
+  </div>
+</div>
+
+
+<!-- HISTORY OVERLAY -->
+<div class="hist-overlay" id="histOverlay" onclick="closeHist()"></div>
+
+<!-- HISTORY DRAWER -->
+<div class="hist-drawer" id="histDrawer">
+  <div class="hist-head">
+    <div class="hist-head-title">📋 Testlar tarixi</div>
+    <button class="hist-close" onclick="closeHist()">✕</button>
+  </div>
+  <div class="hist-body" id="histBody"></div>
+  <div class="hist-foot">
+    <button class="hist-clear" onclick="clearHistory()">🗑 Barchasini o'chirish</button>
+  </div>
+</div>
+
+<!-- HISTORY BUTTON -->
+<button class="hist-btn" id="histBtn" onclick="openHist()">
+  📋 Tarix <span class="hist-badge" id="histBadge">0</span>
+</button>
+
+
+<!-- TIME UP OVERLAY -->
+<div class="time-overlay" id="timeOverlay">
+  <div class="to-box">
+    <div class="to-badge">⏱</div>
+    <div class="to-h">Vaqt tugadi!</div>
+    <div class="to-p">1 soatlik imtihon sessiyangiz yakunlandi. Essayingizni hozir baholang yoki yangi sessiya boshlang.</div>
+    <div class="to-btns">
+      <button class="btn btn-main" onclick="closeOv()">Hozir baholash</button>
+      <button class="btn btn-ghost" onclick="freshStart()">Yangi sessiya boshlash</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">IE</div>
+    <div class="logo-text">IELTS <span>Writing Pro</span></div>
+  </div>
+  <div class="timer-wrap">
+    <div class="timer-chip">
+      <div class="timer-ring">
+        <svg viewBox="0 0 30 30"><circle class="timer-ring-bg" cx="15" cy="15" r="12"/><circle class="timer-ring-fg" id="ringFg" cx="15" cy="15" r="12"/></svg>
+      </div>
+      <div>
+        <div class="timer-digits" id="timerDig">60:00</div>
+        <div class="timer-sub">imtihon vaqti</div>
+      </div>
+    </div>
+    <button class="tctrl" id="btnPP" onclick="toggleTimer()" title="Boshlash/To'xtatish">▶</button>
+    <button class="tctrl" onclick="resetTimer()" title="Qayta">↺</button>
+    <button class="tctrl" onclick="clearApiKey()" title="API kalitni o'zgartirish" style="font-size:14px">🔑</button>
+  </div>
+</div>
+
+<!-- API STRIP -->
+<div class="api-strip" id="apiStrip">
+  <div class="api-strip-lbl">
+    🔑 Gemini API key — <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a> dan bepul oling &nbsp;|&nbsp; 🔒 <em>Kalit faqat shu tab'da saqlanadi, tab yopilganda o'chadi</em>
+  </div>
+  <input class="api-field" type="password" id="apiField" placeholder="AIzaSy...">
+  <button class="btn-api" onclick="saveKey()">Saqlash</button>
+  <span class="api-ok" id="apiOk">✓ Saqlandi</span>
+</div>
+
+<div class="page">
+
+  <!-- STEP BAR -->
+  <div class="stepbar">
+    <div class="sb-step active" id="sb1" onclick="goStep(1)">
+      <div class="sb-num">1</div>
+      <div><div class="sb-sub">Qadam</div><div class="sb-name">Essay turini tanlang</div></div>
+    </div>
+    <div class="sb-step" id="sb2">
+      <div class="sb-num">2</div>
+      <div><div class="sb-sub">Qadam</div><div class="sb-name">Yozing</div></div>
+    </div>
+    <div class="sb-step" id="sb3">
+      <div class="sb-num">3</div>
+      <div><div class="sb-sub">Qadam</div><div class="sb-name">Natijalar</div></div>
+    </div>
+  </div>
+
+  <!-- P1: SELECT -->
+  <div id="p1">
+
+    <!-- STEP A: Task + Type -->
+    <div id="p1a">
+      <div class="ph">Bugungi mashg'ulotni boshlaylik</div>
+      <div class="ps">Task va essay turini tanlang. Har bir tur alohida ko'nikmalarni rivojlantiradi.</div>
+      <div class="task-toggle">
+        <button class="tt active" id="tt1" onclick="setTask(1)">Task 1 — Academic / GT</button>
+        <button class="tt" id="tt2" onclick="setTask(2)">Task 2 — Essay</button>
+      </div>
+      <div class="type-grid" id="typeGrid"></div>
+      <button class="btn btn-main" id="btnGo" onclick="goToCategories()" disabled style="opacity:.4">
+        Mavzu tanlash →
+      </button>
+    </div>
+
+    <!-- STEP B: Category + Topic -->
+    <div id="p1b" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div class="ph">Mavzu kategoriyasini tanlang</div>
+          <div class="ps" style="margin:0">Kategoriyani bosing — shunga mos <strong>10 ta mavzu</strong> chiqadi</div>
+        </div>
+        <button class="btn btn-ghost" onclick="backToTypes()">← Orqaga</button>
+      </div>
+
+      <!-- Category pills -->
+      <div class="cat-pills" id="catPills"></div>
+
+      <!-- Topic list -->
+      <div class="topic-list-wrap" id="topicListWrap" style="display:none">
+        <div class="topic-list-head">
+          <div class="topic-list-title" id="topicListTitle">📚 Mavzular</div>
+          <div class="topic-list-count" id="topicListCount">10 ta mavzu</div>
+        </div>
+        <div class="topic-list" id="topicList"></div>
+      </div>
+
+      <div style="margin-top:20px">
+        <button class="btn btn-main" id="btnWrite" onclick="goStep(2)" disabled style="opacity:.4">
+          Yozishni boshlash →
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- P2: WRITE -->
+  <div id="p2" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+      <div>
+        <div class="ph" id="writeTitle">Essayingizni yozing</div>
+        <div class="ps" id="writeSub" style="margin:0">Vaqtingizni samarali ishlating.</div>
+      </div>
+      <button class="btn btn-ghost" onclick="goStep(1)">← Orqaga</button>
+    </div>
+    <div class="topic-box" id="topicBox">
+      <div class="topic-label">📋 Mavzu — Task <span id="topicTaskNum">1</span></div>
+      <div class="topic-text" id="topicText">Mavzu yuklanmoqda…</div>
+      <div class="topic-actions">
+        <div class="topic-tip">💡 Ushbu mavzu bo'yicha yozing — baholash aniqroq bo'ladi</div>
+        <button class="btn-new-topic" onclick="newTopic()">🔀 Yangi mavzu</button>
+      </div>
+    </div>
+    <div id="chartWrap" style="display:none"></div>
+    <div class="editor-shell">
+      <div class="ed-header">
+        <div class="ed-tags">
+          <span class="tag tag-task" id="tagTask">TASK 1</span>
+          <span class="tag tag-type" id="tagType">Graph</span>
+        </div>
+        <div class="wc-live">
+          <div>
+            <div class="wc-num" id="wcBig">0 <span>so'z</span></div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:4px;letter-spacing:1px">MIN: <span id="wcMin">150</span></div>
+            <div class="wc-track"><div class="wc-prog" id="wcBar" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+      <textarea class="essay-ta" id="essayTA"
+        placeholder="Essayingizni bu yerga yozing. Fikrlaringizni aniq, mantiqiy va izchil ifodalang…"
+        oninput="onType()"></textarea>
+      <div class="ed-footer">
+        <div class="wc-status" id="wcHint"><span class="dot"></span> Kamida <span id="hintMin">150</span> so'z yozing</div>
+        <div class="brow">
+          <button class="btn btn-ghost" onclick="document.getElementById('essayTA').value='';onType()">Tozalash</button>
+          <button class="btn btn-main" id="checkBtn" onclick="doCheck()">
+            <div class="spin" id="spinEl"></div>
+            <span id="checkTxt">Baholash →</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P3: RESULTS -->
+  <div id="p3" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:10px">
+      <div>
+        <div class="ph" id="resultTitle">Sizning natijalaringiz</div>
+        <div class="ps" style="margin:0">IELTS rasmiy band descriptors asosida</div>
+      </div>
+      <div class="brow">
+        <button class="btn btn-ghost" onclick="goStep(2)">← Essayga qaytish</button>
+        <button class="btn-pdf" id="pdfBtn" onclick="downloadPDF()">⬇ PDF yuklab olish</button>
+        <button class="btn btn-main" onclick="freshStart()">Yangi sessiya ✦</button>
+      </div>
+    </div>
+    <div id="resArea"></div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+/* ─── TYPES ─────────────────────────────────── */
+const TYPES = {
+  1: [
+    {id:'graph',   ico:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="9" rx="1.5" fill="#3B82F6"/><rect x="10" y="7" width="4" height="14" rx="1.5" fill="#60A5FA"/><rect x="17" y="3" width="4" height="18" rx="1.5" fill="#93C5FD"/><path d="M3 21h18" stroke="#CBD5E1" stroke-width="1.5" stroke-linecap="round"/></svg>`, name:'Graph / Chart',    desc:'Bar, line, pie, area chart tavsifi', hint:'Grafikning asosiy tendensiyalarini va muhim farqlarini tasvirlab bering.',     min:150},
+    {id:'table',   ico:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#8B5CF6" stroke-width="1.5"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18" stroke="#8B5CF6" stroke-width="1.5" opacity=".5"/><rect x="3" y="3" width="6" height="6" rx="2" fill="#8B5CF6" opacity=".15"/></svg>`, name:'Table',            desc:"Jadval ma'lumotlarini tahlil",       hint:"Eng muhim raqamlarni solishtiring, o'xshashlik va farqlarni ko'rsating.",   min:150},
+    {id:'map',     ico:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 4L3 7v13l6-3 6 3 6-3V4l-6 3-6-3Z" stroke="#06B6D4" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 4v13M15 7v13" stroke="#06B6D4" stroke-width="1.5" opacity=".5"/><circle cx="15" cy="10" r="2" fill="#06B6D4" opacity=".3"/></svg>`, name:'Map / Diagram',    desc:"Xarita yoki joy o'zgarishi",         hint:"O'zgarishlarni ketma-ket, aniq va ravshan tasvirlab bering.",                min:150},
+    {id:'process', ico:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="2.5" fill="#F59E0B"/><circle cx="12" cy="12" r="2.5" fill="#F59E0B" opacity=".7"/><circle cx="19" cy="12" r="2.5" fill="#F59E0B" opacity=".4"/><path d="M7.5 12h2M14.5 12h2" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/><path d="M5 6l7-2 7 2M5 18l7 2 7-2" stroke="#F59E0B" stroke-width="1" opacity=".3" stroke-linecap="round"/></svg>`, name:'Process Diagram',  desc:'Jarayon bosqichlarini izohlash',      hint:"Har bir bosqichni to'liq va mantiqiy tartibda yozing.",                      min:150},
+    {id:'letter',  ico:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" stroke="#10B981" stroke-width="1.5"/><path d="M3 8l9 6 9-6" stroke="#10B981" stroke-width="1.5" stroke-linecap="round"/></svg>`, name:'Letter (GT)',      desc:'Rasmiy yoki norasmiy xat',            hint:'Xat maqsadini birinchi paragrafda aniq bildiring va tonni saqlang.',          min:150},
+  ],
+  2: [
+    {id:'opinion',    ico:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Z" fill="#3B82F6" fill-opacity=".1" stroke="#3B82F6" stroke-width="1.5"/><path d="M12 7v6M12 16v1" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/></svg>`, name:'Opinion Essay',         desc:"Fikrni asoslash va himoya",          hint:'Aniq pozitsiya bildiring va har bir argumentni misol bilan kuchaytiring.',    min:250},
+    {id:'discussion', ico:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 4h10a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8l-4 3V6a2 2 0 0 1 0-.1V4Z" fill="#8B5CF6" fill-opacity=".1" stroke="#8B5CF6" stroke-width="1.5"/><path d="M10 13v1a2 2 0 0 0 2 2h6l3 2v-8a2 2 0 0 0-2-2h-2" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round"/></svg>`, name:'Discussion Essay',      desc:'Ikki qarashni muhokama',             hint:"Ikkala tomonni balanslangan holda yozing, o'z xulosangizni bering.",         min:250},
+    {id:'problem',    ico:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#EF4444" stroke-width="1.5"/><path d="M17 17l3.5 3.5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/><path d="M11 8v4M11 13.5v.5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/></svg>`, name:'Problem & Solution',    desc:'Muammo tahlili va yechim',           hint:"Muammo sabablarini ko'rsating, real va amaliy echimlar taklif qiling.",      min:250},
+    {id:'advantage',  ico:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.5 5.5L20 9.5l-4 4 1 5.5-5-2.5-5 2.5 1-5.5-4-4 5.5-1L12 3Z" fill="#F59E0B" fill-opacity=".15" stroke="#F59E0B" stroke-width="1.5" stroke-linejoin="round"/></svg>`, name:'Adv & Disadvantages',   desc:'Afzallik va kamchiliklar',           hint:"Ikkala tomonni teng yoritib, xulosada o'z firingizni bildiring.",             min:250},
+    {id:'two',        ico:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" fill="#06B6D4" fill-opacity=".15" stroke="#06B6D4" stroke-width="1.5"/><rect x="13" y="3" width="8" height="8" rx="2" fill="#06B6D4" fill-opacity=".15" stroke="#06B6D4" stroke-width="1.5"/><rect x="3" y="13" width="8" height="8" rx="2" fill="#06B6D4" fill-opacity=".08" stroke="#06B6D4" stroke-width="1" stroke-dasharray="2 2"/><rect x="13" y="13" width="8" height="8" rx="2" fill="#06B6D4" fill-opacity=".08" stroke="#06B6D4" stroke-width="1" stroke-dasharray="2 2"/></svg>`, name:'Two-Question Essay',    desc:'Ikkita alohida savolga javob',       hint:"Har bir savolga alohida paragraf ajrating, ikkalasini to'liq javoblang.",    min:250},
+  ]
+};
+
+/* ─── CATEGORIES ────────────────────────────── */
+const CATS = {
+  1: [
+    { id:'education',    ico:'🎓', label:'Education' },
+    { id:'environment',  ico:'🌿', label:'Environment' },
+    { id:'economy',      ico:'💰', label:'Economy' },
+    { id:'health',       ico:'🏥', label:'Health' },
+    { id:'technology',   ico:'💻', label:'Technology' },
+    { id:'transport',    ico:'🚌', label:'Transport' },
+    { id:'population',   ico:'👥', label:'Population' },
+    { id:'tourism',      ico:'✈️', label:'Tourism' },
+  ],
+  2: [
+    { id:'education',    ico:'🎓', label:'Education' },
+    { id:'technology',   ico:'💻', label:'Technology' },
+    { id:'environment',  ico:'🌿', label:'Environment' },
+    { id:'health',       ico:'🏥', label:'Health' },
+    { id:'society',      ico:'🏙️', label:'Society' },
+    { id:'economy',      ico:'💰', label:'Economy' },
+    { id:'crime',        ico:'⚖️', label:'Crime & Law' },
+    { id:'media',        ico:'📱', label:'Media' },
+    { id:'work',         ico:'💼', label:'Work & Career' },
+    { id:'globalisation',ico:'🌍', label:'Globalisation' },
+  ]
+};
+
+/* ─── TOPIC BANK ─────────────────────────────── */
+const TOPICS = {
+  1: {
+    education: [
+      {q:"The bar chart below compares the percentage of students enrolled in higher education in six countries in 2000 and 2020.",chart:{type:"bar",title:"Higher Education Enrolment (%) — 2000 vs 2020",labels:["USA","UK","Germany","Japan","Australia","Canada"],datasets:[{label:"2000",data:[45,38,35,42,48,55],color:"#3B82F6"},{label:"2020",data:[67,52,48,58,61,72],color:"#60A5FA"}]}},
+      {q:"The line graph below shows the number of students studying abroad from three Asian countries between 2005 and 2022.",chart:{type:"line",title:"Students Studying Abroad (thousands)",labels:["2005","2008","2011","2014","2017","2019","2022"],datasets:[{label:"China",data:[340,420,520,640,700,720,680],color:"#EF4444"},{label:"India",data:[120,160,220,280,340,370,410],color:"#F59E0B"},{label:"South Korea",data:[80,95,110,120,125,118,115],color:"#8B5CF6"}]}},
+      {q:"The table below gives information about average class sizes, student-to-teacher ratios, and annual education spending per pupil in five countries in 2021.",chart:{type:"table",title:"Education Statistics by Country (2021)",headers:["Country","Class Size","Student/Teacher","Annual Spend ($)"],rows:[["USA","22","15:1","$12,800"],["Finland","18","11:1","$11,200"],["South Korea","25","17:1","$8,600"],["Brazil","30","22:1","$3,100"],["India","34","28:1","$1,200"]]}},
+      {q:"The pie charts below show how a school's annual budget was divided between different departments in 2010 and 2023.",chart:{type:"pie2",title:"School Budget Allocation — 2010 vs 2023",labels:["Teaching Staff","Technology","Facilities","Admin","Sport & Arts","Other"],data2010:[48,8,20,12,8,4],data2023:[38,18,18,10,10,6]}},
+      {q:"The bar chart below compares the percentage of male and female graduates in four university subjects in the UK in 2019.",chart:{type:"bar",title:"UK University Graduates by Subject & Gender (2019, %)",labels:["Engineering","Medicine","Law","Computer Sci."],datasets:[{label:"Male",data:[78,46,42,82],color:"#3B82F6"},{label:"Female",data:[22,54,58,18],color:"#EC4899"}]}},
+      {q:"The table below shows literacy rates, average years of schooling, and primary school completion rates in five developing countries in 2015 and 2022.",chart:{type:"table",title:"Education Indicators — Developing Countries",headers:["Country","Literacy 2015","Literacy 2022","Avg Schooling (yrs)","Completion Rate"],rows:[["Nigeria","55%","62%","6.2","71%"],["Bangladesh","62%","74%","5.8","85%"],["Ethiopia","44%","55%","4.1","68%"],["Pakistan","56%","60%","5.1","72%"],["Guatemala","79%","84%","6.9","81%"]]}},
+      {q:"The diagrams below show the layout of a university campus in 1985 and how it has changed by 2025.",chart:{type:"map",title:"University Campus — 1985 vs 2025",before:["Main Library","3 Faculty Buildings","Sports Ground","1 Dormitory","Car Park"],after:["Digital Library","6 Faculty Buildings","Indoor Sports Complex","4 Dormitories","Underground Parking + Green Space"]}},
+      {q:"The line graph below shows the number of schools offering online learning in four countries between 2015 and 2023.",chart:{type:"line",title:"Schools Offering Online Learning (thousands)",labels:["2015","2016","2017","2018","2019","2020","2021","2022","2023"],datasets:[{label:"USA",data:[12,18,28,38,52,180,210,195,188],color:"#3B82F6"},{label:"UK",data:[3,5,8,14,22,80,95,88,82],color:"#EF4444"},{label:"India",data:[8,14,24,38,58,220,310,380,440],color:"#F59E0B"},{label:"Brazil",data:[2,4,7,12,18,85,120,140,155],color:"#10B981"}]}},
+      {q:"The bar chart below shows the average student loan debt upon graduation in five countries in 2022.",chart:{type:"bar",title:"Average Student Loan Debt at Graduation (USD)",labels:["USA","UK","Australia","Canada","New Zealand"],datasets:[{label:"Loan Debt (USD)",data:[37700,45200,28500,22400,19800],color:"#EF4444"}]}},
+      {q:"The table below compares dropout rates at secondary and university level across six nations in 2020.",chart:{type:"table",title:"Educational Dropout Rates (2020)",headers:["Country","Secondary Dropout","University Dropout","Main Reason"],rows:[["USA","7%","40%","Financial pressure"],["Germany","5%","28%","Vocational preference"],["Brazil","22%","55%","Economic need"],["Japan","3%","18%","Course difficulty"],["South Africa","28%","52%","Poverty"],["France","8%","32%","Academic failure"]]}}
+    ],
+    environment: [
+      {q:"The graph below shows the proportion of electricity generated from different energy sources in a European country between 1990 and 2020.",chart:{type:"line",title:"Electricity Generation by Source (%)",labels:["1990","1995","2000","2005","2010","2015","2020"],datasets:[{label:"Coal",data:[45,42,38,32,24,18,8],color:"#78716C"},{label:"Gas",data:[20,22,25,26,24,22,18],color:"#F59E0B"},{label:"Nuclear",data:[22,20,18,18,16,14,12],color:"#8B5CF6"},{label:"Renewables",data:[8,10,14,18,28,40,58],color:"#10B981"}]}},
+      {q:"The bar chart below shows CO2 emissions per capita in six countries in 2000, 2010, and 2022.",chart:{type:"bar",title:"CO2 Emissions per Capita (tonnes)",labels:["USA","China","Germany","India","Brazil","UK"],datasets:[{label:"2000",data:[20.2,2.7,10.2,1.1,1.9,9.0],color:"#EF4444"},{label:"2010",data:[17.5,6.2,9.4,1.5,2.2,7.8],color:"#F59E0B"},{label:"2022",data:[14.2,8.1,7.9,1.9,2.1,5.2],color:"#10B981"}]}},
+      {q:"The table below gives information about recycling rates, plastic waste, and renewable energy share in seven countries in 2021.",chart:{type:"table",title:"Environmental Indicators (2021)",headers:["Country","Recycling Rate","Plastic Waste (kg/person)","Renewable Energy %"],rows:[["Germany","67%","18.6","46%"],["South Korea","59%","22.4","8%"],["USA","32%","53.0","21%"],["UK","44%","23.7","42%"],["Brazil","4%","8.2","84%"],["China","22%","11.4","30%"],["India","30%","5.8","22%"]]}},
+      {q:"The line graph below shows changes in average global temperature anomaly and sea level rise between 1970 and 2020.",chart:{type:"line",title:"Global Temperature Anomaly (°C) & Sea Level Rise (cm)",labels:["1970","1980","1990","2000","2010","2020"],datasets:[{label:"Temp Anomaly (°C)",data:[0.0,0.2,0.4,0.4,0.7,1.0],color:"#EF4444"},{label:"Sea Level Rise (cm)",data:[0,1.2,2.5,5.0,8.2,12.2],color:"#3B82F6"}]}},
+      {q:"The pie charts below show the main causes of deforestation in a South American country in 2000 and 2022.",chart:{type:"pie2",title:"Causes of Deforestation — 2000 vs 2022",labels:["Cattle Ranching","Agriculture","Logging","Infrastructure","Mining","Other"],data2010:[48,25,14,6,4,3],data2023:[38,34,10,8,7,3]}},
+      {q:"The bar chart below compares household water usage in litres per person per day across five world regions in 2019.",chart:{type:"bar",title:"Household Water Usage (litres/person/day)",labels:["N. America","Europe","Middle East","Asia","Africa"],datasets:[{label:"Total Usage",data:[380,230,340,180,70],color:"#3B82F6"},{label:"Drinking/Cooking",data:[8,6,7,5,4],color:"#10B981"}]}},
+      {q:"The line graph below shows the number of endangered species recorded globally between 1980 and 2023.",chart:{type:"line",title:"Endangered Species Recorded Globally (thousands)",labels:["1980","1990","2000","2010","2015","2020","2023"],datasets:[{label:"Mammals",data:[2.2,3.5,5.0,6.5,7.1,7.6,7.9],color:"#EF4444"},{label:"Birds",data:[1.8,3.2,4.9,6.6,7.2,7.8,8.1],color:"#F59E0B"},{label:"Plants",data:[1.2,2.8,6.0,11.2,14.2,17.5,20.2],color:"#10B981"}]}},
+      {q:"The table below shows air quality index, annual rainfall, and green space per capita in six major cities in 2022.",chart:{type:"table",title:"Urban Environmental Quality (2022)",headers:["City","Air Quality Index","Annual Rainfall (mm)","Green Space (m²/person)"],rows:[["Singapore","55 (Moderate)","2340","66"],["London","42 (Good)","601","27"],["Paris","58 (Moderate)","641","12"],["Delhi","168 (Unhealthy)","797","2"],["New York","52 (Moderate)","1268","29"],["Tokyo","48 (Good)","1530","3"]]}},
+      {q:"The process diagram below shows how a modern wind turbine generates and distributes electricity.",chart:{type:"process",title:"Wind Turbine Electricity Generation",steps:["Wind Turns Blades","Rotor Spins Shaft","Gearbox Increases Speed","Generator Produces AC","Transformer Boosts Voltage","National Grid","Homes & Businesses"]}},
+      {q:"The bar chart below compares CO2 emissions per passenger per km across different transport types in 2022.",chart:{type:"bar",title:"CO2 Emissions by Transport Type (g per km per passenger)",labels:["Short-haul Flight","Petrol Car","Diesel Car","Motorbike","Bus","Train","Electric Car"],datasets:[{label:"CO2 (g/km/passenger)",data:[255,192,171,103,89,41,0],color:"#EF4444"}]}}
+    ],
+    economy: [
+      {q:"The bar chart below shows the GDP growth rate of five major economies from 2015 to 2022.",chart:{type:"bar",title:"Annual GDP Growth Rate (%)",labels:["2015","2016","2017","2018","2019","2020","2021","2022"],datasets:[{label:"USA",data:[2.9,1.6,2.4,2.9,2.3,-3.4,5.7,2.1],color:"#3B82F6"},{label:"China",data:[6.9,6.7,6.9,6.7,6.0,2.3,8.4,3.0],color:"#EF4444"},{label:"India",data:[8.0,8.3,6.8,6.5,5.0,-6.6,8.7,7.2],color:"#F59E0B"},{label:"Germany",data:[1.7,2.2,2.6,1.5,0.6,-3.7,2.6,1.8],color:"#10B981"}]}},
+      {q:"The table below compares cost of living, average salary, and unemployment in five European cities in 2023.",chart:{type:"table",title:"Cost of Living — European Cities (2023)",headers:["City","Cost of Living Index","Avg Monthly Salary (€)","Unemployment Rate"],rows:[["Zurich","131","€7,200","2.1%"],["Oslo","102","€5,800","3.4%"],["Paris","89","€3,100","7.1%"],["Berlin","72","€3,400","5.4%"],["Warsaw","48","€1,800","2.8%"]]}},
+      {q:"The line graph below shows changes in average house prices in four major cities from 2000 to 2022.",chart:{type:"line",title:"Average House Prices (USD thousands)",labels:["2000","2004","2008","2012","2016","2019","2022"],datasets:[{label:"London",data:[210,310,390,340,520,620,720],color:"#EF4444"},{label:"New York",data:[280,400,480,350,500,580,680],color:"#3B82F6"},{label:"Tokyo",data:[320,290,270,240,290,330,380],color:"#8B5CF6"},{label:"Sydney",data:[240,320,360,380,580,700,820],color:"#10B981"}]}},
+      {q:"The pie charts below show the sources of government revenue and areas of spending in a country in 2021.",chart:{type:"pie2",title:"Government Revenue vs Spending (2021)",labels:["Income Tax","VAT/Sales Tax","Corporate Tax","Healthcare","Education","Defence","Infrastructure","Other"],data2010:[38,28,14,25,18,12,11,6],data2023:[34,30,16,28,20,10,12,5]}},
+      {q:"The bar chart below shows new businesses registered per 1,000 people in six countries in 2010, 2015, and 2020.",chart:{type:"bar",title:"New Business Registrations per 1,000 People",labels:["USA","UK","Singapore","Brazil","Germany","Nigeria"],datasets:[{label:"2010",data:[5.2,3.8,7.2,1.4,2.1,0.8],color:"#3B82F6"},{label:"2015",data:[6.1,4.5,9.8,1.8,2.4,1.2],color:"#8B5CF6"},{label:"2020",data:[7.8,5.2,11.4,2.1,2.8,1.8],color:"#06B6D4"}]}},
+      {q:"The table below shows the number of employees and annual revenue of the five largest retail companies in the world in 2022.",chart:{type:"table",title:"Top 5 Global Retail Companies (2022)",headers:["Company","Country","Employees (millions)","Revenue (USD bn)"],rows:[["Walmart","USA","2.30","$573"],["Amazon","USA","1.54","$513"],["Costco","USA","0.30","$227"],["JD.com","China","0.41","$134"],["Alibaba","China","0.25","$134"]]}},
+      {q:"The line graph below shows export and import values for a developing country between 2005 and 2022.",chart:{type:"line",title:"Export & Import Values (USD billions)",labels:["2005","2008","2011","2014","2017","2019","2021","2022"],datasets:[{label:"Exports",data:[12,18,26,31,34,38,44,52],color:"#10B981"},{label:"Imports",data:[18,26,34,42,40,44,48,58],color:"#EF4444"}]}},
+      {q:"The bar chart below compares inflation rates in four economies between 2018 and 2023.",chart:{type:"bar",title:"Annual Inflation Rate (%)",labels:["2018","2019","2020","2021","2022","2023"],datasets:[{label:"USA",data:[2.4,1.8,1.2,4.7,8.0,3.4],color:"#3B82F6"},{label:"UK",data:[2.5,1.8,0.9,2.5,9.1,6.8],color:"#EF4444"},{label:"Germany",data:[1.8,1.4,0.5,3.2,7.9,5.9],color:"#F59E0B"},{label:"Brazil",data:[3.7,3.7,3.2,8.3,9.3,4.6],color:"#10B981"}]}},
+      {q:"The table below gives information about the poverty rate, Gini coefficient, and welfare spending in eight countries in 2020.",chart:{type:"table",title:"Economic Inequality Indicators (2020)",headers:["Country","Poverty Rate","Gini Coefficient","Welfare Spending (% GDP)"],rows:[["Denmark","13%","0.29","28%"],["Germany","16%","0.31","25%"],["USA","18%","0.39","19%"],["Brazil","25%","0.53","17%"],["South Africa","55%","0.63","12%"],["India","22%","0.35","8%"],["Nigeria","40%","0.43","3%"],["Mexico","44%","0.46","11%"]]}},
+      {q:"The diagrams below show the layout of a city commercial district in 2000 and 2023.",chart:{type:"map",title:"City Commercial District — 2000 vs 2023",before:["Factory Zone","Traditional Market","2-lane Main Road","Old Office Buildings","Bus Terminal"],after:["Tech Hub & Co-working Spaces","Shopping Mall","6-lane Boulevard + Cycle Path","Modern Skyscrapers","Integrated Metro Station"]}}
+    ],
+    health: [
+      {q:"The bar chart below shows the percentage of adults classified as obese in six countries in 2000, 2010, and 2020.",chart:{type:"bar",title:"Adult Obesity Rate (%)",labels:["USA","UK","Australia","Mexico","Germany","Japan"],datasets:[{label:"2000",data:[30.5,20.2,19.8,23.0,17.8,3.0],color:"#EF4444"},{label:"2010",data:[35.5,24.2,24.6,28.0,20.8,3.5],color:"#F59E0B"},{label:"2020",data:[42.4,27.8,30.4,35.2,22.6,4.3],color:"#DC2626"}]}},
+      {q:"The line graph below shows changes in life expectancy at birth in four world regions between 1970 and 2022.",chart:{type:"line",title:"Life Expectancy at Birth (years)",labels:["1970","1980","1990","2000","2010","2015","2022"],datasets:[{label:"North America",data:[70.8,73.2,75.1,76.8,78.2,78.9,77.2],color:"#3B82F6"},{label:"Europe",data:[70.0,72.5,74.2,75.8,77.8,78.8,77.6],color:"#10B981"},{label:"Asia",data:[55.0,62.0,66.8,70.2,73.0,74.2,75.0],color:"#F59E0B"},{label:"Africa",data:[43.0,48.0,51.0,52.0,58.0,62.2,64.2],color:"#EF4444"}]}},
+      {q:"The table below gives information about life expectancy, literacy rate and GDP per capita of six countries in 2020.",chart:{type:"table",title:"Health & Development Indicators (2020)",headers:["Country","Life Expectancy","Literacy Rate","GDP per Capita ($)"],rows:[["Norway","82.4","99%","$67,200"],["USA","78.5","99%","$63,400"],["Brazil","75.9","93%","$8,700"],["China","77.1","97%","$11,200"],["Nigeria","54.7","62%","$2,100"],["India","70.8","74%","$2,000"]]}},
+      {q:"The pie charts below show the leading causes of death in a developed country in 1990 and 2022.",chart:{type:"pie2",title:"Leading Causes of Death — 1990 vs 2022",labels:["Heart Disease","Cancer","Stroke","Respiratory","Diabetes","Alzheimers","Accidents","Other"],data2010:[34,22,9,8,4,3,4,16],data2023:[28,25,7,6,8,9,5,12]}},
+      {q:"The bar chart below compares healthcare expenditure as a percentage of GDP across seven nations in 2019.",chart:{type:"bar",title:"Healthcare Expenditure (% of GDP, 2019)",labels:["USA","Germany","France","Canada","UK","Japan","Australia"],datasets:[{label:"% of GDP",data:[16.8,11.7,11.2,10.8,10.2,11.0,9.4],color:"#3B82F6"}]}},
+      {q:"The line graph below shows new type 2 diabetes diagnoses per 100,000 people in three countries between 2000 and 2021.",chart:{type:"line",title:"Type 2 Diabetes Diagnoses per 100,000 People",labels:["2000","2003","2006","2009","2012","2015","2018","2021"],datasets:[{label:"USA",data:[580,640,710,780,820,850,880,920],color:"#3B82F6"},{label:"India",data:[320,380,460,540,620,700,780,880],color:"#F59E0B"},{label:"China",data:[280,360,480,580,680,750,820,900],color:"#EF4444"}]}},
+      {q:"The table below shows smoking rates, physical inactivity, and alcohol consumption among adults in five countries in 2022.",chart:{type:"table",title:"Lifestyle Risk Factors (2022)",headers:["Country","Smoking Rate","Physical Inactivity","Heavy Drinking (monthly)"],rows:[["Russia","27%","38%","34%"],["Germany","22%","34%","22%"],["USA","14%","42%","25%"],["Japan","18%","28%","15%"],["Australia","11%","37%","20%"]]}},
+      {q:"The diagram below shows how a vaccine is developed, tested, and distributed to the public.",chart:{type:"process",title:"Vaccine Development & Distribution Process",steps:["Basic Research","Pre-Clinical Testing","Phase 1: Safety Trial","Phase 2: Efficacy Trial","Phase 3: Large-Scale Trial","Regulatory Approval","Mass Production","Distribution & Vaccination"]}},
+      {q:"The bar chart below shows average hours of sleep per night for different age groups in four countries in 2021.",chart:{type:"bar",title:"Average Hours of Sleep per Night (2021)",labels:["18-25","26-35","36-45","46-55","56-65","65+"],datasets:[{label:"USA",data:[6.8,6.5,6.4,6.7,7.0,7.4],color:"#3B82F6"},{label:"Japan",data:[6.2,6.0,6.1,6.4,6.8,7.2],color:"#EF4444"},{label:"Germany",data:[7.2,6.9,7.0,7.2,7.5,7.8],color:"#10B981"}]}},
+      {q:"The line graph below shows mental health disorder diagnoses among people aged 18-35 in three countries between 2010 and 2022.",chart:{type:"line",title:"Mental Health Disorders (per 1,000 people, aged 18–35)",labels:["2010","2012","2014","2016","2018","2020","2022"],datasets:[{label:"USA",data:[180,192,208,224,248,320,354],color:"#3B82F6"},{label:"UK",data:[152,162,178,196,218,298,328],color:"#EF4444"},{label:"Australia",data:[168,178,192,210,234,308,340],color:"#F59E0B"}]}}
+    ],
+    transport: [
+      {q:"The bar chart below shows the percentage of people using different types of transport to commute in four major cities in 2018.",chart:{type:"bar",title:"Commuter Transport Mode Share (%) — 2018",labels:["Tokyo","London","Los Angeles","São Paulo"],datasets:[{label:"Public Transport",data:[62,55,14,38],color:"#3B82F6"},{label:"Private Car",data:[12,28,78,44],color:"#EF4444"},{label:"Cycling/Walking",data:[26,17,8,18],color:"#10B981"}]}},
+      {q:"The line graph below shows changes in electric vehicle sales per year in five countries between 2015 and 2023.",chart:{type:"line",title:"Electric Vehicle Sales (thousands)",labels:["2015","2016","2017","2018","2019","2020","2021","2022","2023"],datasets:[{label:"China",data:[188,335,580,1100,1200,1250,3520,5880,8500],color:"#EF4444"},{label:"USA",data:[115,159,195,361,326,295,475,807,1100],color:"#3B82F6"},{label:"Germany",data:[24,30,55,68,108,395,356,832,980],color:"#F59E0B"},{label:"Norway",data:[34,44,62,72,79,75,112,168,192],color:"#10B981"}]}},
+      {q:"The maps below show a town's road and public transport network in 2005 and 2023.",chart:{type:"map",title:"Town Transport Network — 2005 vs 2023",before:["2-lane main road","1 bus route (hourly)","No cycle lanes","Large surface car park","Railway station (outskirts)"],after:["4-lane road + dedicated bus lane","5 bus routes + tram line","20 km cycle network","Underground parking","Railway station with city-centre link"]}},
+      {q:"The table below shows average commute time, public transport use, and congestion index for six cities in 2022.",chart:{type:"table",title:"Urban Commuting Statistics (2022)",headers:["City","Avg Commute (min)","Public Transport %","Congestion Index"],rows:[["Mumbai","60","86%","68"],["London","46","55%","52"],["New York","42","54%","49"],["Berlin","34","48%","38"],["Amsterdam","26","45%","29"],["Copenhagen","22","38%","24"]]}},
+      {q:"The bar chart below compares road traffic deaths per 100,000 people in seven countries in 2010 and 2021.",chart:{type:"bar",title:"Road Traffic Deaths per 100,000 People",labels:["Thailand","Brazil","USA","South Africa","China","Germany","Sweden"],datasets:[{label:"2010",data:[38.1,22.5,11.4,27.6,20.5,4.5,2.8],color:"#EF4444"},{label:"2021",data:[32.7,18.2,12.7,22.4,15.6,3.8,2.2],color:"#10B981"}]}},
+      {q:"The pie charts below show modes of transport used for international travel in a country in 2000 and 2022.",chart:{type:"pie2",title:"International Travel by Transport Mode",labels:["Air","Sea (Cruise)","Rail","Road (Coach)","Private Car","Other"],data2010:[52,8,22,12,5,1],data2023:[71,12,10,5,2,0]}},
+      {q:"The line graph below shows freight transported by road, rail, and sea in a country between 2000 and 2022.",chart:{type:"line",title:"Freight Transport Volume (billion tonne-km)",labels:["2000","2004","2008","2012","2016","2019","2022"],datasets:[{label:"Road",data:[180,228,248,258,296,312,328],color:"#EF4444"},{label:"Rail",data:[140,158,168,174,196,204,242],color:"#3B82F6"},{label:"Sea",data:[240,300,340,380,436,468,520],color:"#10B981"}]}},
+      {q:"The diagram below shows the process by which a high-speed railway line is planned, built, and opened to the public.",chart:{type:"process",title:"High-Speed Railway Development",steps:["Feasibility Study","Environmental Assessment","Government Approval","Land Acquisition","Track & Tunnel Construction","Station Building","Testing & Trials","Safety Certification","Public Opening"]}},
+      {q:"The bar chart below shows government investment in road, rail, and air infrastructure in three countries in 2021.",chart:{type:"bar",title:"Transport Infrastructure Investment (USD billions, 2021)",labels:["Roads","Rail","Airports"],datasets:[{label:"China",data:[280,180,48],color:"#EF4444"},{label:"USA",data:[168,18,22],color:"#3B82F6"},{label:"Germany",data:[42,28,8],color:"#F59E0B"}]}},
+      {q:"The table below compares fuel efficiency, average speed, and carbon emissions for four passenger transport types in 2022.",chart:{type:"table",title:"Passenger Transport Comparison (2022)",headers:["Transport","Avg Speed (km/h)","CO2 (g/km/passenger)","Cost per 100km ($)"],rows:[["High-Speed Train","280","14","$12"],["Electric Car","120","0","$4"],["Petrol Car","100","192","$14"],["Domestic Flight","800","255","$22"],["Coach (diesel)","90","89","$6"]]}}
+    ],
+    population: [
+      {q:"The line graph below shows population growth in urban and rural areas of a developing country between 1980 and 2022.",chart:{type:"line",title:"Urban vs Rural Population (millions)",labels:["1980","1985","1990","1995","2000","2005","2010","2015","2020","2022"],datasets:[{label:"Urban",data:[28,34,42,52,64,78,96,118,138,148],color:"#3B82F6"},{label:"Rural",data:[82,88,92,96,98,98,96,92,86,82],color:"#10B981"}]}},
+      {q:"The bar chart below shows the percentage of population aged over 65 in six countries in 2000, 2010, and 2022.",chart:{type:"bar",title:"Population Aged 65+ (%)",labels:["Japan","Italy","Germany","France","USA","India"],datasets:[{label:"2000",data:[17.4,18.2,16.4,16.0,12.4,4.4],color:"#3B82F6"},{label:"2010",data:[23.0,20.6,20.6,16.8,13.0,5.1],color:"#8B5CF6"},{label:"2022",data:[29.8,23.4,21.8,20.4,16.8,6.8],color:"#EF4444"}]}},
+      {q:"The table below gives information about birth rates, death rates, and net migration for five countries in 2021.",chart:{type:"table",title:"Population Change Indicators (2021)",headers:["Country","Birth Rate (per 1,000)","Death Rate (per 1,000)","Net Migration","Population Growth"],rows:[["Niger","47.2","11.0","-0.2‰","+3.8%"],["USA","11.0","10.4","+3.2‰","+0.4%"],["Germany","9.4","12.0","+4.5‰","+0.2%"],["Japan","6.6","11.8","+0.9‰","-0.5%"],["South Korea","5.3","6.8","+1.2‰","-0.4%"]]}},
+      {q:"The maps below show how a small town developed into a city over 50 years.",chart:{type:"map",title:"Town Development — 1975 vs 2025",before:["Population: ~12,000","Main Street & weekly market","Surrounding farmland & forest","1 school, 1 clinic","Unpaved roads"],after:["Population: ~180,000","Commercial district & business park","Industrial zone & suburbs","5 schools, 3 hospitals, university","Motorway + ring road + bus network"]}},
+      {q:"The pie charts below show the age distribution of the population in a country in 1990 and 2023.",chart:{type:"pie2",title:"Population Age Distribution — 1990 vs 2023",labels:["0-14 years","15-24 years","25-44 years","45-64 years","65-79 years","80+ years"],data2010:[28,18,28,16,8,2],data2023:[18,14,26,22,14,6]}},
+      {q:"The bar chart below compares average household sizes in seven countries in 2000 and 2022.",chart:{type:"bar",title:"Average Household Size (persons)",labels:["Senegal","India","Mexico","Brazil","USA","France","Sweden"],datasets:[{label:"2000",data:[8.8,5.4,4.2,3.8,2.6,2.4,2.1],color:"#3B82F6"},{label:"2022",data:[7.2,4.4,3.6,3.1,2.5,2.2,2.0],color:"#10B981"}]}},
+      {q:"The line graph below shows international migration flows into and out of a country between 2005 and 2022.",chart:{type:"line",title:"International Migration Flows (thousands per year)",labels:["2005","2007","2009","2011","2013","2015","2017","2019","2021","2022"],datasets:[{label:"Immigration",data:[380,420,360,440,520,680,580,620,440,820],color:"#10B981"},{label:"Emigration",data:[280,310,340,320,340,380,360,380,320,360],color:"#EF4444"}]}},
+      {q:"The table below shows population density, urbanisation rate, and average household income for six world regions in 2021.",chart:{type:"table",title:"Population & Income by World Region (2021)",headers:["Region","Pop. Density (p/km²)","Urbanisation Rate","Avg Household Income ($/yr)"],rows:[["North America","23","82%","$68,400"],["Europe","34","74%","$44,200"],["East Asia","135","64%","$22,800"],["South Asia","382","34%","$7,200"],["Latin America","32","82%","$12,600"],["Sub-Saharan Africa","48","42%","$3,100"]]}},
+      {q:"The diagrams below show how a small coastal town expanded between 1960 and 2023.",chart:{type:"map",title:"Coastal Town Expansion — 1960 vs 2023",before:["Fishing port (50 boats)","Old town (~2,000 residents)","Beach & natural sand dunes","Surrounding farmland","1 road in/out"],after:["Commercial marina (200 berths)","New town (~45,000 residents)","Beach resort & promenade","Hotels, leisure complex, car parks","3 roads + coastal bypass"]}},
+      {q:"The bar chart below shows people living alone as a percentage of all households in seven countries in 2000 and 2021.",chart:{type:"bar",title:"Single-Person Households (% of all households)",labels:["Norway","Germany","UK","USA","Japan","Brazil","Nigeria"],datasets:[{label:"2000",data:[40,36,30,26,24,9,4],color:"#8B5CF6"},{label:"2021",data:[48,42,34,28,34,14,6],color:"#3B82F6"}]}}
+    ],
+    tourism: [
+      {q:"The bar chart below shows the number of tourists visiting three museums in London between 2010 and 2020.",chart:{type:"bar",title:"London Museum Visitors (millions)",labels:["2010","2012","2014","2016","2018","2019","2020"],datasets:[{label:"British Museum",data:[5.8,5.9,6.7,6.8,6.2,6.2,1.8],color:"#3B82F6"},{label:"Natural History Museum",data:[4.8,5.1,5.2,5.1,5.2,5.4,0.9],color:"#10B981"},{label:"V&A Museum",data:[2.9,3.2,3.4,3.8,3.9,4.0,0.7],color:"#8B5CF6"}]}},
+      {q:"The line graph below shows international tourist arrivals in five countries between 2010 and 2022.",chart:{type:"line",title:"International Tourist Arrivals (millions)",labels:["2010","2012","2014","2016","2018","2019","2020","2021","2022"],datasets:[{label:"France",data:[77,83,84,83,90,90,40,46,79],color:"#3B82F6"},{label:"Spain",data:[53,58,65,76,83,84,19,31,71],color:"#EF4444"},{label:"Thailand",data:[16,22,25,33,38,40,7,0.4,12],color:"#F59E0B"},{label:"UAE",data:[8,11,14,15,16,17,5,8,14],color:"#10B981"}]}},
+      {q:"The table below shows average tourist spending per day, annual visitors, and tourism's share of GDP in six countries in 2019.",chart:{type:"table",title:"Tourism Economic Impact (2019)",headers:["Country","Avg Spend/Day (USD)","Annual Visitors (m)","Tourism % of GDP"],rows:[["Maldives","$380","1.7","28%"],["UAE","$320","17.0","12%"],["France","$220","90.0","8%"],["Thailand","$180","40.0","18%"],["USA","$280","80.0","2.9%"],["Nepal","$90","1.2","7.5%"]]}},
+      {q:"The maps below show a small island before and after the construction of tourist facilities.",chart:{type:"map",title:"Tropical Island — Before vs After Tourism",before:["Dense jungle (80% of island)","Small fishing village (200 people)","1 dirt track","Natural undeveloped beach","Basic local market"],after:["Jungle nature reserve (40%)","5-star resort complex (2,000 guests)","Paved road + small airport","Developed beach (bars, water sports)","Shopping & restaurant district"]}},
+      {q:"The bar chart below compares how tourists from three countries spent their travel budgets in 2022.",chart:{type:"bar",title:"Tourist Spending Breakdown by Category (%)",labels:["Accommodation","Food & Drink","Shopping","Attractions","Transport","Other"],datasets:[{label:"USA tourists",data:[32,24,18,12,10,4],color:"#3B82F6"},{label:"Chinese tourists",data:[28,18,30,12,8,4],color:"#EF4444"},{label:"German tourists",data:[30,22,16,14,12,6],color:"#F59E0B"}]}},
+      {q:"The pie charts below show the main reasons why people chose their holiday destination in 2005 and 2023.",chart:{type:"pie2",title:"Holiday Destination Choice — 2005 vs 2023",labels:["Beach & Sun","Cultural Sites","Adventure","Family/Friends","Food & Cuisine","Eco-tourism","Business","Other"],data2010:[38,24,12,10,6,2,4,4],data2023:[26,22,18,10,12,8,2,2]}},
+      {q:"The line graph below shows tourists arriving by air, sea, and land to a popular destination between 2015 and 2023.",chart:{type:"line",title:"Tourist Arrivals by Mode of Transport (thousands)",labels:["2015","2016","2017","2018","2019","2020","2021","2022","2023"],datasets:[{label:"Air",data:[1820,2040,2380,2640,2880,780,920,2100,2940],color:"#3B82F6"},{label:"Sea (Cruise)",data:[420,480,560,620,680,80,140,380,740],color:"#06B6D4"},{label:"Land",data:[680,720,760,800,820,420,520,680,860],color:"#10B981"}]}},
+      {q:"The table below compares number of hotels, average room rates, and tourist satisfaction scores in five cities in 2022.",chart:{type:"table",title:"Tourism Accommodation (2022)",headers:["City","No. of Hotels","Avg Room Rate/Night","Occupancy Rate","Satisfaction (1-10)"],rows:[["Dubai","755","$220","82%","8.4"],["Paris","1,486","$180","78%","8.1"],["Bangkok","1,244","$85","76%","8.6"],["New York","680","$310","80%","7.8"],["Istanbul","892","$120","72%","8.2"]]}},
+      {q:"The bar chart below shows money earned from tourism in six countries in 2000, 2010, and 2022.",chart:{type:"bar",title:"Tourism Revenue (USD billions)",labels:["France","USA","Spain","Thailand","Italy","Turkey"],datasets:[{label:"2000",data:[33,84,31,8,28,8],color:"#3B82F6"},{label:"2010",data:[47,104,53,20,39,22],color:"#8B5CF6"},{label:"2022",data:[58,176,73,26,53,46],color:"#06B6D4"}]}},
+      {q:"The diagrams below show a coastal resort area in 1980 and how it has been developed by 2023.",chart:{type:"map",title:"Coastal Resort Development — 1980 vs 2023",before:["Rocky coastline, 1 small beach","2 small hotels (80 beds total)","Local fishing boats & harbour","Narrow village road","1 restaurant & 1 shop"],after:["Marina with 200 berths, 3 beaches","12 hotels + 3 resorts (6,000 beds)","Water sports centre & yacht club","4-lane coastal boulevard","40+ restaurants, bars & nightclubs"]}}
+    ]
+  },
+
+  2: {
+    education: [
+      "Some people believe that children should start formal education at a very early age. Others think it is better for children to start school when they are older. Discuss both views and give your own opinion.",
+      "Many people think that universities should only accept students based on academic merit. Others argue that students from disadvantaged backgrounds should be given preference. To what extent do you agree or disagree?",
+      "Some people think that all university education should be free, while others believe students should pay tuition fees themselves. Discuss both views and give your own opinion.",
+      "In many countries, students are encouraged to choose subjects that will lead to good job prospects, rather than subjects they enjoy. What are the advantages and disadvantages of this approach?",
+      "Some educators believe that every child should study a second language from primary school. Others feel this places too much pressure on young learners. Discuss both views and give your own opinion.",
+      "Many schools are now using tablets and laptops in classrooms instead of traditional textbooks. What are the advantages and disadvantages of this change?",
+      "Some people think that the best way to improve educational standards is to increase teachers' salaries. Others believe there are better ways. To what extent do you agree or disagree?",
+      "Some people argue that children are given too much homework. What are the advantages and disadvantages of homework for children's development?",
+      "In some countries, young people choose to work or travel for a year before starting university. Is this a positive or negative development? Why do you think young people make this choice?",
+      "Many people believe that the purpose of education is to prepare children for the workforce. Others feel it should also develop personal values and social skills. Discuss both views and give your own opinion."
+    ],
+    technology: [
+      "Some people think that robots and artificial intelligence will soon replace human workers in most industries. To what extent do you agree or disagree with this view?",
+      "Many people believe that social media has had a largely negative impact on society. To what extent do you agree or disagree with this statement?",
+      "The internet has transformed the way people communicate and access information. Discuss the advantages and disadvantages of the internet for modern society.",
+      "Online shopping has become increasingly popular in recent years. Why has online shopping become so popular? What are the effects of this trend on traditional retail businesses?",
+      "Some people believe that technology is making people less creative. Others argue that technology enhances creativity. Discuss both views and give your own opinion.",
+      "Many parents worry about the amount of time their children spend playing video games. What are the problems caused by excessive video game use? What solutions can you suggest?",
+      "Some people think that space exploration is a waste of money. Others believe it is essential for the future of humanity. Discuss both views and give your own opinion.",
+      "With advances in technology, it is now possible for people to work from home. What are the advantages and disadvantages of working from home?",
+      "Many people now use online banking and digital payment systems instead of cash. What are the advantages and disadvantages of a cashless society?",
+      "Some people believe that governments should control the content available on the internet. Others feel that the internet should remain completely free. Discuss both views and give your own opinion."
+    ],
+    environment: [
+      "Some people think that the best way to reduce environmental problems is to increase the price of fuel. Others believe there are better alternatives. Discuss both views and give your own opinion.",
+      "Many countries are prioritising economic growth over environmental protection. What are the causes of this trend? What can be done to encourage more sustainable development?",
+      "Some people think individuals can do very little to protect the environment and that it is mainly the responsibility of governments and large corporations. To what extent do you agree or disagree?",
+      "Some experts argue that the only way to solve environmental problems is through international cooperation. To what extent do you agree or disagree?",
+      "Many people believe that zoos serve an important conservation purpose, while others feel they are cruel to animals. Discuss both views and give your own opinion.",
+      "In many cities, air pollution has reached dangerous levels. What are the main causes of urban air pollution? What measures can governments and citizens take to improve air quality?",
+      "Some people argue that a completely vegetarian diet is the most ethical and environmentally responsible choice. To what extent do you agree or disagree?",
+      "Many people think that recycling is not effective enough to solve the world's waste problem. What is your view? What other solutions might be more effective?",
+      "Some people believe that renewable energy will eventually replace fossil fuels entirely. Do you agree? What challenges must be overcome for this to happen?",
+      "Governments should ban the sale of new petrol and diesel cars within the next ten years. Discuss both views on this issue and give your own opinion."
+    ],
+    health: [
+      "Some people believe that the government should be responsible for ensuring that people live healthy lives, while others argue that individuals themselves are responsible for their own health. Discuss both views and give your own opinion.",
+      "Obesity rates are rising rapidly in many countries. What are the main causes of obesity in modern society? What can be done to address this problem?",
+      "Many people today are experiencing high levels of stress due to work pressures. What are the causes of work-related stress? What can employers and individuals do to reduce stress?",
+      "Some people think that governments should impose higher taxes on fast food and sugary drinks. Others argue that people should be free to choose what they eat and drink. Discuss both views and give your own opinion.",
+      "Some people believe that mental health issues are not taken as seriously as physical health problems. To what extent do you agree or disagree? What can be done to address this imbalance?",
+      "In many countries, people are choosing to have children later in life. What are the advantages and disadvantages of this trend?",
+      "Some people argue that regular exercise is the most important factor in maintaining good health, while others believe diet is more important. Discuss both views and give your own opinion.",
+      "Many countries are experiencing a shortage of medical professionals. What are the causes of this shortage? What solutions could governments and medical institutions consider?",
+      "Some people believe that alternative medicine, such as herbal remedies and acupuncture, should be funded by governments alongside conventional medicine. To what extent do you agree or disagree?",
+      "It is now common for people to seek medical advice online rather than visiting a doctor. What are the advantages and disadvantages of this development?"
+    ],
+    society: [
+      "Some people believe that the gap between the rich and the poor is widening. What are the causes of wealth inequality? What can governments do to reduce this gap?",
+      "In many countries, the number of people choosing to live alone is growing. Why is this happening? Do you think this is a positive or negative development for society?",
+      "Many people choose to move to large cities rather than staying in rural areas. Why do people make this choice? Is this a positive or negative development?",
+      "Some people think it is more important for governments to spend money on public services such as health and education rather than on arts and culture. To what extent do you agree?",
+      "In some countries, young people are increasingly less interested in traditional culture and customs. Is this a positive or negative development? What are the causes of this trend?",
+      "Some people believe that it is better to raise children in a city, while others think the countryside is a better environment. Discuss both views and give your own opinion.",
+      "Many elderly people in modern societies live alone or in care homes. What are the causes of this trend? What are the effects on elderly people and society as a whole?",
+      "Some people think that volunteering should be made compulsory for young people. Others believe community service should remain optional. Discuss both views and give your own opinion.",
+      "In many countries, women now have equal access to education and careers. Why is this important? Do you think there are still barriers preventing full gender equality?",
+      "Some people argue that competitive sports teach children important life skills, while others believe competition at a young age can be harmful. Discuss both views and give your own opinion."
+    ],
+    economy: [
+      "Some people think that economic growth is the most important goal for a country. Others believe that protecting the environment should be given higher priority. Discuss both views and give your own opinion.",
+      "Many countries are experiencing an ageing population. What are the advantages and disadvantages of having an older population? What measures can be taken to address this issue?",
+      "Multinational companies are having an increasing influence in developing countries. Discuss the advantages and disadvantages of this development.",
+      "Some people think governments should spend money on building high-speed rail networks, while others argue this money would be better spent on improving roads. Discuss both views and give your own opinion.",
+      "In many countries, there is a shortage of affordable housing in major cities. What are the main reasons for this problem? What solutions could governments and the private sector consider?",
+      "Some people believe that free trade between countries benefits everyone. Others argue that it creates unfair competition for developing nations. Discuss both views and give your own opinion.",
+      "It is becoming increasingly difficult for people to find a good work-life balance. Why is this the case? What can employers and governments do to help people achieve a better balance?",
+      "Some people argue that tourism brings more economic benefits than problems to a country. Others believe the negative effects outweigh the benefits. Discuss both views and give your own opinion.",
+      "In many countries, people are choosing to start their own businesses rather than work for an employer. What are the advantages and disadvantages of self-employment?",
+      "Some people believe that a guaranteed basic income — where the government pays every citizen a set amount regardless of employment — would benefit society. To what extent do you agree or disagree?"
+    ],
+    crime: [
+      "Some people think that the best way to reduce crime is to give longer prison sentences. Others believe there are better alternative ways of reducing crime. Discuss both views and give your own opinion.",
+      "Some people believe that young offenders should be treated the same as adult criminals. Others argue they deserve a different approach. Discuss both views and give your own opinion.",
+      "CCTV cameras are now common in many public spaces. Do the benefits of widespread surveillance outweigh the drawbacks? Give reasons for your answer.",
+      "Some people think that poverty is the main cause of crime. Others believe that a lack of moral education is more responsible. Discuss both views and give your own opinion.",
+      "In some countries, the death penalty is still used as punishment for serious crimes. Some people support this, while others believe it should be abolished. Discuss both views and give your own opinion.",
+      "Some people believe that rehabilitation should be the primary goal of the prison system rather than punishment. To what extent do you agree or disagree?",
+      "Some people argue that making drugs legal would reduce crime and be better for society. Others strongly oppose this view. Discuss both views and give your own opinion.",
+      "It has been suggested that the police should focus more resources on preventing crime rather than solving it after it happens. To what extent do you agree or disagree?",
+      "Some people think that stricter gun control laws would significantly reduce crime. Others believe they are ineffective. Discuss both views and give your own opinion.",
+      "Cybercrime is one of the fastest-growing types of criminal activity. What are the main causes of cybercrime? What can individuals and governments do to protect against it?"
+    ],
+    media: [
+      "Some people think that the media has too much influence over people's lives. To what extent do you agree or disagree?",
+      "Many people believe that newspapers will soon become completely replaced by online news. Do you think this is a positive or negative development?",
+      "Some people think that celebrities and social media influencers have too much influence on young people. What are the problems this causes? What solutions can you suggest?",
+      "Advertising encourages people to buy things they do not need and creates an unhealthy desire for material possessions. To what extent do you agree or disagree?",
+      "Some people believe that violent content in films and video games makes people more aggressive in real life. To what extent do you agree or disagree?",
+      "It has become common for people to get their news from social media rather than traditional news outlets. What are the advantages and disadvantages of this trend?",
+      "Freedom of the press is essential in a democratic society. However, some people argue that certain types of media content should be regulated or censored. Discuss both views and give your own opinion.",
+      "Some people think that reality television shows a negative image of society. Others believe they are simply harmless entertainment. Discuss both views and give your own opinion.",
+      "Many people believe that social media companies should be held responsible for the content users post on their platforms. To what extent do you agree or disagree?",
+      "It is now possible for people to become famous through social media without any special talent or achievement. Is this a positive or negative development? Why?"
+    ],
+    work: [
+      "Some people think that employees should be free to dress as they wish at work. Others believe a formal dress code is important. Discuss both views and give your own opinion.",
+      "Many companies now allow employees to work flexible hours. What are the advantages and disadvantages of flexible working for employees and employers?",
+      "Some people believe that job satisfaction is more important than a high salary. Others prioritise financial rewards above all else. Discuss both views and give your own opinion.",
+      "In many countries, women are still paid less than men for doing the same work. What are the causes of this pay gap? What measures could be taken to reduce it?",
+      "Some people think that all employees should be given the same salary regardless of their position. Others believe pay should reflect individual performance. Discuss both views and give your own opinion.",
+      "Many young people today change jobs frequently rather than staying with one employer for a long time. Why is this happening? Is it a positive or negative trend?",
+      "Some people believe that workers over the age of 60 should be required to retire. Others argue that retirement should be a personal choice. Discuss both views and give your own opinion.",
+      "It is becoming increasingly difficult for people to find a good work-life balance. Why is this the case? What can employers and governments do to help?",
+      "Some employers prefer to hire experienced workers rather than young graduates. What are the advantages and disadvantages of this approach for both employers and young people?",
+      "Many people believe that automation and artificial intelligence will eliminate most jobs in the near future. To what extent do you agree? What steps can governments take to prepare workers?"
+    ],
+    globalisation: [
+      "Some people think that globalisation has brought more benefits than problems to the world. To what extent do you agree or disagree?",
+      "Many people believe that English has become so dominant globally that learning other languages is no longer necessary. Discuss both views and give your own opinion.",
+      "As countries become more interconnected, local cultures and traditions are being lost. What are the causes of this? Is this a positive or negative development?",
+      "Some people believe that international travel broadens the mind and improves cultural understanding. Others think it only benefits wealthy nations. Discuss both views and give your own opinion.",
+      "Nowadays, more and more people are learning languages other than their mother tongue. Why is this? How does learning a second language benefit individuals and society?",
+      "Some people think that poorer countries should be given financial aid from richer nations, while others believe trade and investment are more beneficial. Discuss both views and give your own opinion.",
+      "The growing power of multinational corporations means that some governments have less control over their own economies. Do the advantages of this situation outweigh the disadvantages?",
+      "Some people argue that global brands are destroying local businesses and reducing consumer choice. To what extent do you agree or disagree?",
+      "Many people believe that migration enriches host countries economically and culturally. Others think it causes social problems. Discuss both views and give your own opinion.",
+      "Some people think that all countries should adopt a single global currency. What are the advantages and disadvantages of this proposal?"
+    ]
+  }
+};
+
+let currentTopic = '';
+let currentChartData = null;
+let selectedCat = '';
+
+/* ─── CHART RENDERER ─────────────────────────── */
+let activeChartInstance = null;
+
+function renderChart(chartData) {
+  const wrap = document.getElementById('chartWrap');
+  if (!chartData || task !== 1) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+
+  const c = chartData;
+
+  if (c.type === 'table') {
+    wrap.innerHTML = `
+      <div class="chart-wrap">
+        <div class="chart-wrap-title">📊 ${c.title}</div>
+        <table class="chart-table">
+          <thead><tr>${c.headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+          <tbody>${c.rows.map(r=>`<tr>${r.map(cell=>`<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table>
+      </div>`;
+    return;
+  }
+
+  if (c.type === 'map') {
+    wrap.innerHTML = `
+      <div class="chart-wrap">
+        <div class="chart-wrap-title">🗺 ${c.title}</div>
+        <div class="map-diagram">
+          <div class="map-side">
+            <div class="map-side-label before">⏮ BEFORE</div>
+            ${c.before.map(x=>`<div class="map-zone old">🔴 ${x}</div>`).join('')}
+          </div>
+          <div class="map-side">
+            <div class="map-side-label after">⏭ AFTER</div>
+            ${c.after.map(x=>`<div class="map-zone new">🟢 ${x}</div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  if (c.type === 'process') {
+    wrap.innerHTML = `
+      <div class="chart-wrap">
+        <div class="chart-wrap-title">⚙️ ${c.title}</div>
+        <div class="process-flow">
+          ${c.steps.map((s,i)=>`
+            <div class="process-step">
+              <div class="process-step-num">${i+1}</div>
+              <div class="process-step-lbl">${s}</div>
+            </div>
+            ${i < c.steps.length-1 ? '<div class="process-arrow">→</div>' : ''}
+          `).join('')}
+        </div>
+      </div>`;
+    return;
+  }
+
+  if (c.type === 'pie2') {
+    const COLORS = ['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#06B6D4','#EC4899','#F97316'];
+    wrap.innerHTML = `
+      <div class="chart-wrap">
+        <div class="chart-wrap-title">🥧 ${c.title}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div><div style="text-align:center;font-size:11px;font-weight:800;color:#94A3B8;letter-spacing:1px;margin-bottom:10px">BEFORE</div><canvas id="pie2A" height="180"></canvas></div>
+          <div><div style="text-align:center;font-size:11px;font-weight:800;color:#94A3B8;letter-spacing:1px;margin-bottom:10px">AFTER</div><canvas id="pie2B" height="180"></canvas></div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+          ${c.labels.map((l,i)=>`<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#CBD5E1"><span style="width:10px;height:10px;border-radius:3px;background:${COLORS[i]};flex-shrink:0"></span>${l}</span>`).join('')}
+        </div>
+      </div>`;
+    if (activeChartInstance) { activeChartInstance.forEach(ch=>ch.destroy()); activeChartInstance=null; }
+    const cfg = (data) => ({
+      type:'pie', data:{ labels:c.labels, datasets:[{data, backgroundColor:COLORS.slice(0,data.length), borderWidth:2, borderColor:'#0F172A'}]},
+      options:{ plugins:{ legend:{display:false} }, responsive:true, maintainAspectRatio:false }
+    });
+    const ch1 = new Chart(document.getElementById('pie2A'), cfg(c.data2010));
+    const ch2 = new Chart(document.getElementById('pie2B'), cfg(c.data2023));
+    activeChartInstance = [ch1, ch2];
+    return;
+  }
+
+  // bar / line
+  wrap.innerHTML = `
+    <div class="chart-wrap">
+      <div class="chart-wrap-title">${c.type==='bar'?'📊':'📈'} ${c.title}</div>
+      <div class="chart-canvas-wrap"><canvas id="mainChart" height="200"></canvas></div>
+    </div>`;
+  if (activeChartInstance) {
+    if (Array.isArray(activeChartInstance)) activeChartInstance.forEach(ch=>ch.destroy());
+    else activeChartInstance.destroy();
+    activeChartInstance = null;
+  }
+  const colors = c.datasets.map(d => d.color || '#3B82F6');
+  activeChartInstance = new Chart(document.getElementById('mainChart'), {
+    type: c.type,
+    data: {
+      labels: c.labels,
+      datasets: c.datasets.map((d,i) => ({
+        label: d.label,
+        data: d.data,
+        backgroundColor: c.type==='bar' ? colors[i]+'99' : 'transparent',
+        borderColor: colors[i],
+        borderWidth: c.type==='line' ? 2.5 : 1,
+        pointRadius: c.type==='line' ? 3 : 0,
+        pointBackgroundColor: colors[i],
+        tension: 0.4,
+        fill: false,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color:'#CBD5E1', font:{size:12}, boxWidth:14 } }
+      },
+      scales: {
+        x: { ticks:{ color:'#94A3B8', font:{size:11} }, grid:{ color:'rgba(255,255,255,.06)' } },
+        y: { ticks:{ color:'#94A3B8', font:{size:11} }, grid:{ color:'rgba(255,255,255,.08)' } }
+      }
+    }
+  });
+}
+
+/* ─── CATEGORY & TOPIC SELECTION ────────────── */
+function goToCategories(){
+  if(!sel) return;
+  document.getElementById('p1a').style.display = 'none';
+  document.getElementById('p1b').style.display = 'block';
+  selectedCat = '';
+  currentTopic = '';
+  renderCatPills();
+  document.getElementById('topicListWrap').style.display = 'none';
+  lockWrite();
+}
+
+function backToTypes(){
+  document.getElementById('p1b').style.display = 'none';
+  document.getElementById('p1a').style.display = 'block';
+}
+
+function renderCatPills(){
+  const cats = CATS[task] || [];
+  document.getElementById('catPills').innerHTML = cats.map(c => `
+    <button class="cat-pill${selectedCat===c.id?' active':''}" onclick="pickCat('${c.id}','${c.label}')">
+      <span class="cat-ico">${c.ico}</span>${c.label}
+    </button>`).join('');
+}
+
+function pickCat(id, label){
+  selectedCat = id;
+  currentTopic = '';
+  renderCatPills();
+  lockWrite();
+  renderTopicList(id, label);
+}
+
+function renderTopicList(catId, catLabel){
+  const pool = TOPICS[task]?.[catId] || [];
+  const wrap = document.getElementById('topicListWrap');
+  if(!pool.length){ wrap.style.display='none'; return; }
+
+  document.getElementById('topicListTitle').textContent = '📚 ' + catLabel + ' mavzulari';
+  document.getElementById('topicListCount').textContent = pool.length + ' ta mavzu';
+
+  document.getElementById('topicList').innerHTML = pool.map((item,i) => {
+    const qText = typeof item === 'object' ? item.q : item;
+    const chartIcon = (typeof item === 'object' && item.chart) ? `<div class="topic-tag">${{bar:'📊 Bar',line:'📈 Line',table:'📋 Table',pie2:'🥧 Pie',map:'🗺 Map',process:'⚙️ Process'}[item.chart.type]||'📊'}</div>` : '';
+    return `<div class="topic-item" id="titem${i}" onclick="pickTopic(${i}, this)">
+      <div class="topic-num">${i+1}</div>
+      <div class="topic-q">${qText}</div>
+      ${chartIcon}
+    </div>`;
+  }).join('');
+
+  wrap.style.display = 'block';
+}
+
+function pickTopic(idx, el){
+  document.querySelectorAll('.topic-item').forEach(e => e.classList.remove('picked'));
+  el.classList.add('picked');
+  const pool = TOPICS[task]?.[selectedCat] || [];
+  const item = pool[idx];
+  currentTopic = item ? (typeof item === 'object' ? item.q : item) : '';
+  currentChartData = item && typeof item === 'object' ? item.chart : null;
+  unlockWrite();
+}
+
+function lockWrite(){
+  const b = document.getElementById('btnWrite');
+  if(b){ b.disabled=true; b.style.opacity='.4'; }
+}
+function unlockWrite(){
+  const b = document.getElementById('btnWrite');
+  if(b){ b.disabled=false; b.style.opacity='1'; }
+}
+
+function newTopic() {
+  if(selectedCat){
+    const pool = TOPICS[task]?.[selectedCat] || [];
+    const current = currentTopic;
+    let item = pool[Math.floor(Math.random() * pool.length)];
+    let tries = 0;
+    const getQ = x => typeof x === 'object' ? x.q : x;
+    while(getQ(item) === current && tries < 10){ item = pool[Math.floor(Math.random() * pool.length)]; tries++; }
+    currentTopic = getQ(item);
+    currentChartData = typeof item === 'object' ? item.chart : null;
+    document.getElementById('topicText').textContent = currentTopic;
+    renderChart(currentChartData);
+    document.getElementById('essayTA').value = '';
+    onType();
+  }
+}
+
+
+const BAND_NAME = {9:'Expert',8.5:'Expert',8:'Very Good',7.5:'Very Good',
+  7:'Good',6.5:'Competent',6:'Competent',5.5:'Modest',5:'Modest',
+  4.5:'Limited',4:'Limited',3.5:'Extremely Limited',3:'Extremely Limited',
+  2:'Intermittent',1.5:'Non-User',1:'Non-User'};
+const CRIT_COLORS = ['#3B82F6','#8B5CF6','#06B6D4','#F59E0B'];
+
+
+/* ─── STUDENT NAME ───────────────────────────── */
+let studentFirst='', studentLast='';
+
+function checkNmBtn(){
+  const f=document.getElementById('nmFirst').value.trim();
+  const l=document.getElementById('nmLast').value.trim();
+  document.getElementById('nmBtn').disabled = !(f && l);
+}
+function startSession(){
+  const f=document.getElementById('nmFirst').value.trim();
+  const l=document.getElementById('nmLast').value.trim();
+  if(!f||!l) return;
+  studentFirst=f; studentLast=l;
+  document.getElementById('nameModalWrap').style.animation='modalOut .3s forwards';
+  setTimeout(()=>document.getElementById('nameModalWrap').style.display='none',280);
+}
+
+/* ─── ANALYSIS OVERLAY CONTROL ───────────────── */
+let aoTimer=null;
+function showAnalysis(){
+  const overlay=document.getElementById('analysisOverlay');
+  document.getElementById('aoNameTag').textContent = studentFirst+' '+studentLast+" uchun tahlil";
+  [0,1,2,3].forEach(i=>{
+    const s=document.getElementById('aostep'+i);
+    s.className='ao-step';
+  });
+  document.getElementById('aoProgress').style.width='0%';
+  overlay.classList.add('on');
+  let step=0;
+  const prog=[8,35,70,92];
+  function nextStep(){
+    if(step>0) { document.getElementById('aostep'+(step-1)).className='ao-step done'; }
+    if(step<4){
+      if(step<4) document.getElementById('aostep'+step) && (document.getElementById('aostep'+step).className='ao-step active');
+      document.getElementById('aoProgress').style.width=prog[step]+'%';
+      step++;
+      aoTimer=setTimeout(nextStep, 900+(Math.random()*600));
+    }
+  }
+  nextStep();
+}
+function hideAnalysis(){
+  clearTimeout(aoTimer);
+  [0,1,2,3].forEach(i=>{ const s=document.getElementById('aostep'+i); if(s) s.className='ao-step done'; });
+  document.getElementById('aoProgress').style.width='100%';
+  setTimeout(()=>{
+    document.getElementById('analysisOverlay').classList.remove('on');
+  },600);
+}
+
+/* ─── STATE ─────────────────────────────────── */
+// API key: sessionStorage'dan yuklash (tab yopilganda o'chadi - xavfsizroq)
+let apiKey = sessionStorage.getItem('_ik') || '', task=1, sel=null;
+if(apiKey) {
+  document.getElementById('apiOk').classList.add('on');
+  setTimeout(()=>document.getElementById('apiStrip').classList.add('gone'), 100);
+}
+let timerSec=3600, timerOn=false, timerIv=null;
+
+/* ─── TIMER ──────────────────────────────────── */
+function fmtSec(s){ return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
+function updateTimerUI(){
+  const el=document.getElementById('timerDig');
+  const fg=document.getElementById('ringFg');
+  const pct=timerSec/3600;
+  const offset=376.99*(1-pct);
+  el.textContent=fmtSec(timerSec);
+  el.className='timer-digits'+(timerSec<=300?' danger':timerSec<=600?' warn':'');
+  fg.className='timer-ring-fg'+(timerSec<=300?' danger':timerSec<=600?' warn':'');
+  fg.style.strokeDashoffset=offset;
+}
+function toggleTimer(){
+  if(timerOn){ clearInterval(timerIv); timerOn=false; document.getElementById('btnPP').textContent='▶'; }
+  else {
+    if(timerSec<=0){resetTimer();return;}
+    timerOn=true; document.getElementById('btnPP').textContent='⏸';
+    timerIv=setInterval(()=>{
+      timerSec--; updateTimerUI();
+      if(timerSec<=0){ clearInterval(timerIv); timerOn=false; document.getElementById('btnPP').textContent='▶'; document.getElementById('timeOverlay').classList.add('on'); }
+    },1000);
+  }
+}
+function resetTimer(){ clearInterval(timerIv); timerOn=false; timerSec=3600; document.getElementById('btnPP').textContent='▶'; updateTimerUI(); }
+function closeOv(){ document.getElementById('timeOverlay').classList.remove('on'); }
+
+/* ─── API KEY ──────────────────────────────── */
+function saveKey(){
+  const v=document.getElementById('apiField').value.trim();
+  if(!v)return; apiKey=v;
+  sessionStorage.setItem('_ik', v);
+  document.getElementById('apiOk').classList.add('on');
+  setTimeout(()=>document.getElementById('apiStrip').classList.add('gone'),1300);
+}
+function clearApiKey(){
+  apiKey=''; sessionStorage.removeItem('_ik');
+  document.getElementById('apiStrip').classList.remove('gone');
+  document.getElementById('apiField').value='';
+  document.getElementById('apiOk').classList.remove('on');
+}
+
+/* ─── TASK / TYPE ────────────────────────────── */
+function setTask(n){
+  task=n; sel=null; selectedCat=''; currentTopic='';
+  document.getElementById('tt1').classList.toggle('active',n===1);
+  document.getElementById('tt2').classList.toggle('active',n===2);
+  renderTypes(); lockGo();
+}
+function renderTypes(){
+  document.getElementById('typeGrid').innerHTML=TYPES[task].map(t=>`
+    <div class="tcard${sel===t.id?' sel':''}" onclick="pickType('${t.id}')">
+      <div class="tc-check">✓</div>
+      <div class="tc-ico">${t.ico}</div>
+      <div class="tc-name">${t.name}</div>
+      <div class="tc-desc">${t.desc}</div>
+    </div>`).join('');
+}
+function pickType(id){
+  sel=id; renderTypes();
+  const b=document.getElementById('btnGo'); b.disabled=false; b.style.opacity='1';
+}
+function lockGo(){ const b=document.getElementById('btnGo'); b.disabled=true; b.style.opacity='.4'; }
+
+/* ─── STEPS ──────────────────────────────────── */
+function goStep(n){
+  if(n===2&&(!sel||!currentTopic))return;
+  // Show/hide p1 sub-panels
+  if(n===1){
+    // If user already selected type+category, go back to category view (p1b)
+    // If coming from fresh start or no selection, show type selection (p1a)
+    const showB = sel && selectedCat;
+    document.getElementById('p1a').style.display = showB ? 'none' : 'block';
+    document.getElementById('p1b').style.display = showB ? 'block' : 'none';
+    if(showB) renderCatPills(); // re-render to keep active state
+  }
+  ['p1','p2','p3'].forEach((id,i)=>document.getElementById(id).style.display=i===n-1?'block':'none');
+  [1,2,3].forEach(i=>{
+    const e=document.getElementById('sb'+i);
+    e.className='sb-step'+(i===n?' active':i<n?' done':'');
+  });
+  if(n===2){
+    const t=TYPES[task].find(x=>x.id===sel);
+    document.getElementById('tagTask').textContent=`TASK ${task}`;
+    document.getElementById('tagType').textContent=t.name;
+    document.getElementById('writeTitle').textContent=t.name;
+    document.getElementById('writeSub').textContent=t.hint;
+    document.getElementById('wcMin').textContent=t.min;
+    document.getElementById('hintMin').textContent=t.min;
+    document.getElementById('topicTaskNum').textContent=task;
+    document.getElementById('topicText').textContent = currentTopic;
+    renderChart(currentChartData);
+    onType();
+    if(!timerOn && timerSec===3600) toggleTimer();
+  }
+}
+
+/* ─── WORD COUNT ─────────────────────────────── */
+function onType(){
+  const txt=document.getElementById('essayTA').value.trim();
+  const wc=txt?txt.split(/\s+/).filter(Boolean).length:0;
+  const t=TYPES[task].find(x=>x.id===sel)||{min:150};
+  const pct=Math.min(wc/t.min*100,100);
+  document.getElementById('wcBig').innerHTML=`${wc} <span>so'z</span>`;
+  const bar=document.getElementById('wcBar');
+  bar.style.width=pct+'%';
+  bar.className='wc-prog'+(pct>=100?' full':pct>=60?' half':'');
+  const hint=document.getElementById('wcHint');
+  if(wc===0){ hint.className='wc-status'; hint.innerHTML=`<span class="dot"></span> Kamida ${t.min} so'z yozing`; }
+  else if(wc<t.min){ hint.className='wc-status warn'; hint.innerHTML=`<span class="dot"></span> ${t.min-wc} so'z yana kerak`; }
+  else { hint.className='wc-status ok'; hint.innerHTML=`<span class="dot"></span> ✓ ${wc} so'z — ajoyib!`; }
+}
+
+/* ─── CHECK ──────────────────────────────────── */
+async function doCheck(){
+  const essay=document.getElementById('essayTA').value.trim();
+  if(!apiKey){alert('Iltimos, avval Gemini API key kiriting!');return;}
+  if(!essay||essay.split(/\s+/).filter(Boolean).length<15){alert('Kamida bir necha gap yozing!');return;}
+  const t=TYPES[task].find(x=>x.id===sel);
+  document.getElementById('checkBtn').disabled=true;
+  document.getElementById('spinEl').classList.add('on');
+  document.getElementById('checkTxt').textContent='Tahlil qilinmoqda…';
+  showAnalysis();
+
+  const descriptors = task === 1 ? `
+OFFICIAL IELTS WRITING TASK 1 BAND DESCRIPTORS (May 2023):
+
+TASK ACHIEVEMENT:
+Band 9: All requirements fully and appropriately satisfied. Extremely rare lapses.
+Band 8: Covers all requirements appropriately, relevantly and sufficiently. Key features skilfully selected, clearly presented and illustrated. Occasional omissions/lapses.
+Band 7: Covers requirements. Content relevant and accurate with few omissions. Clear overview, data appropriately categorised, main trends identified. Format appropriate.
+Band 6: Focuses on requirements, appropriate format. Key features covered and adequately highlighted. Relevant overview attempted. Some irrelevant/inaccurate info may occur. Some details missing.
+Band 5: Generally addresses requirements. Format may be inappropriate. Key features not adequately covered. Recounting mainly mechanical. May be no data support. Irrelevant/inaccurate material detracts.
+Band 4: Attempts to address task. Few key features selected. Features presented may be irrelevant, repetitive, inaccurate or inappropriate.
+Band 3: Does not address requirements. Key features largely irrelevant. Limited information, may be repetitive.
+
+COHERENCE & COHESION:
+Band 9: Followed effortlessly. Cohesion very rarely attracts attention. Lapses minimal. Paragraphing skilfully managed.
+Band 8: Followed with ease. Ideas logically sequenced, cohesion well managed. Occasional lapses. Paragraphing used sufficiently and appropriately.
+Band 7: Ideas logically organised, clear progression. A few lapses. Range of cohesive devices used flexibly but with some inaccuracies or over/under use.
+Band 6: Generally arranged coherently, clear overall progression. Cohesive devices used to some effect but cohesion within/between sentences may be faulty or mechanical. Reference/substitution may lack flexibility.
+Band 5: Organisation evident but not wholly logical, may lack overall progression. Relationship of ideas can be followed but sentences not fluently linked. Limited/overuse of cohesive devices. May be repetitive.
+Band 4: Ideas evident but not arranged coherently, no clear progression. Relationships between ideas unclear/inadequately marked. Some basic cohesive devices, may be inaccurate/repetitive.
+
+LEXICAL RESOURCE:
+Band 9: Full flexibility and precise use. Wide range used accurately and appropriately with very natural and sophisticated control. Minor spelling errors extremely rare.
+Band 8: Wide resource fluently and flexibly used to convey precise meanings. Skilful use of uncommon/idiomatic items. Occasional inaccuracies in word choice/collocation. Occasional spelling errors, minimal impact.
+Band 7: Sufficient for some flexibility and precision. Some ability to use less common/idiomatic items. Awareness of style and collocation, though inappropriacies occur. Only a few spelling errors.
+Band 6: Generally adequate and appropriate. Meaning generally clear despite restricted range or lack of precision. Some spelling/word formation errors but do not impede communication.
+Band 5: Limited but minimally adequate. Simple vocabulary may be used accurately but range does not permit much variation. Frequent lapses in word choice. Spelling errors may be noticeable and cause difficulty.
+Band 4: Limited and inadequate. Vocabulary basic and may be used repetitively. Inappropriate use of lexical chunks. Word choice errors and spelling may impede meaning.
+
+GRAMMATICAL RANGE & ACCURACY:
+Band 9: Wide range of structures with full flexibility and control. Punctuation and grammar appropriate throughout. Minor errors extremely rare.
+Band 8: Wide range of structures flexibly and accurately used. Majority of sentences error-free. Occasional non-systematic errors, minimal impact.
+Band 7: Variety of complex structures with some flexibility and accuracy. Grammar and punctuation generally well controlled. Error-free sentences frequent. A few errors may persist but do not impede.
+Band 6: Mix of simple and complex sentence forms, flexibility limited. Complex structures not as accurate as simple. Grammar/punctuation errors occur but rarely impede.
+Band 5: Range of structures limited and rather repetitive. Complex sentences tend to be faulty. Grammatical errors frequent, may cause difficulty. Punctuation may be faulty.
+Band 4: Very limited range. Subordinate clauses rare, simple sentences predominate. Grammatical errors frequent, may impede meaning. Punctuation often faulty.
+` : `
+OFFICIAL IELTS WRITING TASK 2 BAND DESCRIPTORS (May 2023):
+
+TASK RESPONSE:
+Band 9: Prompt appropriately addressed and explored in depth. Clear and fully developed position directly answers the question. Ideas relevant, fully extended and well supported. Lapses extremely rare.
+Band 8: Prompt appropriately and sufficiently addressed. Clear and well-developed position. Ideas relevant, well extended and supported. Occasional omissions/lapses.
+Band 7: Main parts of prompt appropriately addressed. Clear and developed position. Main ideas extended and supported but may over-generalise or lack focus/precision.
+Band 6: Main parts addressed (some more fully than others). Appropriate format. Position directly relevant but conclusions may be unclear/unjustified/repetitive. Main ideas relevant but some insufficiently developed.
+Band 5: Main parts incompletely addressed. Format may be inappropriate. Position expressed but development not always clear. Main ideas limited and not sufficiently developed. May have irrelevant detail and repetition.
+Band 4: Prompt tackled minimally or answer is tangential. Position discernible but reader must read carefully. Main ideas difficult to identify and may lack relevance/clarity/support. Large parts may be repetitive.
+Band 3: No part adequately addressed or prompt misunderstood. No relevant position. Few ideas, may be irrelevant or insufficiently developed.
+
+COHERENCE & COHESION:
+Band 9: Followed effortlessly. Cohesion very rarely attracts attention. Lapses minimal. Paragraphing skilfully managed.
+Band 8: Followed with ease. Ideas logically sequenced, cohesion well managed. Occasional lapses. Paragraphing used sufficiently and appropriately.
+Band 7: Ideas logically organised, clear progression throughout (few minor lapses). Range of cohesive devices including reference/substitution used flexibly but with some inaccuracies. Paragraphing generally effective.
+Band 6: Generally arranged coherently, clear overall progression. Cohesive devices to some effect but cohesion within/between sentences may be faulty or mechanical. Paragraphing may not always be logical.
+Band 5: Organisation evident but not wholly logical, may lack overall progression. Relationship of ideas can be followed but not fluently linked. Limited/overuse of cohesive devices. Paragraphing may be inadequate or missing.
+Band 4: Ideas evident but not arranged coherently, no clear progression. Relationships unclear/inadequately marked. Basic cohesive devices may be inaccurate/repetitive. May be no paragraphing.
+
+LEXICAL RESOURCE:
+Band 9: Full flexibility and precise use widely evident. Wide range used accurately and appropriately with very natural and sophisticated control. Minor spelling errors extremely rare.
+Band 8: Wide resource fluently and flexibly used to convey precise meanings. Skilful use of uncommon/idiomatic items. Occasional inaccuracies. Occasional spelling errors, minimal impact.
+Band 7: Sufficient for some flexibility and precision. Some ability to use less common/idiomatic items. Awareness of style and collocation, though inappropriacies occur. Only a few spelling errors.
+Band 6: Generally adequate and appropriate. Meaning generally clear despite restricted range or lack of precision. Some spelling errors but do not impede communication.
+Band 5: Limited but minimally adequate. Simple vocabulary may be used accurately but limited variation. Frequent lapses in word choice appropriacy. Spelling errors may cause difficulty.
+Band 4: Limited and inadequate. Vocabulary basic, may be used repetitively. Inappropriate lexical chunks. Word choice and spelling errors may impede meaning.
+
+GRAMMATICAL RANGE & ACCURACY:
+Band 9: Wide range of structures with full flexibility and control. Punctuation and grammar appropriate throughout. Minor errors extremely rare.
+Band 8: Wide range of structures flexibly and accurately used. Majority of sentences error-free. Occasional non-systematic errors, minimal impact.
+Band 7: Variety of complex structures with some flexibility and accuracy. Grammar and punctuation generally well controlled. Error-free sentences frequent. A few errors do not impede communication.
+Band 6: Mix of simple and complex sentence forms, flexibility limited. Complex structures not as accurate as simple. Grammar/punctuation errors occur but rarely impede.
+Band 5: Range of structures limited and rather repetitive. Complex sentences tend to be faulty. Grammatical errors frequent, may cause difficulty. Punctuation may be faulty.
+Band 4: Very limited range. Subordinate clauses rare, simple sentences predominate. Grammatical errors frequent, may impede meaning. Punctuation often faulty.
+`;
+
+  const prompt=`You are a certified IELTS examiner with 15+ years of experience. Your task is to evaluate the following IELTS Writing Task ${task} essay with maximum precision — targeting 90-95% accuracy compared to official IELTS scoring.
+
+SCORING METHODOLOGY:
+1. Read the entire essay carefully before scoring anything.
+2. For each criterion, find the band descriptor that BEST matches the essay — the essay must FULLY fit the positive features at that level.
+3. Use half-band scores (e.g. 6.5) when the essay is between two bands.
+4. The overall_band is the AVERAGE of the 4 criterion scores, rounded to the nearest 0.5.
+5. Be STRICT and realistic — do not inflate scores. Most test-takers score between 5.5-7.0.
+
+${descriptors}
+
+ESSAY QUESTION/TOPIC:
+"""${currentTopic || "(No specific topic provided)"}
+"""
+
+ESSAY TYPE: Task ${task} — ${t.name}
+WORD COUNT: ${document.getElementById('essayTA').value.trim().split(/\s+/).filter(Boolean).length} words
+
+ESSAY TO EVALUATE:
+"""${essay}"""
+
+SCORING INSTRUCTIONS:
+- CRITICAL: Evaluate how well the essay addresses THE SPECIFIC TOPIC/QUESTION given above. An essay that ignores the topic must score lower on Task Achievement/Response.
+- task_score: Score for ${task===1?'Task Achievement':'Task Response'} based on descriptors above
+- coherence_score: Score for Coherence & Cohesion based on descriptors above  
+- lexical_score: Score for Lexical Resource based on descriptors above
+- grammar_score: Score for Grammatical Range & Accuracy based on descriptors above
+- overall_band: Average of all 4 scores, rounded to nearest 0.5
+- Each feedback must cite SPECIFIC examples from the essay (quote actual words/sentences the writer used)
+- strengths: 3 specific strengths with examples from the essay
+- improvements: 3 specific, actionable improvements referencing actual weaknesses found
+- next_steps: 3 concrete practice recommendations tailored to this writer's level
+
+Respond ONLY with a valid JSON object. No markdown, no code fences, no extra text:
+{
+  "overall_band": 6.5,
+  "task_score": 6,
+  "coherence_score": 7,
+  "lexical_score": 6,
+  "grammar_score": 7,
+  "task_feedback": "Specific 2-3 sentence feedback citing actual essay content.",
+  "coherence_feedback": "Specific 2-3 sentence feedback citing actual essay content.",
+  "lexical_feedback": "Specific 2-3 sentence feedback citing actual essay content.",
+  "grammar_feedback": "Specific 2-3 sentence feedback citing actual essay content.",
+  "strengths": ["specific strength with example from essay", "specific strength with example", "specific strength with example"],
+  "improvements": ["specific actionable improvement referencing actual weakness", "specific improvement", "specific improvement"],
+  "next_steps": ["concrete practice step tailored to this writer", "concrete step", "concrete step"],
+  "overall_comment": "2-3 sentence honest professional assessment referencing the actual essay quality."
+}
+Valid band scores: 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9`;
+
+  try{
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {method:'POST',headers:{'Content-Type':'application/json'},
+       body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:.15}})});
+    if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'API xatosi');}
+    const data=await r.json();
+    const raw=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
+    const clean=raw.replace(/```json\n?|```/g,'').trim();
+    hideAnalysis();
+    await new Promise(r=>setTimeout(r,700));
+    renderResults(JSON.parse(clean));
+    goStep(3);
+  } catch(err){
+    hideAnalysis();
+    await new Promise(r=>setTimeout(r,500));
+    document.getElementById('resArea').innerHTML=`<div class="err-card"><div class="err-icon">⚠️</div><div class="err-body"><strong>Xato yuz berdi</strong>${err.message}<br><small>API key va internet ulanishini tekshiring.</small></div></div>`;
+    goStep(3);
+  } finally{
+    document.getElementById('checkBtn').disabled=false;
+    document.getElementById('spinEl').classList.remove('on');
+    document.getElementById('checkTxt').textContent='Baholash →';
+  }
+}
+
+/* ─── RENDER ─────────────────────────────────── */
+function renderResults(r){
+  const titleEl = document.getElementById('resultTitle');
+  if(titleEl && studentFirst) titleEl.textContent = studentFirst+' '+studentLast+"ning natijasi";
+  const wc=document.getElementById('essayTA').value.trim().split(/\s+/).filter(Boolean).length;
+  const elapsed=3600-timerSec, em=Math.floor(elapsed/60), es=elapsed%60;
+  const t=TYPES[task].find(x=>x.id===sel);
+  const band=r.overall_band;
+
+  const bandClass = band>=8.5?'band9':band>=7.5?'band8':band>=6.5?'band7':band>=5?'band6':band>=4?'band5':'band4';
+  const circumference=376.99;
+  const dashOffset=circumference*(1-(band/9));
+
+  const crits=[
+    {name: task===2?'Task Response':'Task Achievement', val:r.task_score,      col:CRIT_COLORS[0], ico:'📝', cls:'c0', fb:r.task_feedback},
+    {name:'Coherence & Cohesion',                       val:r.coherence_score, col:CRIT_COLORS[1], ico:'🔗', cls:'c1', fb:r.coherence_feedback},
+    {name:'Lexical Resource',                           val:r.lexical_score,   col:CRIT_COLORS[2], ico:'📚', cls:'c2', fb:r.lexical_feedback},
+    {name:'Grammatical Range',                          val:r.grammar_score,   col:CRIT_COLORS[3], ico:'✏️', cls:'c3', fb:r.grammar_feedback},
+  ];
+
+  // Motivational message logic
+  let motiClass, motiIcon, motiH, motiMsg, motiTip;
+  if(band>=8){
+    motiClass='moti-9'; motiIcon='🏆';
+    motiH=`Ushbu natija ajoyib — Band ${band}!`;
+    motiMsg=`Siz yuqori darajadagi ingliz tili mahoratini namoyish etdingiz. Bu natija ko'plab universitetlar va kompaniyalar talabini qondiradi. Mehnat va intizomingiz meva bermoqda!`;
+    motiTip=`💡 Pro maslahat: Band 9 ga erishish uchun idiomatic iboralar, complex nominal phrases va cohesive devices'ni yanada nozikroq ishlatishga e'tibor bering.`;
+  } else if(band>=7){
+    motiClass='moti-9'; motiIcon='🎯';
+    motiH=`Yaxshi natija — Band ${band}!`;
+    motiMsg=`Siz "Good User" darajasiga erishdingiz. Bu aksariyat universitetlar uchun yetarli. Yana bir oz mehnat bilan Band 8 ga ham erishishingiz mumkin!`;
+    motiTip=`💡 Keyingi bosqich: Vocabulary'ni chuqurlashtiring — academic word list'dan 5 ta yangi ibora har kuni o'rganing.`;
+  } else if(band>=6){
+    motiClass='moti-7'; motiIcon='📈';
+    motiH=`Yaxshi yo'ldasiz — Band ${band}`;
+    motiMsg=`"Competent User" darajasi — bu jiddiy o'quvchi natijasidir. Siz asosiy grammatika va leksikani yaxshi bilasiz. Kuchli tomonlaringizni saqlab, zaif joylarni maqsadli ravishda mashq qiling.`;
+    motiTip=`💡 Eng tez o'sish: Coherence bo'limiga e'tibor bering — topic sentences, linking words va paragraph structure ustida ishlang.`;
+  } else if(band>=5){
+    motiClass='moti-5'; motiIcon='🔥';
+    motiH=`Davom eting — Band ${band}`;
+    motiMsg=`Siz yaxshi boshlang'ich nuqtadasiz. Band 6-7 ga o'tish uchun tizimli mashq kerak. Har kuni yozish odatini shakllantiring — progress tez ko'rinadi!`;
+    motiTip=`💡 Muhim: Har hafta kamida 3 ta essay yozing. Har essay'dan keyin xatolaringizni tahlil qiling va qayta yozing.`;
+  } else {
+    motiClass='moti-low'; motiIcon='💪';
+    motiH=`Bu — boshlang'ich nuqta, Band ${band}`;
+    motiMsg=`Hamma ham bir yerdan boshlagan. Eng muhimi — hozir ishlashni boshlash. Asosiy grammatika va keng vocabulary — bu ikki narsa natijangizni tez oshiradi.`;
+    motiTip=`💡 Birinchi qadam: IELTS Writing Task 2 uchun 5 ta asosiy essay strukturasini yodlang va har birini yozing.`;
+  }
+
+  const scaleLeft = ((band-1)/8*100).toFixed(1);
+
+  document.getElementById('resArea').innerHTML=`
+
+    <!-- HERO SCORE CARD -->
+    <div class="result-hero">
+      <div class="hero-body">
+        <!-- Score donut -->
+        <div class="hero-score-side">
+          <div class="score-donut">
+            <svg viewBox="0 0 140 140">
+              <circle class="sd-bg" cx="70" cy="70" r="60" transform="rotate(-90 70 70)"/>
+              <circle class="sd-fg ${bandClass}" id="sdFg" cx="70" cy="70" r="60" transform="rotate(-90 70 70)" style="stroke-dashoffset:${circumference}"/>
+            </svg>
+            <div class="score-inner">
+              <div class="si-num">${band}</div>
+              <div class="si-lbl">BAND</div>
+            </div>
+          </div>
+          <div class="score-label">${BAND_NAME[band]||''}</div>
+        </div>
+
+        <!-- Criteria bars -->
+        <div class="hero-criteria">
+          ${crits.map(c=>`
+            <div class="crit-row">
+              <div class="crit-top">
+                <div class="crit-name">${c.name}</div>
+                <div class="crit-score-badge">${c.val}</div>
+              </div>
+              <div class="crit-track">
+                <div class="crit-bar" style="width:0%;background:${c.col}" data-w="${(c.val/9*100).toFixed(1)}%"></div>
+              </div>
+            </div>`).join('')}
+        </div>
+
+        <!-- Radar chart -->
+        <div class="hero-radar">
+          <canvas id="radar" width="180" height="180"></canvas>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-val">${wc}</div><div class="hstat-key">So'z yozildi</div></div>
+        <div class="hstat"><div class="hstat-val">${em}:${String(es).padStart(2,'0')}</div><div class="hstat-key">Vaqt sarflandi</div></div>
+        <div class="hstat"><div class="hstat-val">Task ${task}</div><div class="hstat-key">${t.name}</div></div>
+        <div class="hstat"><div class="hstat-val">${band >= 7 ? '✓ Maqsadga' : band >= 6 ? '⟳ Yaqin' : '↑ O\'sish'}</div><div class="hstat-key">Holat</div></div>
+      </div>
+    </div>
+
+    <!-- BAND SCALE -->
+    <div class="scale-card">
+      <div class="scale-title">IELTS Band Scale — Sizning o'rningiz</div>
+      <div class="scale-track">
+        <div class="scale-marker" id="scaleMarker" style="left:${scaleLeft}%">
+          <div class="sm-label">Band ${band}</div>
+          <div class="sm-arrow"></div>
+        </div>
+      </div>
+      <div class="scale-nums">
+        ${[1,2,3,4,5,6,7,8,9].map(n=>`<div class="sn-item">${n}</div>`).join('')}
+      </div>
+    </div>
+
+    <!-- MOTIVATIONAL BANNER -->
+    <div class="moti-banner ${motiClass}">
+      <div class="moti-icon-wrap">${motiIcon}</div>
+      <div class="moti-content">
+        <div class="moti-heading">${motiH}</div>
+        <div class="moti-body">${motiMsg}</div>
+        <div class="moti-tip ${motiClass}">${motiTip}</div>
+      </div>
+    </div>
+
+    <!-- NEXT STEPS -->
+    <div class="next-steps">
+      <div class="ns-title">→ Keyingi qadamlar</div>
+      <div class="ns-grid">
+        ${(r.next_steps||[]).map((s,i)=>`
+          <div class="ns-card">
+            <div class="ns-num">${i+1}</div>
+            <div class="ns-label">Qadam ${i+1}</div>
+            <div class="ns-desc">${s}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- STRENGTHS & IMPROVEMENTS -->
+    <div class="section-hd">Tahlil natijalari</div>
+    <div class="si-grid">
+      <div class="si-card">
+        <div class="si-title green">✓ Kuchli tomonlar</div>
+        <div class="si-items">${(r.strengths||[]).map(s=>`
+          <div class="si-item">
+            <div class="si-bullet green">✓</div>
+            <div class="si-text">${s}</div>
+          </div>`).join('')}</div>
+      </div>
+      <div class="si-card">
+        <div class="si-title red">↑ Yaxshilash kerak</div>
+        <div class="si-items">${(r.improvements||[]).map(s=>`
+          <div class="si-item">
+            <div class="si-bullet red">!</div>
+            <div class="si-text">${s}</div>
+          </div>`).join('')}</div>
+      </div>
+    </div>
+
+    <!-- CRITERIA FEEDBACK -->
+    <div class="section-hd">Batafsil baholash</div>
+    <div class="fb-grid">
+      ${crits.map(c=>`
+        <div class="fb-card ${c.cls}">
+          <div class="fb-head">
+            <div class="fb-icon ${c.cls}">${c.ico}</div>
+            <div class="fb-title">${c.name}</div>
+            <div class="fb-band-pill">${c.val}</div>
+          </div>
+          <div class="fb-text">${c.fb}</div>
+        </div>`).join('')}
+    </div>
+  `;
+
+  // Save to history
+  addToHistory(r, document.getElementById('essayTA').value.trim());
+
+  // Animate donut
+  requestAnimationFrame(()=>setTimeout(()=>{
+    document.getElementById('sdFg').style.strokeDashoffset = dashOffset;
+    document.querySelectorAll('.crit-bar').forEach(el=>{el.style.width=el.dataset.w;});
+    drawRadar(crits.map(c=>c.val));
+  },100));
+}
+
+/* ─── RADAR CHART ────────────────────────────── */
+function drawRadar(scores){
+  const canvas=document.getElementById('radar');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const cx=90,cy=90,r=70;
+  const labels=['Task','Coherence','Lexical','Grammar'];
+  const n=4;
+  ctx.clearRect(0,0,180,180);
+
+  // Draw grid
+  for(let lvl=1;lvl<=9;lvl++){
+    const rf=r*(lvl/9);
+    ctx.beginPath();
+    for(let i=0;i<n;i++){
+      const ang=(i/n)*Math.PI*2-Math.PI/2;
+      const x=cx+rf*Math.cos(ang), y=cy+rf*Math.sin(ang);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle=lvl%3===0?'rgba(255,255,255,.12)':'rgba(255,255,255,.05)';
+    ctx.lineWidth=1; ctx.stroke();
+  }
+
+  // Draw axes
+  for(let i=0;i<n;i++){
+    const ang=(i/n)*Math.PI*2-Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+r*Math.cos(ang),cy+r*Math.sin(ang));
+    ctx.strokeStyle='rgba(255,255,255,.15)';
+    ctx.lineWidth=1; ctx.stroke();
+  }
+
+  // Draw data
+  ctx.beginPath();
+  for(let i=0;i<n;i++){
+    const ang=(i/n)*Math.PI*2-Math.PI/2;
+    const rf=r*(scores[i]/9);
+    const x=cx+rf*Math.cos(ang), y=cy+rf*Math.sin(ang);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle='rgba(59,130,246,.25)';
+  ctx.fill();
+  ctx.strokeStyle='#60A5FA';
+  ctx.lineWidth=2; ctx.stroke();
+
+  // Draw dots
+  const dotColors=['#3B82F6','#8B5CF6','#06B6D4','#F59E0B'];
+  for(let i=0;i<n;i++){
+    const ang=(i/n)*Math.PI*2-Math.PI/2;
+    const rf=r*(scores[i]/9);
+    const x=cx+rf*Math.cos(ang), y=cy+rf*Math.sin(ang);
+    ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fillStyle=dotColors[i]; ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+  }
+
+  // Labels
+  ctx.font='bold 10px Plus Jakarta Sans,sans-serif';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  for(let i=0;i<n;i++){
+    const ang=(i/n)*Math.PI*2-Math.PI/2;
+    const off=r+14;
+    const x=cx+off*Math.cos(ang), y=cy+off*Math.sin(ang);
+    ctx.fillStyle='rgba(255,255,255,.55)';
+    ctx.fillText(labels[i],x,y);
+  }
+}
+
+
+/* ─── HISTORY ────────────────────────────────── */
+const HIST_KEY = 'ielts_pro_history';
+
+function getHistory(){
+  try{ return JSON.parse(localStorage.getItem(HIST_KEY)||'[]'); }
+  catch(e){ return []; }
+}
+function saveHistory(arr){
+  localStorage.setItem(HIST_KEY, JSON.stringify(arr));
+}
+function updateHistBadge(){
+  const n = getHistory().length;
+  document.getElementById('histBadge').textContent = n;
+}
+function addToHistory(result, essayText){
+  const arr = getHistory();
+  const entry = {
+    id: Date.now(),
+    date: new Date().toLocaleString('uz-UZ'),
+    task: task,
+    typeName: (TYPES[task].find(x=>x.id===sel)||{name:''}).name,
+    band: result.overall_band,
+    task_score: result.task_score,
+    coherence_score: result.coherence_score,
+    lexical_score: result.lexical_score,
+    grammar_score: result.grammar_score,
+    overall_comment: result.overall_comment,
+    topic: currentTopic,
+    essay: essayText.slice(0, 300),
+    result: result
+  };
+  arr.unshift(entry);
+  if(arr.length > 50) arr.pop();
+  saveHistory(arr);
+  updateHistBadge();
+}
+function openHist(){
+  renderHistDrawer();
+  document.getElementById('histDrawer').classList.add('open');
+  document.getElementById('histOverlay').classList.add('on');
+}
+function closeHist(){
+  document.getElementById('histDrawer').classList.remove('open');
+  document.getElementById('histOverlay').classList.remove('on');
+}
+function renderHistDrawer(){
+  const arr = getHistory();
+  const body = document.getElementById('histBody');
+  if(!arr.length){
+    body.innerHTML = `<div class="hist-empty"><div class="hist-empty-ico">📭</div><div class="hist-empty-txt">Hali hech qanday test saqlanmagan.<br>Essay yozib baholang!</div></div>`;
+    return;
+  }
+  const BAND_COL = {9:'#059669',8:'#2563EB',7:'#7C3AED',6:'#D97706',5:'#EA580C',4:'#DC2626'};
+  body.innerHTML = arr.map((e,i)=>`
+    <div class="hist-item" onclick="loadHistItem(${i})">
+      <button class="hist-del" onclick="event.stopPropagation();deleteHistItem(${e.id})">✕</button>
+      <div class="hist-item-top">
+        <div>
+          <div class="hist-band" style="color:${BAND_COL[Math.floor(e.band)]||'#6B7280'}">${e.band}</div>
+          <div class="hist-band-lbl">BAND SCORE</div>
+        </div>
+        <div class="hist-meta">
+          <strong>Task ${e.task} — ${e.typeName}</strong>
+          ${e.date}
+        </div>
+      </div>
+      ${e.topic ? `<div style="font-size:11px;color:#6B7280;margin-bottom:8px;line-height:1.5;font-style:italic">"${e.topic.slice(0,80)}…"</div>` : ''}
+      <div class="hist-scores">
+        <span class="hist-score-chip">📝 ${e.task_score}</span>
+        <span class="hist-score-chip">🔗 ${e.coherence_score}</span>
+        <span class="hist-score-chip">📚 ${e.lexical_score}</span>
+        <span class="hist-score-chip">✏️ ${e.grammar_score}</span>
+      </div>
+      ${e.topic ? `<div style="margin-top:8px;font-size:11px;color:var(--muted);line-height:1.5;font-style:italic">${e.topic.slice(0,100)}…</div>` : ''}
+    </div>`).join('');
+}
+function loadHistItem(idx){
+  const arr = getHistory();
+  const e = arr[idx];
+  if(!e) return;
+  closeHist();
+  task = e.task;
+  sel = null;
+  selectedCat = e.catId || '';
+  currentTopic = e.topic || '';
+  const found = TYPES[task].find(x=>x.name===e.typeName);
+  if(found) sel = found.id;
+  // Show p3 directly without goStep guard
+  document.getElementById('essayTA').value = e.essay;
+  ['p1','p2','p3'].forEach((id,i)=>document.getElementById(id).style.display=i===2?'block':'none');
+  [1,2,3].forEach(i=>document.getElementById('sb'+i).className='sb-step'+(i===3?' active':i<3?' done':''));
+  renderResults(e.result);
+}
+function deleteHistItem(id){
+  let arr = getHistory().filter(e=>e.id!==id);
+  saveHistory(arr);
+  updateHistBadge();
+  renderHistDrawer();
+}
+function clearHistory(){
+  if(!confirm("Barcha tarix o'chirilsinmi?")) return;
+  saveHistory([]);
+  updateHistBadge();
+  renderHistDrawer();
+}
+
+/* ─── PDF DOWNLOAD ───────────────────────────── */
+async function downloadPDF(){
+  const btn = document.getElementById('pdfBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Tayyorlanmoqda...';
+  try {
+    const el = document.getElementById('resArea');
+    const opt = {
+      margin: [10, 10, 10, 10],
+      filename: `IELTS_Natija_${new Date().toLocaleDateString('uz-UZ').replace(/[.]/g,'-')}.pdf`,
+      image: { type: 'jpeg', quality: 0.95 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#F8F7F4' },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    await html2pdf().set(opt).from(el).save();
+  } catch(e){
+    alert('PDF yaratishda xato: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '⬇ PDF yuklab olish';
+  }
+}
+
+/* ─── FRESH START ────────────────────────────── */
+
+function freshStart(){
+  closeOv(); sel=null; task=1; currentTopic='';
+  document.getElementById('essayTA').value='';
+  document.getElementById('tt1').classList.add('active');
+  document.getElementById('tt2').classList.remove('active');
+  resetTimer(); renderTypes(); lockGo();
+  ['p1','p2','p3'].forEach((id,i)=>document.getElementById(id).style.display=i===0?'block':'none');
+  [1,2,3].forEach(i=>document.getElementById('sb'+i).className='sb-step'+(i===1?' active':''));
+}
+
+/* ─── INIT ───────────────────────────────────── */
+renderTypes();
+updateTimerUI();
+updateHistBadge();
+</script>
+</body>
+</html>
