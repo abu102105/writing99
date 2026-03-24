@@ -1048,7 +1048,7 @@ canvas#radar { display: block; }
         <circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5"/>
         <path d="M3.5 17c0-3.314 2.91-6 6.5-6s6.5 2.686 6.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
-      <input class="nm-input" id="nmFirst" type="text" placeholder="Masalan: Kamol" maxlength="30" oninput="checkNmBtn()" onkeydown="if(event.key==='Enter')document.getElementById('nmLast').focus()">
+      <input class="nm-input" id="nmFirst" type="text" placeholder="Masalan: Shohrux" maxlength="30" oninput="checkNmBtn()" onkeydown="if(event.key==='Enter')document.getElementById('nmLast').focus()">
     </div>
     <div class="nm-field-wrap">
       <label class="nm-label">Familiya</label>
@@ -1056,7 +1056,7 @@ canvas#radar { display: block; }
         <rect x="3" y="4" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
         <path d="M7 8h6M7 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
-      <input class="nm-input" id="nmLast" type="text" placeholder="Masalan: Toshmatov" maxlength="30" oninput="checkNmBtn()" onkeydown="if(event.key==='Enter')startSession()">
+      <input class="nm-input" id="nmLast" type="text" placeholder="Masalan: Komilov" maxlength="30" oninput="checkNmBtn()" onkeydown="if(event.key==='Enter')startSession()">
     </div>
     <button class="nm-btn" id="nmBtn" onclick="startSession()" disabled>
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -1863,12 +1863,14 @@ function hideAnalysis(){
 }
 
 /* ─── STATE ─────────────────────────────────── */
-// API key: sessionStorage'dan yuklash (tab yopilganda o'chadi - xavfsizroq)
-let apiKey = sessionStorage.getItem('_ik') || '', task=1, sel=null;
-if(apiKey) {
-  document.getElementById('apiOk').classList.add('on');
-  setTimeout(()=>document.getElementById('apiStrip').classList.add('gone'), 100);
-}
+const _GROQ_DEFAULT = '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';
+let apiKey = _GROQ_DEFAULT, task=1, sel=null;
+document.addEventListener('DOMContentLoaded',()=>{
+  const strip=document.getElementById('apiStrip');
+  if(strip) strip.classList.add('gone');
+  const ok=document.getElementById('apiOk');
+  if(ok) ok.classList.add('on');
+});
 let timerSec=3600, timerOn=false, timerIv=null;
 
 /* ─── TIMER ──────────────────────────────────── */
@@ -1898,19 +1900,8 @@ function resetTimer(){ clearInterval(timerIv); timerOn=false; timerSec=3600; doc
 function closeOv(){ document.getElementById('timeOverlay').classList.remove('on'); }
 
 /* ─── API KEY ──────────────────────────────── */
-function saveKey(){
-  const v=document.getElementById('apiField').value.trim();
-  if(!v)return; apiKey=v;
-  sessionStorage.setItem('_ik', v);
-  document.getElementById('apiOk').classList.add('on');
-  setTimeout(()=>document.getElementById('apiStrip').classList.add('gone'),1300);
-}
-function clearApiKey(){
-  apiKey=''; sessionStorage.removeItem('_ik');
-  document.getElementById('apiStrip').classList.remove('gone');
-  document.getElementById('apiField').value='';
-  document.getElementById('apiOk').classList.remove('on');
-}
+function saveKey(){ /* Key is embedded */ }
+function clearApiKey(){ /* Key is embedded */ }
 
 /* ─── TASK / TYPE ────────────────────────────── */
 function setTask(n){
@@ -2542,5 +2533,9 @@ renderTypes();
 updateTimerUI();
 updateHistBadge();
 </script>
+<div style="text-align:center;padding:18px 0 24px;font-size:.7rem;color:#3a3f4e;font-family:'IBM Plex Mono',monospace;letter-spacing:1.5px;">
+  Designed by <span style="color:#4f7ef7;font-weight:700;">Abubakr</span> · 2026
+</div>
+
 </body>
 </html>
