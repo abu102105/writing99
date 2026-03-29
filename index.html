@@ -214,6 +214,29 @@ textarea.inp{resize:none;line-height:1.8;min-height:240px;font-size:15px}
   .page{padding:24px 20px 48px}
   .hero-content{padding:60px 24px 48px}
 }
+
+/* ── MOTIVATSIYA PARI ─────────────── */
+#fairy-wrap{position:fixed;bottom:80px;right:14px;z-index:200;display:flex;flex-direction:column;align-items:flex-end;gap:8px;pointer-events:none}
+#fairy-wrap.hidden{display:none}
+.fairy-bubble{background:linear-gradient(135deg,#1e0a3c,#2d1155);border:1.5px solid rgba(167,139,250,.45);border-radius:16px 16px 4px 16px;padding:12px 14px;max-width:230px;font-size:13px;line-height:1.6;color:#e8d9ff;box-shadow:0 8px 32px rgba(124,58,237,.35);pointer-events:all;position:relative;animation:bubbleIn .3s cubic-bezier(.34,1.56,.64,1)}
+.fairy-bubble::after{content:'';position:absolute;bottom:-10px;right:18px;border:5px solid transparent;border-top-color:#2d1155}
+.fairy-close{position:absolute;top:7px;right:9px;background:none;border:none;color:rgba(167,139,250,.6);cursor:pointer;font-size:16px;line-height:1;padding:0;pointer-events:all}
+.fairy-close:hover{color:#a78bfa}
+.fairy-char{width:56px;height:56px;cursor:pointer;pointer-events:all;filter:drop-shadow(0 0 10px rgba(167,139,250,.6));animation:fairyFloat 3s ease-in-out infinite}
+.fairy-char:hover{filter:drop-shadow(0 0 18px rgba(167,139,250,.9))}
+.fairy-btn{background:none;border:none;padding:0;cursor:pointer;pointer-events:all;display:block}
+.fairy-dot{position:fixed;bottom:86px;right:17px;z-index:199;width:52px;height:52px;cursor:pointer;filter:drop-shadow(0 0 8px rgba(167,139,250,.5));animation:fairyFloat 3s ease-in-out infinite;pointer-events:all}
+.fairy-dot:hover{filter:drop-shadow(0 0 16px rgba(167,139,250,.85))}
+@keyframes fairyFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+@keyframes bubbleIn{from{opacity:0;transform:scale(.7) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.fairy-sparkle{position:fixed;bottom:130px;right:12px;z-index:198;pointer-events:none;animation:sparkleAnim 2s ease-in-out infinite}
+@keyframes sparkleAnim{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.3) rotate(20deg)}}
+
+/* ── TEACHER MOTIV ─────────────────── */
+.motiv-card{background:linear-gradient(135deg,#0f0520,#1a0a35);border:1.5px solid rgba(167,139,250,.3);border-radius:var(--r-lg);padding:20px}
+.motiv-preview{background:rgba(124,58,237,.12);border:1px solid rgba(167,139,250,.2);border-radius:12px;padding:12px;font-size:13px;color:#c4b5fd;line-height:1.6;margin-top:12px;min-height:48px;font-style:italic}
+.student-motiv-badge{background:rgba(124,58,237,.13);border:1px solid rgba(167,139,250,.25);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer;transition:all .15s}
+.student-motiv-badge:hover{background:rgba(124,58,237,.22);border-color:rgba(167,139,250,.45)}
 </style>
 </head>
 <body>
@@ -298,27 +321,443 @@ const CATS = [
 // Academic Task 1 — chart types
 const TASK1_TYPES = [
   { id:'line',    icon:'📈', label:'Line Graph',    desc:'Vaqt o\'zgarishi',    color:'#38BDF8', rgb:'56,189,248',
-    hint:'Overview da umumiy trend bering (increase/decline). Key data points va peak/trough larni qo\'shing.',
-    prompts:['global internet usage 2000-2020','CO2 emissions by country 1990-2020','average temperature changes over decades'] },
+    hint:'Overview da umumiy trend bering (rise/fall/fluctuate). Peak va trough larni sanani aniq ayt. So\'nggi yil holatini xulosada ber.' },
   { id:'bar',     icon:'📊', label:'Bar Chart',     desc:'Kategoriya solishtir', color:'#C8102E', rgb:'200,16,46',
-    hint:'Overview da eng yuqori va eng past kategoriyalarni ayting. Raqamlarni taqqoslang.',
-    prompts:['employment rates by sector','sports participation by age group','energy consumption by source'] },
+    hint:'Overview: eng yuqori va eng past kategoriyalarni birinchi ayt. Har kategoriya uchun aniq raqam kel­tir va farqni hisobla.' },
   { id:'pie',     icon:'🥧', label:'Pie Chart',     desc:'Foiz ulushlar',       color:'#7C3AED', rgb:'124,58,237',
-    hint:'Eng katta va eng kichik ulushni ayt. Foizlarni aniq keltiring.',
-    prompts:['household expenditure breakdown','electricity generation by source','population distribution by age'] },
+    hint:'Eng katta ulushdan boshlang. Foizlarni aniq keltiring. Kichik ulushlarni "combined" qilib ifodalang. Jami 100% bo\'lishini tekshiring.' },
   { id:'map',     icon:'🗺️', label:'Map',           desc:'Joy o\'zgarishi',     color:'#059669', rgb:'5,150,105',
-    hint:'Before/after o\'zgarishlarni tavsifla: built, demolished, relocated, extended, replaced.',
-    prompts:['town development plan before and after','university campus changes','coastal area before and now'] },
+    hint:'Before/after o\'zgarishlarni tasvirla: built, demolished, relocated, extended, replaced, remained. Yo\'nalishlarni (north/south/east/west) ishlat.' },
   { id:'process', icon:'⚙️', label:'Process',       desc:'Jarayon diagramma',  color:'#D97706', rgb:'217,119,6',
-    hint:'Passive voice ishlating. Sequencing words: firstly, then, after that, finally.',
-    prompts:['water treatment process','how paper is manufactured','life cycle of a butterfly'] },
+    hint:'Passive voice ishlat (is heated, are mixed). Sequencing: firstly, then, after that, finally. Har bosqichni alohida ifodalang.' },
   { id:'table',   icon:'📋', label:'Table',         desc:'Raqamli jadval',      color:'#0891B2', rgb:'8,145,178',
-    hint:'Eng muhim raqamlar va o\'zgarishlarni tanlang. Hammasi haqida yozmaslik kerak.',
-    prompts:['tourist arrivals by country','GDP growth rates comparison','university rankings data'] },
+    hint:'Eng muhim trend va farqlarni tanlang — hamma raqamni yozmang. Kategoriyalar o\'rtasidagi eng katta tafovutni ajratib ko\'rsating.' },
   { id:'mixed',   icon:'🔀', label:'Mixed (2ta)',   desc:'2 grafik birga',      color:'#BE185D', rgb:'190,24,93',
-    hint:'Har ikkala grafikni overview da qamrab oling. Ularni o\'zaro bog\'lashga harakat qiling.',
-    prompts:['line graph and bar chart showing sales and profit','pie chart and table about transport'] },
+    hint:'Har ikkala grafikni overview da qamra. Ular o\'rtasidagi bog\'liqlikni ko\'rsating. Har grafikka 1 paragraf ajrating.' },
 ];
+
+/* ══════════════════════════════════════════
+   📚 REAL IELTS TASK 1 TOPIC BANK
+══════════════════════════════════════════ */
+const REAL_TOPICS = {
+  line: [
+    {
+      topic: "The graph below shows the percentage of people using the internet in three different countries between 1999 and 2009.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Canada: rose from 35% (1999) to 88% (2009). Mexico: increased from 5% to 40%. Japan: grew steadily from 22% to 78%. All three showed consistent growth with Canada consistently highest.",
+      category: "Academic Task 1 — Line Graph",
+      tip_uz: "Umumiy trend: uchala mamlakat ham o'sgan. Canada eng yuqori, Mexico eng past. 2009-yildagi yakuniy raqamlarni solishtiring va farqni hisoblang.",
+      chartData: {type:'line', title:'Internet users (% of population)',
+        labels:['1999','2001','2003','2005','2007','2009'],
+        series:[
+          {name:'Canada', data:[35,47,58,68,76,88], color:'#C8102E'},
+          {name:'Japan',  data:[22,33,45,57,67,78], color:'#38BDF8'},
+          {name:'Mexico', data:[5,8,13,20,30,40],   color:'#22C55E'}
+        ]}
+    },
+    {
+      topic: "The graph below shows the average monthly temperatures in three major cities — London, Sydney, and Toronto — over the course of a year.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "London: ranges from 4°C (Jan) to 19°C (Jul). Sydney: peaks at 26°C (Jan) and dips to 13°C (Jul) — opposite season. Toronto: -5°C (Jan) to 22°C (Jul). Sydney always warmest in Jan–Mar.",
+      category: "Academic Task 1 — Line Graph",
+      tip_uz: "Sydney Southern hemisphere bo'lgani uchun qarama-qarshi: uning eng issiq vaqti — Yanvar. Bu farqni overview da albatta aytib o'ting.",
+      chartData: {type:'line', title:'Average monthly temperature (°C)',
+        labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        series:[
+          {name:'Sydney',  data:[26,25,23,19,15,13,13,14,17,20,23,25], color:'#F59E0B'},
+          {name:'London',  data:[4,5,8,11,14,17,19,19,16,12,7,5],      color:'#C8102E'},
+          {name:'Toronto', data:[-5,-4,1,8,15,20,22,21,17,10,4,-2],    color:'#38BDF8'}
+        ]}
+    },
+    {
+      topic: "The line graph below shows the number of tourists visiting three Asian countries — Thailand, Vietnam, and Indonesia — from 2010 to 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Thailand: 15M (2010) → 40M (2019), slight dip to 38M (2020). Vietnam: 5M → 18M steady rise. Indonesia: 7M → 16M with fluctuations in 2015–16. Thailand consistently highest.",
+      category: "Academic Task 1 — Line Graph",
+      tip_uz: "Thailand doimo eng ko'p. Vietnam eng tezkor o'sdi (3.6 marta). 2020-yildagi pasayishni (COVID) qisqacha izohlang.",
+      chartData: {type:'line', title:'Tourist arrivals (millions)',
+        labels:['2010','2012','2014','2016','2018','2020'],
+        series:[
+          {name:'Thailand',  data:[15,22,27,33,38,38], color:'#C8102E'},
+          {name:'Vietnam',   data:[5,7,10,13,16,18],   color:'#22C55E'},
+          {name:'Indonesia', data:[7,8,9,11,14,16],    color:'#38BDF8'}
+        ]}
+    },
+    {
+      topic: "The graph below shows the percentage of households in owned and rented accommodation in England and Wales between 1918 and 2011.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Owner-occupied: rose from 23% (1918) to 69% (2001), then fell to 64% (2011). Rented: fell from 77% to 31% (2001), then rose slightly to 36%. Lines crossed around 1971.",
+      category: "Academic Task 1 — Line Graph",
+      tip_uz: "Ikkita chiziq taxminan 1971-yilda kesishgan — bu turning point. Overview da 'crossed' so'zini ishlating. 2001-dan keyingi o'zgarishni alohida ta'kidlang.",
+      chartData: {type:'line', title:'Accommodation type (% of households)',
+        labels:['1918','1939','1953','1961','1971','1981','1991','2001','2011'],
+        series:[
+          {name:'Owner-occupied', data:[23,31,38,44,52,57,67,69,64], color:'#22C55E'},
+          {name:'Rented',         data:[77,69,62,56,48,43,33,31,36], color:'#C8102E'}
+        ]}
+    },
+    {
+      topic: "The graph below shows cinema attendance by age group in Australia from 2000 to 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "15–24: fell from 64% to 52% (steady decline). 25–44: fluctuated between 48–58%. 45–64: rose from 30% to 45%. 65+: climbed from 18% to 38%. Youngest group always highest.",
+      category: "Academic Task 1 — Line Graph",
+      tip_uz: "Yosh guruhlar qarama-qarshi yo'nalishda: yoshlar kamaygan, keksalar ko'paygan. Bu ziddiyatni overview da ifodalang.",
+      chartData: {type:'line', title:'Cinema attendance (% of age group)',
+        labels:['2000','2004','2008','2012','2016','2020'],
+        series:[
+          {name:'15–24', data:[64,60,58,56,54,52], color:'#C8102E'},
+          {name:'25–44', data:[50,52,55,58,52,48], color:'#38BDF8'},
+          {name:'45–64', data:[30,33,36,40,43,45], color:'#F59E0B'},
+          {name:'65+',   data:[18,22,27,31,35,38], color:'#22C55E'}
+        ]}
+    },
+    {
+      topic: "The graph below shows the proportion of the population aged 65 and over in three countries from 1940 to 2040.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Japan: 5% (1940) → 14% (2000) → projected 27% (2040). Sweden: 7% → 18% → 25%. USA: 9% → 13% → 23%. Japan shows the steepest projected rise after 2000.",
+      category: "Academic Task 1 — Line Graph",
+      tip_uz: "2040-yil — kelajak proektsiya. 'Is projected to', 'is expected to' kabi modal iboralarni ishlating. Japan eng tez qariydi.",
+      chartData: {type:'line', title:'Population aged 65+ (%)',
+        labels:['1940','1960','1980','2000','2020','2040'],
+        series:[
+          {name:'Japan',  data:[5,6,9,14,21,27], color:'#C8102E'},
+          {name:'Sweden', data:[7,10,16,18,20,25], color:'#38BDF8'},
+          {name:'USA',    data:[9,9,11,13,16,23], color:'#22C55E'}
+        ]}
+    },
+    {
+      topic: "The line graph shows the amount of electricity produced from renewable sources (wind, solar, and hydroelectric) in the UK from 2010 to 2023.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Wind: grew dramatically from 10TWh (2010) to 75TWh (2023). Solar: rose from near zero to 32TWh. Hydro: remained relatively stable at 5–8TWh. Wind overtook all sources by 2015.",
+      category: "Academic Task 1 — Line Graph",
+      tip_uz: "Wind energiya eng tez o'sdi. Solar noldan ko'tarildi. Hydro deyarli o'zgarmadi. 'Dramatically', 'marginally', 'remained stable' — tegishli so'zlarni qo'llang.",
+      chartData: {type:'line', title:'UK renewable electricity (TWh)',
+        labels:['2010','2012','2014','2016','2018','2020','2023'],
+        series:[
+          {name:'Wind',  data:[10,18,30,45,58,68,75], color:'#38BDF8'},
+          {name:'Solar', data:[0,1,4,10,18,26,32],    color:'#F59E0B'},
+          {name:'Hydro', data:[5,6,6,7,7,8,7],        color:'#22C55E'}
+        ]}
+    },
+    {
+      topic: "The graph below shows changes in the birth rate and death rate in New Zealand between 1900 and 2000.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Birth rate: dropped from 28 per 1000 (1900) to 14 (2000), with a peak of 27 in 1960 (baby boom). Death rate: fell steadily from 13 to 8 per 1000. Gap between rates narrowed over time.",
+      category: "Academic Task 1 — Line Graph",
+      tip_uz: "1960-yildagi baby boom — birth rate ga e'tibor bering. Death rate doimiy tushdi. So'ngida gap (farq) torayganini aytib qo'ying.",
+      chartData: {type:'line', title:'Birth & death rate (per 1,000 people)',
+        labels:['1900','1920','1940','1960','1980','2000'],
+        series:[
+          {name:'Birth rate', data:[28,25,20,27,18,14], color:'#C8102E'},
+          {name:'Death rate', data:[13,11,10,9,9,8],    color:'#6B7280'}
+        ]}
+    },
+  ],
+
+  bar: [
+    {
+      topic: "The chart below shows the amount of money per week spent on fast food in the UK, in relation to household income, in 1990.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "High income (£550+/wk): spent £3.29 on hamburgers, £1.47 on fish & chips. Average income (£260–£430): £2.49 on hamburgers. Low income (under £260): spent most on fish & chips (£0.97). Hamburgers top choice across all groups.",
+      category: "Academic Task 1 — Bar Chart",
+      tip_uz: "Daromad guruhlarini solishtiring. Yuqori daromad — ko'proq sarflaydi (lekin % emas, mutlaq raqam). Fish & chips past daromadda nisbatan mashhur.",
+      chartData: {type:'bar', title:'Weekly fast food spending (£)',
+        labels:['High income','Average income','Low income'],
+        series:[
+          {name:'Hamburgers',  data:[3.29,2.49,1.52], color:'#C8102E'},
+          {name:'Fish & chips',data:[1.47,1.03,0.97], color:'#F59E0B'},
+          {name:'Pizza',       data:[0.98,0.78,0.34], color:'#38BDF8'}
+        ]}
+    },
+    {
+      topic: "The bar chart below shows the percentage of students who gained five grades A*–C in GCSE examinations by gender in three types of schools in 2010 in England.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Grammar schools: girls 90%, boys 87%. Comprehensive: girls 62%, boys 52%. Independent: girls 85%, boys 84%. Girls outperformed boys in all three types. Comprehensive students scored lowest overall.",
+      category: "Academic Task 1 — Bar Chart",
+      tip_uz: "Qizlar barcha maktab turida o'g'illardan yuqori — bu asosiy pattern. Grammar va Independent o'rtasida kichik farq, Comprehensive eng past.",
+      chartData: {type:'bar', title:'Students achieving 5 A*–C GCSE grades (%)',
+        labels:['Grammar','Comprehensive','Independent'],
+        series:[
+          {name:'Girls', data:[90,62,85], color:'#C8102E'},
+          {name:'Boys',  data:[87,52,84], color:'#38BDF8'}
+        ]}
+    },
+    {
+      topic: "The chart below shows the results of a survey about people's coffee and tea drinking habits in five Australian cities.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Melbourne: coffee 65%, tea 40%. Sydney: coffee 58%, tea 45%. Brisbane: coffee 50%, tea 50% (equal). Perth: coffee 42%, tea 52% (tea higher). Adelaide: coffee 55%, tea 38%. Coffee dominant in most cities.",
+      category: "Academic Task 1 — Bar Chart",
+      tip_uz: "Brisbane — tenglashgan, Perth — choy ustun. Qolgan shaharlarda qahva ko'p. Bu istisnolarni overview da albatta ta'kidlang.",
+      chartData: {type:'bar', title:'Coffee & tea preference (% of respondents)',
+        labels:['Melbourne','Sydney','Brisbane','Perth','Adelaide'],
+        series:[
+          {name:'Coffee', data:[65,58,50,42,55], color:'#92400E'},
+          {name:'Tea',    data:[40,45,50,52,38], color:'#22C55E'}
+        ]}
+    },
+    {
+      topic: "The bar chart below shows the number of books read by men and women at Burnaby Public Library, in six different months of 2012.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Women consistently read more. March peak: women 700, men 400. July lowest: women 350, men 200. September rise for both. December: women 500, men 300. Women roughly 1.7x more books across all months.",
+      category: "Academic Task 1 — Bar Chart",
+      tip_uz: "Ayollar har oyda ko'proq kitob o'qigan — bu asosiy trend. March eng yuqori, July eng past. Nisbatni hisoblang (taxminan 1.7x).",
+      chartData: {type:'bar', title:'Books borrowed per month (2012)',
+        labels:['March','May','July','September','November','December'],
+        series:[
+          {name:'Women', data:[700,500,350,450,550,500], color:'#C8102E'},
+          {name:'Men',   data:[400,300,200,280,350,300], color:'#38BDF8'}
+        ]}
+    },
+    {
+      topic: "The chart below compares the average number of hours of leisure time per week enjoyed by men and women of different employment status in Australia in 2010.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Retired men: 85 hrs/wk. Retired women: 74 hrs. Employed full-time men: 34 hrs, women: 30 hrs. Employed part-time men: 45 hrs, women: 38 hrs. Unemployed men: 79 hrs, women: 58 hrs. Men always have more leisure.",
+      category: "Academic Task 1 — Bar Chart",
+      tip_uz: "Barcha kategoriyada erkaklar ko'proq bo'sh vaqtga ega. Retired eng ko'p, full-time employed eng kam. Gender farqi (gap) Retired da 11 soat — eng katta farq.",
+      chartData: {type:'bar', title:'Average leisure hours per week',
+        labels:['Retired','Unemployed','Part-time','Full-time'],
+        series:[
+          {name:'Men',   data:[85,79,45,34], color:'#38BDF8'},
+          {name:'Women', data:[74,58,38,30], color:'#C8102E'}
+        ]}
+    },
+    {
+      topic: "The bar chart below shows the percentage of Australian men and women in different age groups who did regular physical activity in 2010.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "15–24: men 52%, women 47%. 25–34: men 48%, women 50% (women overtake). 45–54: men 39%, women 36%. 55–64: men 33%, women 27%. 65+: men 44%, women 38%. Activity generally declines with age.",
+      category: "Academic Task 1 — Bar Chart",
+      tip_uz: "25–34 yoshda ayollar erkaklar ustidan o'tadi — noodatiy holat. Umumiy trend: yosh oshgan sari faollik kamayadi, lekin 65+ da biroz oshadi.",
+      chartData: {type:'bar', title:'Regular physical activity (%)',
+        labels:['15–24','25–34','35–44','45–54','55–64','65+'],
+        series:[
+          {name:'Men',   data:[52,48,44,39,33,44], color:'#38BDF8'},
+          {name:'Women', data:[47,50,45,36,27,38], color:'#C8102E'}
+        ]}
+    },
+    {
+      topic: "The chart below shows the proportion of people's total spending on different items in four European countries in 2002.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Food: Turkey highest 32%, UK lowest 15%. Clothing: Italy 9%, Sweden 5%. Leisure: UK highest 23%, Turkey 4%. Housing: Germany 27%, Turkey 17%. Clear West/East divide in spending patterns.",
+      category: "Academic Task 1 — Bar Chart",
+      tip_uz: "G'arbiy Yevropa (UK, Sweden) — ko'proq leisure ga sarflaydi. Sharqiy (Turkey) — ko'proq oziq-ovqatga. Bu madaniy-iqtisodiy farqni ifodalang.",
+      chartData: {type:'bar', title:'Spending proportions by category (%)',
+        labels:['Food','Housing','Leisure','Clothing'],
+        series:[
+          {name:'Turkey',  data:[32,17,4,7],  color:'#C8102E'},
+          {name:'Germany', data:[22,27,14,8], color:'#F59E0B'},
+          {name:'Italy',   data:[20,24,16,9], color:'#22C55E'},
+          {name:'UK',      data:[15,25,23,7], color:'#38BDF8'}
+        ]}
+    },
+    {
+      topic: "The bar chart below shows the number of students by subject area who were enrolled in further education in the UK in 2000–2001.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Sciences: male 80K, female 40K. Engineering: male 150K, female 10K. Business: male 100K, female 110K (female higher). Education: male 30K, female 200K. Humanities: male 60K, female 90K.",
+      category: "Academic Task 1 — Bar Chart",
+      tip_uz: "Engineering erkaklar ustun (15:1 nisbat). Education — ayollar mutlaq ko'p (200K vs 30K). Business — deyarli teng. Bu dramatic farqlarni ta'kidlang.",
+      chartData: {type:'bar', title:'Students enrolled (thousands)',
+        labels:['Engineering','Education','Business','Sciences','Humanities'],
+        series:[
+          {name:'Male',   data:[150,30,100,80,60],  color:'#38BDF8'},
+          {name:'Female', data:[10,200,110,40,90],  color:'#C8102E'}
+        ]}
+    },
+  ],
+
+  pie: [
+    {
+      topic: "The pie charts below show the proportion of income earned from different sectors of the economy in three developing countries in 2018.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Country A: Agriculture 45%, Industry 30%, Services 25%. Country B: Agriculture 20%, Industry 45%, Services 35%. Country C: Agriculture 10%, Industry 35%, Services 55%. Shift from agriculture to services as development increases.",
+      category: "Academic Task 1 — Pie Chart",
+      tip_uz: "Rivojlanish darajasi oshgani sari qishloq xo'jaligi ulushi kamayadi, xizmat ko'rsatish o'sadi. Bu pattern ni overview da aniq ifodalang.",
+      chartData: {type:'pie', title:'Country A economy sectors',
+        segments:[{label:'Agriculture',value:45,color:'#22C55E'},{label:'Industry',value:30,color:'#C8102E'},{label:'Services',value:25,color:'#38BDF8'}]}
+    },
+    {
+      topic: "The pie charts below show the main reasons why people moved to and from the UK in 2007.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Moving IN: Work (27%), Formal study (22%), Accompany/join family (18%), Looking for work (14%), Other (19%). Moving OUT: Going home (24%), Work (30%), Accompany family (15%), No reason stated (31%).",
+      category: "Academic Task 1 — Pie Chart",
+      tip_uz: "Kelganlar asosiy sababi — ish va ta'lim. Ketganlar — uyga qaytish va ish. 'No reason stated' — 31% ni alohida ta'kidlang. Ikkita chartni solishtiring.",
+      chartData: {type:'pie', title:'Why people moved IN to UK (2007)',
+        segments:[{label:'Work',value:27,color:'#C8102E'},{label:'Formal study',value:22,color:'#38BDF8'},{label:'Family',value:18,color:'#22C55E'},{label:'Looking for work',value:14,color:'#F59E0B'},{label:'Other',value:19,color:'#6B7280'}]}
+    },
+    {
+      topic: "The charts below show the electricity generated in Germany and France from all sources and from renewable energy in 2009.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Germany total: Coal 29%, Natural gas 14%, Nuclear 22%, Renewables 17%, Other 18%. France total: Nuclear 76%, Hydro 10%, Gas 5%, Other 9%. Germany renewable breakdown: Wind 38%, Biomass 25%, Solar 17%, Hydro 20%.",
+      category: "Academic Task 1 — Pie Chart",
+      tip_uz: "France — yadroga qaramlik (76%) dramatic. Germany — diversifitsiya, renewables 17%. Ikki mamlakatning energy strategiyasi tubdan farqli.",
+      chartData: {type:'pie', title:'Germany electricity sources (2009)',
+        segments:[{label:'Coal',value:29,color:'#6B7280'},{label:'Nuclear',value:22,color:'#EF4444'},{label:'Other',value:18,color:'#A78BFA'},{label:'Renewables',value:17,color:'#22C55E'},{label:'Gas',value:14,color:'#38BDF8'}]}
+    },
+    {
+      topic: "The pie charts compare the proportion of males and females studying different subjects at a UK university in 2010.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Males: Engineering 35%, Sciences 30%, Social sciences 20%, Arts 15%. Females: Arts 30%, Social sciences 28%, Sciences 25%, Engineering 17%. Clear gender preference: males favour STEM, females favour arts.",
+      category: "Academic Task 1 — Pie Chart",
+      tip_uz: "Erkaklar — Engineering dominant. Ayollar — Arts va Social sciences ustun. Sciences da farq kichik. 'In contrast', 'whereas' kabi so'zlar bilan solishtirib boring.",
+      chartData: {type:'pie', title:'Male students by subject (2010)',
+        segments:[{label:'Engineering',value:35,color:'#38BDF8'},{label:'Sciences',value:30,color:'#22C55E'},{label:'Social sci.',value:20,color:'#F59E0B'},{label:'Arts',value:15,color:'#C8102E'}]}
+    },
+    {
+      topic: "The pie chart below shows how a typical family in the UK spent their weekly budget in 2012.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Housing 30%, Food & drink 18%, Transport 14%, Recreation & culture 11%, Clothing 6%, Health 5%, Education 4%, Other 12%. Housing accounts for nearly a third of total expenditure.",
+      category: "Academic Task 1 — Pie Chart",
+      tip_uz: "Turar joy (30%) — eng katta ulush. Oziq-ovqat ikkinchi (18%). Ta'lim eng kam (4%). Top 3 kategoriya jami 62% ni tashkil etadi — bu asosiy nuqta.",
+      chartData: {type:'pie', title:'UK family weekly budget (2012)',
+        segments:[{label:'Housing',value:30,color:'#C8102E'},{label:'Food & drink',value:18,color:'#F59E0B'},{label:'Transport',value:14,color:'#38BDF8'},{label:'Other',value:12,color:'#6B7280'},{label:'Recreation',value:11,color:'#22C55E'},{label:'Clothing',value:6,color:'#A78BFA'},{label:'Health',value:5,color:'#EC4899'},{label:'Education',value:4,color:'#14B8A6'}]}
+    },
+    {
+      topic: "The charts below show the percentage of water used for different purposes in six world regions in 2000.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "North America: Industrial 48%, Agricultural 39%, Domestic 13%. Central Asia: Agricultural 88%, Industrial 7%, Domestic 5%. Europe: Industrial 53%, Agricultural 31%, Domestic 16%. South Asia: Agricultural 94%, Industrial 2%, Domestic 4%.",
+      category: "Academic Task 1 — Pie Chart",
+      tip_uz: "Rivojlanayotgan mintaqalar (Central Asia, South Asia) — qishloq xo'jaligi 88–94%. Rivojlangan (North America, Europe) — sanoat 48–53%. Bu ziddiyat asosiy xulosa.",
+      chartData: {type:'pie', title:'South Asia water use (2000)',
+        segments:[{label:'Agricultural',value:94,color:'#22C55E'},{label:'Domestic',value:4,color:'#38BDF8'},{label:'Industrial',value:2,color:'#C8102E'}]}
+    },
+    {
+      topic: "The two pie charts below show the favourite leisure activities of men and women in a survey conducted in Canada in 2015.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Men: Sports 35%, Gaming 25%, Reading 15%, Cooking 10%, Other 15%. Women: Shopping 28%, Reading 25%, Cooking 20%, Sports 15%, Other 12%. Reading common for both. Sports dominant for men; shopping for women.",
+      category: "Academic Task 1 — Pie Chart",
+      tip_uz: "Reading — ikkala guruhda ham muhim (lekin ayollar ko'proq). Sports erkaklar uchun 1-o'rin, ayollar uchun 4-o'rin. Bu katta farqni ta'kidlang.",
+      chartData: {type:'pie', title:"Men's leisure activities (Canada)",
+        segments:[{label:'Sports',value:35,color:'#38BDF8'},{label:'Gaming',value:25,color:'#7C3AED'},{label:'Other',value:15,color:'#6B7280'},{label:'Reading',value:15,color:'#22C55E'},{label:'Cooking',value:10,color:'#F59E0B'}]}
+    },
+  ],
+
+  map: [
+    {
+      topic: "The maps below show the town of Chorleywood, a village near London, in 1868, 1994 and 2005.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1868: small settlement near river. 1994: railway added (south side), residential expansion east and west, new roads built. 2005: motorway added (north bypass), industrial area developed in the northeast, retail park in south.",
+      category: "Academic Task 1 — Map",
+      tip_uz: "Uch davr bor: 1868 → 1994 → 2005. Railway (1994) va motorway (2005) rivojlanishni tezlashtirdi. Shimol-Janub-Sharq-G'arb yo'nalishlarida o'zgarishlarni tasvirlab bering.",
+      chartData: {type:'map',
+        before:{year:'1868', items:['Small settlement near river','No railway','No roads','Farmland all around']},
+        after: {year:'2005', items:['Railway (south, added 1994)','Residential expansion E & W','Motorway bypass (north)','Industrial area (northeast)','Retail park (south)']}}
+    },
+    {
+      topic: "The diagrams below show the layout of a sports centre as it is now, and plans for its development in the future.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Now: main entrance (south), swimming pool (west), gym (east), car park (north), small café (centre). Future: café to be extended into restaurant, new dance studio replacing car park, gym expanded, outdoor sports area added (east).",
+      category: "Academic Task 1 — Map",
+      tip_uz: "Mavjud → kelajak. 'Will be replaced by', 'is to be extended', 'will be added' kabi future iboralar ishlat. Har o'zgarishni joylashuv bilan ifodalang.",
+      chartData: {type:'map',
+        before:{year:'Now', items:['Main entrance (south)','Swimming pool (west)','Gym (east)','Car park (north)','Small café (centre)']},
+        after: {year:'Future', items:['Restaurant (extended café)','Dance studio (was car park)','Gym expanded (east)','Outdoor sports area added','Main entrance unchanged']}}
+    },
+    {
+      topic: "The maps below show an island before and after the construction of some tourist facilities.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Before: uninhabited, trees covering most of the island, one sandy beach (west coast), coral reef (south). After: reception (centre), 6 beach huts (west beach), restaurant (east), pier and boat trips (south), footpaths throughout, trees mostly cleared.",
+      category: "Academic Task 1 — Map",
+      tip_uz: "Before — tabiiy, uninhabited. After — to'liq o'zgargan. 'Previously', 'now', 'has been replaced by', 'has been built' kabi iboralar qo'llang. Daraxtlar yo'qolganini ta'kidlang.",
+      chartData: {type:'map',
+        before:{year:'Before', items:['Uninhabited island','Trees cover most island','Sandy beach (west coast)','Coral reef (south)','No facilities at all']},
+        after: {year:'After', items:['Reception building (centre)','6 beach huts (west beach)','Restaurant (east side)','Pier & boat trips (south)','Footpaths throughout','Trees mostly cleared']}}
+    },
+    {
+      topic: "The maps show a small industrial town called Whitley in 1965 and 2005.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1965: factory (north), farmland (west), terraced houses (south), river and bridge (east), small school (centre). 2005: factory demolished → housing estate, farmland → supermarket, new primary and secondary schools, bridge widened, river park created.",
+      category: "Academic Task 1 — Map",
+      tip_uz: "Fabrika turar joyga, qishloq xo'jaligi savdo markaziga aylandi. 'Has been demolished', 'has been converted into', 'has been replaced by' — passiv iboralar ishlating.",
+      chartData: {type:'map',
+        before:{year:'1965', items:['Factory (north)','Farmland (west)','Terraced houses (south)','River & bridge (east)','Small school (centre)']},
+        after: {year:'2005', items:['Housing estate (was factory)','Supermarket (was farmland)','2 new schools added','Bridge widened','River park created']}}
+    },
+    {
+      topic: "The diagrams below show the floor plan of a public library in 2001 and how it looks following a refurbishment in 2023.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "2001: large reading room (centre), reference section (north), children's area (east), periodicals (west), one computer terminal, main desk at entrance. 2023: children's area doubled, 20 computer stations, café added (where periodicals were), self-service kiosks, reading room slightly reduced.",
+      category: "Academic Task 1 — Map",
+      tip_uz: "Texnologiya va zamonaviy xizmat: kompyuterlar ko'paydi (1→20), self-service qo'shildi. Bolalar bo'limi kengaydi. Periodicals ko'tarildi — kutubxona zamonaviylashtirdi.",
+      chartData: {type:'map',
+        before:{year:'2001', items:['Reading room (centre)','Reference section (north)','Children\'s area (east)','Periodicals (west)','1 computer terminal','Main desk at entrance']},
+        after: {year:'2023', items:['Children\'s area doubled','20 computer stations','Café (was periodicals)','Self-service kiosks','Reading room reduced','Main desk unchanged']}}
+    },
+    {
+      topic: "The two maps below show changes in a coastal town called Frettenham between 1975 and 2015.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1975: fishing harbour (west), hotel (north cliff), small promenade, residential area (east). 2015: harbour expanded into marina, hotel extended with spa, promenade doubled in length with shops added, beach parking constructed, new coastal path (north to south), residential area expanded further east.",
+      category: "Academic Task 1 — Map",
+      tip_uz: "Turizm rivojlangani ko'rinib turibdi: marina, spa, do'konlar. Harbour → marina — bu asosiy o'zgarish. Promenade ikki barobar kengaydi — sanab o'ting.",
+      chartData: {type:'map',
+        before:{year:'1975', items:['Fishing harbour (west)','Hotel (north cliff)','Small promenade','Residential area (east)','No parking']},
+        after: {year:'2015', items:['Marina (was harbour)','Hotel extended + spa','Promenade doubled + shops','Beach car park added','Coastal path (N→S)','Residential area expanded']}}
+    },
+    {
+      topic: "The maps show the village of Stokeford in 1930 and in 2010.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1930: church (west), farmland (large, north), post office & shop (centre), handful of houses, river (south), mill (south by river). 2010: farmland → large housing estate, mill demolished, supermarket replaced post office, new road bypasses village, school added (northeast), church remained.",
+      category: "Academic Task 1 — Map",
+      tip_uz: "Church — o'zgarmadi (remained unchanged). Mill — ko'tarildi. Qishloq xo'jaligi yerlar turar joyga aylandi. 'Remained', 'was demolished', 'was replaced by' — farqlang.",
+      chartData: {type:'map',
+        before:{year:'1930', items:['Church (west) ✓','Large farmland (north)','Post office & shop (centre)','River (south)','Mill by river','A few houses']},
+        after: {year:'2010', items:['Church unchanged ✓','Housing estate (was farmland)','Supermarket (was post office)','Mill demolished','New bypass road','School added (northeast)']}}
+    },
+  ],
+
+  process: [
+    {
+      topic: "The diagram below shows the process of making cement and how it is used in the production of concrete.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Step 1: limestone and clay crushed. Step 2: mixed in 80:20 ratio. Step 3: heated in rotating kiln at 1450°C. Step 4: clinker formed, cooled. Step 5: ground with gypsum → cement powder. Concrete: 15% cement + 10% water + 25% sand + 50% small stones mixed and ready.",
+      category: "Academic Task 1 — Process",
+      tip_uz: "Ikkita jarayon: cement ishlab chiqarish va beton tayyorlash. Passive voice ishlating: 'is crushed', 'are mixed', 'is heated'. Harorat (1450°C) va nisbatlarni aniq keltiring.",
+      chartData: {type:'process', steps:['Limestone & clay are crushed','Mixed in 80:20 ratio','Heated in rotating kiln (1450°C)','Clinker is formed & cooled','Ground with gypsum → cement powder','Mixed: 15% cement + 10% water + 25% sand + 50% gravel = Concrete']}
+    },
+    {
+      topic: "The diagram below shows the life cycle of a salmon, from egg to adult fish.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Stage 1: eggs laid in river gravel (winter). Stage 2: hatch into alevins (spring), feed on yolk sac. Stage 3: fry swim freely, eat insects. Stage 4: fingerlings grow in fresh water (1–2 yrs). Stage 5: smolt migrate to sea. Stage 6: adult salmon (ocean, 1–4 yrs). Stage 7: return upstream to spawn and die.",
+      category: "Academic Task 1 — Process",
+      tip_uz: "7 bosqich bor — hammani qamra. Daryo → dengiz → daryo siklini ta'kidlang. Vaqtni (winter, spring, 1–2 years) aniq keltiring. Bosqichlarni birlashtirish ham mumkin.",
+      chartData: {type:'process', steps:['Eggs laid in river gravel (winter)','Hatch into alevins — feed on yolk sac (spring)','Fry swim freely and eat insects','Fingerlings grow in fresh water (1–2 years)','Smolt migrate downstream to the sea','Adult salmon live in ocean (1–4 years)','Return upstream to spawn → die']}
+    },
+    {
+      topic: "The diagram illustrates how a hydroelectric dam works to produce electricity.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1: Rain collected in reservoir behind dam. 2: Water flows through intake gate. 3: Passes down penstock (pipe). 4: Spins turbines at high speed. 5: Generator converts rotation to electricity. 6: Electricity sent to transformer. 7: Transmitted via power lines to homes. Water exits as tail race back to river.",
+      category: "Academic Task 1 — Process",
+      tip_uz: "Suv — energiyaga aylanish jarayoni. Har bosqichni passiv bilan yozing: 'is collected', 'flows through', 'is converted'. Jarayonning siklik emasligini (bir yo'nalishli) ta'kidlang.",
+      chartData: {type:'process', steps:['Rainwater collected in reservoir (behind dam)','Water flows through intake gate','Passes down penstock at high speed','Turbines are spun by water force','Generator converts rotation → electricity','Electricity stepped up by transformer','Transmitted via power lines to homes']}
+    },
+  ],
+
+  table: [
+    {
+      topic: "The table below gives information about the underground railway systems in six cities.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "London: opened 1863, 394km, 775M passengers/yr. Tokyo: 1927, 282km, 1927M. Washington DC: 1976, 126km, 144M. Paris: 1900, 201km, 1191M. Kyoto: 1981, 11km, 45M. Los Angeles: 2001, 28km, 50M. Tokyo highest ridership; London oldest; LA newest.",
+      category: "Academic Task 1 — Table",
+      tip_uz: "Eng qadimiy (London, 1863) va eng yangi (LA, 2001). Eng ko'p yo'lovchi — Tokyo. Eng uzun tizim — London. Bu uch o'lchovni alohida paragrafda solishtiring.",
+      chartData: {type:'table', headers:['City','Opened','Length','Passengers/yr'],
+        rows:[['London 🔺','1863','394 km','775M'],['Paris','1900','201 km','1,191M'],['Tokyo','1927','282 km','1,927M 🔺'],['Washington DC','1976','126 km','144M'],['Kyoto','1981','11 km','45M'],['Los Angeles','2001 🔻','28 km','50M']]}
+    },
+    {
+      topic: "The table shows the proportion of people in employment in four European countries working more than 40 hours per week in 1990 and 2000.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "UK: 1990 men 38%, women 15%; 2000 men 45%, women 16%. France: 1990 men 25%, women 8%; 2000 men 22%, women 9%. Germany: 1990 men 33%, women 10%; 2000 men 36%, women 11%. Netherlands: 1990 men 22%, women 4%; 2000 men 28%, women 8%.",
+      category: "Academic Task 1 — Table",
+      tip_uz: "UK erkaklar eng ko'p ishlaydi va o'sdi. France — kamaydi (noodatiy). Ayollar barcha mamlakatlarda erkaklar dan sezilarli past. Ikki yil o'rtasidagi trend ni taqqoslang.",
+      chartData: {type:'table', headers:['Country','Men 1990','Men 2000','Women 1990','Women 2000'],
+        rows:[['UK','38%','45% ↑','15%','16% ↑'],['Germany','33%','36% ↑','10%','11% ↑'],['France','25%','22% ↓','8%','9% ↑'],['Netherlands','22%','28% ↑','4%','8% ↑']]}
+    },
+    {
+      topic: "The table below shows the sales at a small restaurant in downtown London over a two-week period in January 2010.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Week 1: Mon £2420, Tue £2935, Wed £3026, Thu £3357, Fri £4106, Sat £4827, Sun £3221. Week 2: Mon £2795, Tue £3145, Wed £3423, Thu £3705, Fri £4898, Sat £5096, Sun £3568. Both weeks: weekends highest, Mondays lowest.",
+      category: "Academic Task 1 — Table",
+      tip_uz: "Weekend (Juma-Shanba) doimo eng yuqori, Dushanba eng past. Ikkinchi hafta birinchidan ko'proq. 'Consistently', 'peaked', 'remained the lowest' iboralarini ishlating.",
+      chartData: {type:'table', headers:['Day','Week 1 (£)','Week 2 (£)','Change'],
+        rows:[['Monday','2,420','2,795','↑ +375'],['Tuesday','2,935','3,145','↑ +210'],['Wednesday','3,026','3,423','↑ +397'],['Thursday','3,357','3,705','↑ +348'],['Friday','4,106','4,898','↑ +792'],['Saturday 🔺','4,827','5,096 🔺','↑ +269'],['Sunday','3,221','3,568','↑ +347']]}
+    },
+  ],
+
+  mixed: [
+    {
+      topic: "The bar chart shows the number of visitors to three London museums between 2010 and 2020, and the pie chart shows what percentage of these visitors were from overseas in 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Bar: British Museum grew from 5.8M to 6.2M. Natural History: 4.1M to 5.3M (biggest growth). V&A: 2.5M to 3.2M. Pie (2020 overseas %): British Museum 72%, Natural History 58%, V&A 65%.",
+      category: "Academic Task 1 — Mixed Charts",
+      tip_uz: "Bar — 10 yillik trend. Pie — 2020 yil xorijiy tashrif buyuruvchilar ulushi. Ikkisini bog'lang: Natural History eng ko'p o'sdi, lekin British Museum eng ko'p xorijiylarni jalb qildi.",
+      chartData: {type:'mixed', charts:[
+        {type:'bar', title:'Museum visitors (millions)', labels:['British Museum','Natural History','V&A'],
+          series:[{name:'2010',data:[5.8,4.1,2.5],color:'#38BDF8'},{name:'2020',data:[6.2,5.3,3.2],color:'#C8102E'}]},
+        {type:'pie', title:'Overseas visitors 2020',
+          segments:[{label:'British Museum',value:72,color:'#C8102E'},{label:'V&A',value:65,color:'#38BDF8'},{label:'Natural History',value:58,color:'#22C55E'}]}
+      ]}
+    },
+    {
+      topic: "The graph below shows the number of enquiries received by a tourist information office over a six-month period, and the pie chart shows where enquirers came from.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Line graph: Jan 1000 → Feb 1500 → Mar 2800 → Apr 4000 → May 3800 → Jun 2500. Pie: Local residents 35%, UK tourists 40%, Overseas 25%. Summer peak in April. UK tourists largest group.",
+      category: "Academic Task 1 — Mixed Charts",
+      tip_uz: "Aprel — eng ko'p so'rov (4000). Iyun — pasayish. Pie: UK tourists dominant (40%). Ikkita grafikni 'connect' qiling: bahor oylarida ko'p so'rov, asosan UK sayyohlari.",
+      chartData: {type:'mixed', charts:[
+        {type:'line', title:'Monthly enquiries (tourist office)', labels:['Jan','Feb','Mar','Apr','May','Jun'],
+          series:[{name:'Enquiries',data:[1000,1500,2800,4000,3800,2500],color:'#38BDF8'}]},
+        {type:'pie', title:'Source of enquiries',
+          segments:[{label:'UK tourists',value:40,color:'#C8102E'},{label:'Local residents',value:35,color:'#38BDF8'},{label:'Overseas',value:25,color:'#22C55E'}]}
+      ]}
+    },
+  ],
+};
+
+// Pick a random real topic by chart type
+function getRealTopic(chartTypeId) {
+  const bank = REAL_TOPICS[chartTypeId];
+  if (!bank || bank.length === 0) return null;
+  return bank[Math.floor(Math.random() * bank.length)];
+}
 
 // General Training Task 1 — letter types
 const LETTER_TYPES = [
@@ -338,6 +777,272 @@ const TASK1_MODES = [
   { id:'academic', icon:'🎓', label:'Academic Task 1', desc:'Grafik tavsifi' },
   { id:'general',  icon:'✉️', label:'General Training', desc:'Xat yozish' },
 ];
+
+/* ── MINI CHART PREVIEWS (SVG) ─────────────── */
+function miniChartSVG(type) {
+  const bg='#0E0E0E', g1='#1E1E1E', g2='#2A2A2A', t='#888';
+  const W=200, H=124;
+  const s=`width:100%;max-width:${W}px;height:${H}px;display:block`;
+
+  if(type==='line') {
+    // Internet users % — 3 countries 2000-2020
+    const data=[
+      {n:'UK',  c:'#38BDF8', v:[42,54,66,74,80,84,88,91]},
+      {n:'Brazil',c:'#22C55E',v:[12,18,26,35,44,53,61,70]},
+      {n:'India', c:'#F59E0B',v:[1,3,7,12,19,26,34,41]},
+    ];
+    const yrs=['00','02','04','06','08','10','12','14'];
+    const ml=26,mr=8,mt=12,mb=30,cW=W-ml-mr,cH=H-mt-mb;
+    const xP=i=>ml+i*(cW/(yrs.length-1));
+    const yP=v=>mt+cH*(1-v/100);
+    let paths='',dots='',lbls='';
+    data.forEach(d=>{
+      const pts=d.v.map((v,i)=>`${xP(i).toFixed(1)},${yP(v).toFixed(1)}`).join(' ');
+      paths+=`<polyline points="${pts}" fill="none" stroke="${d.c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+      d.v.forEach((v,i)=>{dots+=`<circle cx="${xP(i).toFixed(1)}" cy="${yP(v).toFixed(1)}" r="2.5" fill="${d.c}" stroke="${bg}" stroke-width="1.2"/>`;});
+    });
+    // y ticks
+    let ytx='';
+    [0,25,50,75,100].forEach(v=>{
+      const y=yP(v);
+      ytx+=`<line x1="${ml}" y1="${y.toFixed(1)}" x2="${W-mr}" y2="${y.toFixed(1)}" stroke="${g2}" stroke-width="${v===0?1.2:.5}"/>`;
+      ytx+=`<text x="${ml-3}" y="${(y+3.5).toFixed(1)}" text-anchor="end" font-size="8" fill="${t}">${v}</text>`;
+    });
+    // x labels
+    yrs.forEach((y,i)=>{ lbls+=`<text x="${xP(i).toFixed(1)}" y="${H-mb+13}" text-anchor="middle" font-size="8" fill="${t}">${y}</text>`; });
+    // legend
+    let leg=''; const lx=ml;
+    data.forEach((d,i)=>{leg+=`<rect x="${lx+i*56}" y="${H-9}" width="8" height="5" fill="${d.c}" rx="1"/><text x="${lx+i*56+11}" y="${H-4}" font-size="7.5" fill="${t}">${d.n}</text>`;});
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="${s}">
+      <rect width="${W}" height="${H}" fill="${bg}" rx="8"/>
+      <text x="${W/2}" y="9" text-anchor="middle" font-size="8" font-weight="600" fill="#CCC">Internet users (%)</text>
+      ${ytx}${paths}${dots}${lbls}${leg}
+    </svg>`;
+  }
+
+  if(type==='bar') {
+    // CO2 emissions — 4 countries, 2 years
+    const cats=['UK','USA','China','India'];
+    const s1={n:'2010',c:'#38BDF8',v:[8,18,7,2]};
+    const s2={n:'2020',c:'#C8102E',v:[5,15,11,3]};
+    const ml=22,mr=8,mt=14,mb=28,cW=W-ml-mr,cH=H-mt-mb;
+    const grpW=cW/cats.length, bW=Math.min(14,(grpW-8)/2);
+    const maxV=20;
+    const yP=v=>mt+cH*(1-v/maxV);
+    let bars='',xlbls='',ytx='';
+    [0,5,10,15,20].forEach(v=>{
+      const y=yP(v);
+      ytx+=`<line x1="${ml}" y1="${y.toFixed(1)}" x2="${W-mr}" y2="${y.toFixed(1)}" stroke="${g2}" stroke-width="${v===0?1.2:.5}"/>`;
+      ytx+=`<text x="${ml-3}" y="${(y+3.5).toFixed(1)}" text-anchor="end" font-size="8" fill="${t}">${v}</text>`;
+    });
+    cats.forEach((c,i)=>{
+      const cx=ml+i*grpW+grpW/2;
+      [s1,s2].forEach((s,si)=>{
+        const bx=cx+(si===0?-bW-1:1), bH=(s.v[i]/maxV)*cH;
+        bars+=`<rect x="${bx.toFixed(1)}" y="${yP(s.v[i]).toFixed(1)}" width="${bW}" height="${Math.max(1,bH).toFixed(1)}" fill="${s.c}" rx="2" opacity=".9"/>`;
+      });
+      xlbls+=`<text x="${cx.toFixed(1)}" y="${H-mb+11}" text-anchor="middle" font-size="8" fill="${t}">${c}</text>`;
+    });
+    const leg=`<rect x="${ml}" y="${H-8}" width="8" height="5" fill="${s1.c}" rx="1"/><text x="${ml+11}" y="${H-3}" font-size="7.5" fill="${t}">${s1.n}</text>
+      <rect x="${ml+36}" y="${H-8}" width="8" height="5" fill="${s2.c}" rx="1"/><text x="${ml+47}" y="${H-3}" font-size="7.5" fill="${t}">${s2.n}</text>`;
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="${s}">
+      <rect width="${W}" height="${H}" fill="${bg}" rx="8"/>
+      <text x="${W/2}" y="10" text-anchor="middle" font-size="8" font-weight="600" fill="#CCC">CO₂ emissions (tonnes/person)</text>
+      ${ytx}${bars}${xlbls}${leg}
+    </svg>`;
+  }
+
+  if(type==='pie') {
+    // Energy sources pie
+    const segs=[
+      {l:'Coal',  v:36, c:'#C8102E'},
+      {l:'Gas',   v:24, c:'#F59E0B'},
+      {l:'Nuclear',v:19,c:'#38BDF8'},
+      {l:'Solar', v:12, c:'#22C55E'},
+      {l:'Other', v:9,  c:'#7C3AED'},
+    ];
+    const cx=68, cy=60, r=46, ir=22;
+    let total=0; segs.forEach(s=>total+=s.v);
+    let angle=-Math.PI/2, paths='';
+    segs.forEach(seg=>{
+      const sw=(seg.v/total)*2*Math.PI;
+      const x1=cx+r*Math.cos(angle),y1=cy+r*Math.sin(angle);
+      const x2=cx+r*Math.cos(angle+sw),y2=cy+r*Math.sin(angle+sw);
+      const xi1=cx+ir*Math.cos(angle),yi1=cy+ir*Math.sin(angle);
+      const xi2=cx+ir*Math.cos(angle+sw),yi2=cy+ir*Math.sin(angle+sw);
+      const lg=sw>Math.PI?1:0;
+      paths+=`<path d="M${xi1.toFixed(1)},${yi1.toFixed(1)} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${lg},1 ${x2.toFixed(1)},${y2.toFixed(1)} L${xi2.toFixed(1)},${yi2.toFixed(1)} A${ir},${ir} 0 ${lg},0 ${xi1.toFixed(1)},${yi1.toFixed(1)}" fill="${seg.c}" opacity=".92"/>`;
+      if(seg.v/total>0.09){const ma=angle+sw/2;paths+=`<text x="${(cx+(r*.72)*Math.cos(ma)).toFixed(1)}" y="${(cy+(r*.72)*Math.sin(ma)+4).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" fill="white">${seg.v}%</text>`;}
+      angle+=sw;
+    });
+    let leg=''; segs.forEach((s,i)=>{leg+=`<rect x="128" y="${12+i*18}" width="9" height="9" fill="${s.c}" rx="2"/><text x="141" y="${19+i*18+1}" font-size="8.5" fill="#BBB">${s.l} ${s.v}%</text>`;});
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="${s}">
+      <rect width="${W}" height="${H}" fill="${bg}" rx="8"/>
+      <text x="${cx}" y="9" text-anchor="middle" font-size="8" font-weight="600" fill="#CCC">Energy sources</text>
+      ${paths}
+      <circle cx="${cx}" cy="${cy}" r="${ir}" fill="${bg}"/>
+      ${leg}
+    </svg>`;
+  }
+
+  if(type==='map') {
+    // Before → After floor plan
+    const lw=2, lc='#059669', fill='#05966912', fill2='#05966930', tc='#6EE7B7';
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="${s}">
+      <rect width="${W}" height="${H}" fill="${bg}" rx="8"/>
+      <!-- BEFORE label -->
+      <text x="47" y="12" text-anchor="middle" font-size="8.5" font-weight="700" fill="${lc}">BEFORE</text>
+      <!-- Before floor plan -->
+      <rect x="6" y="16" width="82" height="66" fill="${fill}" stroke="${lc}" stroke-width="${lw}" rx="3"/>
+      <line x1="6" y1="49" x2="88" y2="49" stroke="${lc}" stroke-width="1"/>
+      <line x1="47" y1="16" x2="47" y2="82" stroke="${lc}" stroke-width="1"/>
+      <text x="26" y="36" text-anchor="middle" font-size="7" fill="${tc}">Hall</text>
+      <text x="68" y="32" text-anchor="middle" font-size="7" fill="${tc}">Office</text>
+      <text x="26" y="62" text-anchor="middle" font-size="7" fill="${tc}">Park</text>
+      <text x="68" y="57" text-anchor="middle" font-size="7" fill="${tc}">Store</text>
+      <text x="68" y="72" text-anchor="middle" font-size="7" fill="${tc}">Café</text>
+      <!-- Arrow -->
+      <text x="100" y="56" text-anchor="middle" font-size="16" fill="${lc}">→</text>
+      <!-- AFTER label -->
+      <text x="155" y="12" text-anchor="middle" font-size="8.5" font-weight="700" fill="#22C55E">AFTER</text>
+      <!-- After floor plan -->
+      <rect x="114" y="16" width="82" height="66" fill="${fill2}" stroke="#22C55E" stroke-width="${lw}" rx="3"/>
+      <line x1="114" y1="43" x2="196" y2="43" stroke="#22C55E" stroke-width="1"/>
+      <line x1="155" y1="16" x2="155" y2="82" stroke="#22C55E" stroke-width="1"/>
+      <line x1="155" y1="62" x2="196" y2="62" stroke="#22C55E" stroke-width=".8" stroke-dasharray="3,2"/>
+      <text x="134" y="32" text-anchor="middle" font-size="7" fill="#86EFAC">Hall</text>
+      <text x="176" y="30" text-anchor="middle" font-size="7" fill="#86EFAC">Office ×2</text>
+      <text x="134" y="59" text-anchor="middle" font-size="7" fill="#86EFAC">Car park</text>
+      <text x="176" y="54" text-anchor="middle" font-size="7" fill="#86EFAC">Restaurant</text>
+      <text x="176" y="73" text-anchor="middle" font-size="6.5" fill="#86EFAC">New studio</text>
+    </svg>`;
+  }
+
+  if(type==='process') {
+    // Cement making process
+    const c='#D97706', cf='#D9770618', cb='#D97706';
+    const steps=[
+      {x:10,  y:14, w:56, h:24, n:'1', txt:'Limestone\n& clay'},
+      {x:74,  y:14, w:56, h:24, n:'2', txt:'Crushed\n& mixed'},
+      {x:138, y:14, w:56, h:24, n:'3', txt:'Heated\n1450°C'},
+      {x:46,  y:52, w:56, h:24, n:'4', txt:'Clinker\ncooled'},
+      {x:110, y:52, w:56, h:24, n:'5', txt:'Cement\npowder'},
+    ];
+    let boxes='';
+    steps.forEach(s=>{
+      boxes+=`<rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" fill="${cf}" stroke="${c}" stroke-width="1.5" rx="5"/>`;
+      boxes+=`<circle cx="${s.x+10}" cy="${s.y+12}" r="7" fill="${c}"/>`;
+      boxes+=`<text x="${s.x+10}" y="${s.y+16}" text-anchor="middle" font-size="8" font-weight="800" fill="white">${s.n}</text>`;
+      const lines=s.txt.split('\n');
+      lines.forEach((ln,li)=>{ boxes+=`<text x="${s.x+s.w/2+4}" y="${s.y+(s.h/2)+(li-lines.length/2+.7)*9}" text-anchor="middle" font-size="7.5" fill="#FDE68A">${ln}</text>`; });
+    });
+    // arrows
+    const arrows=`
+      <line x1="66" y1="26" x2="74" y2="26" stroke="${c}" stroke-width="1.5"/><polygon points="73,23 77,26 73,29" fill="${c}"/>
+      <line x1="130" y1="26" x2="138" y2="26" stroke="${c}" stroke-width="1.5"/><polygon points="137,23 141,26 137,29" fill="${c}"/>
+      <path d="M166,38 Q166,45 156,45 Q140,45 136,52" stroke="${c}" stroke-width="1.5" fill="none"/><polygon points="133,51 136,55 139,51" fill="${c}"/>
+      <line x1="102" y1="64" x2="110" y2="64" stroke="${c}" stroke-width="1.5"/><polygon points="109,61 113,64 109,67" fill="${c}"/>
+    `;
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="${s}">
+      <rect width="${W}" height="${H}" fill="${bg}" rx="8"/>
+      <text x="${W/2}" y="10" text-anchor="middle" font-size="8" font-weight="600" fill="#CCC">Cement production process</text>
+      ${arrows}${boxes}
+    </svg>`;
+  }
+
+  if(type==='table') {
+    // Metro systems table
+    const c='#0891B2', ch='#0891B240', ht='#0EA5E9';
+    const hdrs=['City','Opened','Length','Riders/yr'];
+    const rows=[
+      ['London','1863','394 km','775M'],
+      ['Tokyo', '1927','282 km','1,927M ↑'],
+      ['Paris', '1900','201 km','1,191M'],
+      ['LA',    '2001','28 km', '50M ↓'],
+    ];
+    const colW=[44,34,40,54], rH=18, headerH=20, x0=4;
+    const tH=headerH+rows.length*rH+4;
+    let hcells='',rcells='',vlines='';
+    let cx=x0;
+    hdrs.forEach((h,i)=>{
+      hcells+=`<text x="${(cx+colW[i]/2).toFixed(1)}" y="${headerH/2+6}" text-anchor="middle" font-size="8.5" font-weight="700" fill="${ht}">${h}</text>`;
+      if(i>0)vlines+=`<line x1="${cx}" y1="0" x2="${cx}" y2="${tH}" stroke="${ch}" stroke-width=".8"/>`;
+      cx+=colW[i];
+    });
+    rows.forEach((row,ri)=>{
+      const ry=headerH+ri*rH;
+      if(ri%2===0) rcells+=`<rect x="${x0}" y="${ry}" width="${W-x0*2}" height="${rH}" fill="#0891B20A" rx="2"/>`;
+      let cx2=x0;
+      row.forEach((cell,ci)=>{
+        const col=ci===0?'#E0E0DC':'#9CA3AF';
+        const fw=ci===0?'600':'400';
+        rcells+=`<text x="${(cx2+colW[ci]/2).toFixed(1)}" y="${(ry+rH/2+4).toFixed(1)}" text-anchor="middle" font-size="8" fill="${col}" font-weight="${fw}">${cell}</text>`;
+        cx2+=colW[ci];
+      });
+      rcells+=`<line x1="${x0}" y1="${(ry+rH).toFixed(1)}" x2="${W-x0}" y2="${(ry+rH).toFixed(1)}" stroke="${ch}" stroke-width=".6"/>`;
+    });
+    return `<svg viewBox="0 0 ${W} ${tH+8}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;height:${tH+8}px;display:block">
+      <rect width="${W}" height="${tH+8}" fill="${bg}" rx="8"/>
+      <rect x="${x0}" y="4" width="${W-x0*2}" height="${headerH}" fill="${c}22" stroke="${c}" stroke-width="1.2" rx="4"/>
+      ${hcells}
+      <line x1="${x0}" y1="${headerH+4}" x2="${W-x0}" y2="${headerH+4}" stroke="${c}" stroke-width="1"/>
+      ${rcells}${vlines}
+    </svg>`;
+  }
+
+  if(type==='mixed') {
+    // Left: line chart, Right: pie chart
+    const lc='#BE185D';
+    // Line chart (left half)
+    const ml=22,mt=14,mb=22,lW=92,cH=H-mt-mb;
+    const vals=[30,45,38,60,52,72];
+    const lbs=['Jan','Mar','May','Jul','Sep','Nov'];
+    const maxV=80;
+    const xP=i=>ml+i*(lW-ml-6)/(vals.length-1);
+    const yP=v=>mt+cH*(1-v/maxV);
+    let linePts=vals.map((v,i)=>`${xP(i).toFixed(1)},${yP(v).toFixed(1)}`).join(' ');
+    // area fill
+    const areaPath=`M${xP(0).toFixed(1)},${yP(vals[0]).toFixed(1)} ${vals.map((v,i)=>`L${xP(i).toFixed(1)},${yP(v).toFixed(1)}`).join(' ')} L${xP(vals.length-1).toFixed(1)},${(mt+cH).toFixed(1)} L${xP(0).toFixed(1)},${(mt+cH).toFixed(1)} Z`;
+    let ylbls='',xlbls2='';
+    [0,40,80].forEach(v=>{ylbls+=`<line x1="${ml}" y1="${yP(v).toFixed(1)}" x2="${lW}" y2="${yP(v).toFixed(1)}" stroke="${g2}" stroke-width=".5"/><text x="${ml-3}" y="${(yP(v)+3.5).toFixed(1)}" text-anchor="end" font-size="7" fill="${t}">${v}</text>`;});
+    [0,2,4].forEach(i=>{xlbls2+=`<text x="${xP(i).toFixed(1)}" y="${H-mb+10}" text-anchor="middle" font-size="7" fill="${t}">${lbs[i]}</text>`;});
+    // Pie chart (right half) — visitors by country
+    const pSegs=[{v:40,c:'#BE185D'},{v:30,c:'#F59E0B'},{v:20,c:'#38BDF8'},{v:10,c:'#22C55E'}];
+    const pLabels=['UK','US','EU','Asia'];
+    const pcx=150,pcy=H/2,pr=36,pir=18;
+    let pAngle=-Math.PI/2, pieP='';
+    let pTot=0; pSegs.forEach(s=>pTot+=s.v);
+    pSegs.forEach((seg,si)=>{
+      const sw=(seg.v/pTot)*2*Math.PI;
+      const x1=pcx+pr*Math.cos(pAngle),y1=pcy+pr*Math.sin(pAngle);
+      const x2=pcx+pr*Math.cos(pAngle+sw),y2=pcy+pr*Math.sin(pAngle+sw);
+      const xi1=pcx+pir*Math.cos(pAngle),yi1=pcy+pir*Math.sin(pAngle);
+      const xi2=pcx+pir*Math.cos(pAngle+sw),yi2=pcy+pir*Math.sin(pAngle+sw);
+      const lg=sw>Math.PI?1:0;
+      pieP+=`<path d="M${xi1.toFixed(1)},${yi1.toFixed(1)} L${x1.toFixed(1)},${y1.toFixed(1)} A${pr},${pr} 0 ${lg},1 ${x2.toFixed(1)},${y2.toFixed(1)} L${xi2.toFixed(1)},${yi2.toFixed(1)} A${pir},${pir} 0 ${lg},0 ${xi1.toFixed(1)},${yi1.toFixed(1)}" fill="${seg.c}" opacity=".9"/>`;
+      if(seg.v/pTot>0.12){const ma=pAngle+sw/2;pieP+=`<text x="${(pcx+(pr*.72)*Math.cos(ma)).toFixed(1)}" y="${(pcy+(pr*.72)*Math.sin(ma)+3.5).toFixed(1)}" text-anchor="middle" font-size="8" font-weight="700" fill="white">${seg.v}%</text>`;}
+      pAngle+=sw;
+    });
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="${s}">
+      <rect width="${W}" height="${H}" fill="${bg}" rx="8"/>
+      <line x1="${lW+4}" y1="8" x2="${lW+4}" y2="${H-8}" stroke="${g2}" stroke-width="1"/>
+      <text x="${lW/2+5}" y="10" text-anchor="middle" font-size="7.5" font-weight="600" fill="#CCC">Monthly visitors</text>
+      ${ylbls}
+      <path d="${areaPath}" fill="${lc}18"/>
+      <polyline points="${linePts}" fill="none" stroke="${lc}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      ${vals.map((v,i)=>`<circle cx="${xP(i).toFixed(1)}" cy="${yP(v).toFixed(1)}" r="2.2" fill="${lc}" stroke="${bg}" stroke-width="1"/>`).join('')}
+      ${xlbls2}
+      <text x="${pcx}" y="10" text-anchor="middle" font-size="7.5" font-weight="600" fill="#CCC">Source (%)</text>
+      ${pieP}
+      <circle cx="${pcx}" cy="${pcy}" r="${pir}" fill="${bg}"/>
+      ${pSegs.map((s,i)=>`<rect x="${pcx-pr-4}" y="${H-18+i*0}" width="0" height="0" fill="${s.c}"/>`).join('')}
+      <rect x="${lW+8}" y="${H-22}" width="52" height="18" fill="${bg}88" rx="3"/>
+      ${pSegs.map((s,i)=>`<rect x="${lW+10}" y="${H-20+i*4.5}" width="5" height="3.5" fill="${s.c}" rx="1"/><text x="${lW+18}" y="${H-17+i*4.5}" font-size="6.5" fill="#BBB">${pLabels[i]} ${s.v}%</text>`).join('')}
+    </svg>`;
+  }
+
+  return `<span style="font-size:22px">${type}</span>`;
+}
 
 const ESSAY_TYPES = [
   {id:'opinion',    label:'Opinion',       icon:'🎯', desc:'Agree/Disagree',
@@ -425,9 +1130,15 @@ const S = {
   // History filter
   histFilter: 'all',
   // Settings form
-  sf: {botToken:'',teacherChatId:'',groqApiKey:''},
+  sf: {botToken:'',teacherChatId:'',groqApiKey:'',motivMsg:'',motivTitle:''},
   savedMsg: '',
   tgSent: false,
+  // 🧚 Motivatsiya Pari
+  motivMsg: '',
+  motivTitle: '',
+  fairyOpen: false,
+  fairySeen: false,
+  motivSaved: false,
 };
 
 /* ══════════════════════════════════════════
@@ -584,7 +1295,7 @@ function getScoreRing(score, label, size = 70) {
 /* ══════════════════════════════════════════
    🤖 GROQ API
 ══════════════════════════════════════════ */
-async function callGroq(system, userMsg, maxTokens = 1500) {
+async function callGroq(system, userMsg, maxTokens = 1500, temp = 0.4) {
   const key = S.settings.groqApiKey || GROQ_KEY;
   if (!key) throw new Error('API_KEY_MISSING');
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -593,7 +1304,7 @@ async function callGroq(system, userMsg, maxTokens = 1500) {
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
       messages: [{ role: 'system', content: system }, { role: 'user', content: userMsg }],
-      temperature: 0.6,
+      temperature: temp,
       max_tokens: maxTokens,
       response_format: { type: 'json_object' },
     }),
@@ -642,10 +1353,25 @@ async function generateTopic() {
 
   // ─── Exam mode: Task 1 first ───────────
   if (pm === 'exam' && S.examPhase === 1) {
-    // Generate Task 1 topic
+    // Use real topic bank — no AI needed for Task 1
+    const chartTypes = ['line','bar','pie','map'];
+    const randomType = chartTypes[Math.floor(Math.random() * chartTypes.length)];
+    const realTopic  = getRealTopic(randomType);
+    if (realTopic) {
+      S.taskType    = '1';
+      S.topic       = { ...realTopic };
+      S.essay       = '';
+      S.examRunning = true;
+      S.examTimer   = 20 * 60;
+      startExamTimer();
+      S.view = 'write';
+      render();
+      return;
+    }
+    // Fallback: AI generate
     setLoading(true, 'Imtihon boshlanmoqda… Task 1 yaratilmoqda');
     try {
-      const types  = ['bar chart','line graph','pie chart','table','map'];
+      const types  = ['bar chart','line graph','pie chart','map'];
       const topics = ['global internet access 2000–2020','renewable energy sources comparison','city transport modes','university enrollment by subject','water usage by sector'];
       const t  = types[Math.floor(Math.random() * types.length)];
       const tp = topics[Math.floor(Math.random() * topics.length)];
@@ -658,7 +1384,7 @@ JSON: {"topic":"The ${t} below shows [complete description]. Summarise the infor
       S.topic    = JSON.parse(raw.replace(/```json|```/g, '').trim());
       S.essay    = '';
       S.examRunning = true;
-      S.examTimer   = 20 * 60; // 20 minutes
+      S.examTimer   = 20 * 60;
       startExamTimer();
       S.view = 'write';
       setLoading(false);
@@ -746,9 +1472,20 @@ Situation: ${sit}
 JSON: {"topic":"You should spend about 20 minutes on this task.\\n\\n[2-3 sentence situation description requiring the student to ${sit}. Include 3 bullet points of what to cover.]\\n\\nWrite at least 150 words.","letterType":"${lt.label}","category":"General Training Task 1","tip_uz":"${ltHint}"}`
         );
       } else {
-        // Academic: specific chart type
+        // Academic: pick from real IELTS topic bank (no AI needed)
         const ct = TASK1_TYPES.find(t => t.id === S.selTask1Type) || TASK1_TYPES[0];
-        const topic = ct.prompts[Math.floor(Math.random() * ct.prompts.length)];
+        const realTopic = getRealTopic(ct.id);
+        if (realTopic) {
+          S.taskType = '1';
+          S.topic    = { ...realTopic, chartType: ct.label };
+          S.essay    = '';
+          S.view     = 'write';
+          setLoading(false);
+          render();
+          return;
+        }
+        // Fallback to AI if no bank topic
+        const topic = ct.prompts ? ct.prompts[Math.floor(Math.random() * ct.prompts.length)] : 'general data';
         const chartLabel = ct.id === 'mixed'
           ? 'a bar chart and a line graph'
           : `a ${ct.label.toLowerCase()}`;
@@ -805,52 +1542,165 @@ function startExamTimer() {
 }
 
 /* ══════════════════════════════════════════
-   🎯 GRADE ESSAY
+   🎯 GRADE ESSAY — Official IELTS Band Descriptors (May 2023)
 ══════════════════════════════════════════ */
+
+const BAND_DESC_T1 = `
+OFFICIAL IELTS WRITING TASK 1 BAND DESCRIPTORS (May 2023):
+
+=== TASK ACHIEVEMENT ===
+9: All requirements fully/appropriately satisfied. Extremely rare lapses.
+8: All requirements covered appropriately/relevantly/sufficiently. Key features skilfully selected, clearly presented, highlighted and illustrated. Occasional omissions.
+7: Requirements covered. Content relevant/accurate with few omissions. Clear overview, data appropriately categorised, main trends/differences identified. Key features clearly highlighted but could be more fully illustrated.
+6: Requirements focused on, appropriate format. Key features covered and adequately highlighted. Relevant overview attempted. Information appropriately selected and supported using figures/data. Some irrelevant/inaccurate info may occur. Some details missing or excessive.
+5: Generally addresses requirements but format may be inappropriate. Key features selected are NOT adequately covered. Recounting of detail is mainly mechanical. There may be NO DATA to support description. Tendency to focus on details without the bigger picture.
+4: Attempt to address task. FEW key features selected. Features presented may be irrelevant, repetitive, inaccurate or inappropriate.
+3: Does not address requirements (possibly misunderstood data/diagram). Key features largely irrelevant. Limited information, may be repetitive.
+2: Content barely relates to task.
+1: Content wholly unrelated. ≤20 words = Band 1.
+
+=== COHERENCE & COHESION ===
+9: Followed effortlessly. Cohesion very rarely attracts attention. Minimal lapses. Paragraphing skilfully managed.
+8: Followed with ease. Ideas logically sequenced, cohesion well managed. Occasional lapses. Paragraphing used sufficiently and appropriately.
+7: Logically organised, clear progression throughout. Few lapses. Range of cohesive devices used flexibly but with some inaccuracies or over/under use.
+6: Generally arranged coherently, clear overall progression. Cohesive devices used to some good effect BUT cohesion within/between sentences may be faulty or mechanical (misuse, overuse, omission). Reference/substitution may lack flexibility → repetition or error.
+5: Organisation evident but NOT wholly logical, may lack overall progression. Relationship of ideas can be followed but sentences not fluently linked. Limited/overuse of cohesive devices with some inaccuracy. Writing may be repetitive.
+4: Ideas evident but NOT arranged coherently, no clear progression. Relationships unclear/inadequately marked. Basic cohesive devices may be inaccurate/repetitive. Inaccurate use or lack of substitution/referencing.
+3: No apparent logical organisation. Ideas discernible but difficult to relate. Minimal sequencers/cohesive devices. Difficulty identifying referencing.
+
+=== LEXICAL RESOURCE ===
+9: Full flexibility and precise use. Wide range used accurately/appropriately with very natural and sophisticated control. Minor errors in spelling/word formation extremely rare.
+8: Wide resource fluently and flexibly used to convey precise meanings. Skilful use of uncommon/idiomatic items despite occasional inaccuracies in word choice/collocation. Occasional spelling/word formation errors with minimal impact.
+7: Sufficient to allow some flexibility and precision. Some ability to use less common/idiomatic items. Awareness of style/collocation evident though inappropriacies occur. Only a few spelling/word formation errors, do not detract from clarity.
+6: Generally adequate and appropriate. Meaning generally clear despite rather restricted range or lack of precision. Risk-takers use wider range but with higher inaccuracy. Some spelling/word formation errors but do not impede communication.
+5: Limited but minimally adequate. Simple vocabulary may be accurate but range does not permit variation. Frequent lapses in word choice appropriacy, lack of flexibility → frequent simplifications/repetitions. Spelling/word formation errors may be noticeable and cause difficulty.
+4: Limited and inadequate/unrelated to task. Vocabulary basic, may be repetitive. Inappropriate lexical chunks (memorised phrases, formulaic language). Word choice errors/spelling may IMPEDE meaning.
+3: Inadequate resource. Possible over-dependence on input material or memorised language. Control of word choice/spelling very limited, errors predominate → severely impede meaning.
+
+=== GRAMMATICAL RANGE & ACCURACY ===
+9: Wide range of structures with full flexibility and control. Punctuation and grammar used appropriately throughout. Minor errors extremely rare.
+8: Wide range of structures flexibly and accurately used. Majority of sentences error-free, punctuation well managed. Occasional non-systematic errors with minimal impact.
+7: Variety of complex structures used with some flexibility and accuracy. Grammar/punctuation generally well controlled, error-free sentences frequent. Few errors persist but do not impede communication.
+6: Mix of simple and complex sentence forms but flexibility limited. Complex structures not as accurate as simple ones. Errors in grammar/punctuation occur but rarely impede communication.
+5: Range of structures limited and rather repetitive. Complex sentences attempted but tend to be faulty. Greatest accuracy on simple sentences. Grammatical errors may be frequent and cause difficulty. Punctuation may be faulty.
+4: Very limited range of structures. Subordinate clauses rare, simple sentences predominate. Some structures produced accurately but grammatical errors frequent and may impede meaning. Punctuation often faulty or inadequate.
+3: Sentence forms attempted but errors in grammar/punctuation predominate. This prevents most meaning from coming through. Length may be insufficient.
+`;
+
+const BAND_DESC_T2 = `
+OFFICIAL IELTS WRITING TASK 2 BAND DESCRIPTORS (May 2023):
+
+=== TASK RESPONSE ===
+9: Prompt appropriately addressed and explored in depth. Clear and fully developed position directly answering the question. Ideas relevant, fully extended and well supported. Extremely rare lapses.
+8: Prompt appropriately and sufficiently addressed. Clear and well-developed position. Ideas relevant, well extended and supported. Occasional omissions/lapses.
+7: Main parts of prompt appropriately addressed. Clear and developed position. Main ideas extended and supported but may over-generalise or lack focus/precision in supporting ideas.
+6: Main parts addressed (though some more fully than others). Appropriate format. Position directly relevant but conclusions may be unclear/unjustified/repetitive. Main ideas relevant but some insufficiently developed or unclear; some supporting arguments less relevant or inadequate.
+5: Main parts INCOMPLETELY addressed. Format may be inappropriate. Writer expresses position but development not always clear. Some main ideas put forward but limited and NOT sufficiently developed. May be irrelevant detail or repetition.
+4: Tackled in a minimal way, or answer is tangential — possibly due to misunderstanding of prompt. Format may be inappropriate. Position discernible but reader has to read carefully to find it. Main ideas difficult to identify; those identifiable may lack relevance/clarity/support. Large parts may be repetitive.
+3: NO part of prompt adequately addressed, or prompt misunderstood. No relevant position identifiable, little direct response. Few ideas, may be irrelevant or insufficiently developed.
+2: Content barely related to prompt. No position. Glimpses of 1-2 ideas without development.
+1: Content wholly unrelated. ≤20 words = Band 1.
+
+=== COHERENCE & COHESION ===
+9: Followed effortlessly. Cohesion very rarely attracts attention. Minimal lapses. Paragraphing skilfully managed.
+8: Followed with ease. Ideas logically sequenced, cohesion well managed. Occasional lapses. Paragraphing used sufficiently and appropriately.
+7: Logically organised, clear progression throughout (few minor lapses). Range of cohesive devices including reference/substitution used flexibly but with some inaccuracies or over/under use. Paragraphing generally effective, sequencing within paragraphs generally logical.
+6: Generally arranged coherently, clear overall progression. Cohesive devices used to some good effect BUT cohesion within/between sentences may be faulty or mechanical (misuse, overuse, omission). Reference/substitution may lack flexibility → repetition or error. Paragraphing may not always be logical or central topic not always clear.
+5: Organisation evident but NOT wholly logical, may lack overall progression. Relationship of ideas can be followed but sentences not fluently linked. Limited/overuse of cohesive devices with some inaccuracy. Writing repetitive. PARAGRAPHING MAY BE INADEQUATE OR MISSING.
+4: Ideas evident but NOT coherently arranged, no clear progression. Relationships unclear/inadequately marked. Basic cohesive devices may be inaccurate or repetitive. NO paragraphing and/or no clear main topic within paragraphs.
+3: No apparent logical organisation. Ideas discernible but difficult to relate. Minimal use of sequencers/cohesive devices. Difficulty identifying referencing. Any attempts at paragraphing are unhelpful.
+
+=== LEXICAL RESOURCE ===
+9: Full flexibility and precise use widely evident. Wide range used accurately/appropriately with very natural and sophisticated control. Minor errors extremely rare.
+8: Wide resource fluently and flexibly used to convey precise meanings. Skilful use of uncommon/idiomatic items despite occasional inaccuracies in word choice/collocation. Occasional errors with minimal impact.
+7: Sufficient to allow some flexibility and precision. Some ability to use less common/idiomatic items. Awareness of style/collocation evident though inappropriacies occur. Only a few errors in spelling/word formation, do not detract from clarity.
+6: Generally adequate and appropriate. Meaning generally clear despite restricted range or lack of precision. Risk-takers use wider range but with higher inaccuracy/inappropriacy. Some errors in spelling/word formation but do not impede communication.
+5: Limited but minimally adequate. Simple vocabulary may be accurate but range does not permit variation. Frequent lapses in word choice appropriacy, lack of flexibility → frequent simplifications/repetitions. Errors in spelling/word formation may be noticeable and cause difficulty.
+4: Limited and inadequate/unrelated to task. Vocabulary basic, may be repetitive. Inappropriate lexical chunks. Word choice errors and/or spelling may impede meaning.
+3: Inadequate resource. Possible over-dependence on input material or memorised language. Word choice/spelling very limited, errors predominate → severely impede meaning.
+
+=== GRAMMATICAL RANGE & ACCURACY ===
+9: Wide range of structures with full flexibility and control. Punctuation/grammar used appropriately throughout. Minor errors extremely rare.
+8: Wide range of structures flexibly and accurately used. Majority of sentences error-free, punctuation well managed. Occasional non-systematic errors with minimal impact.
+7: Variety of complex structures used with some flexibility and accuracy. Grammar/punctuation generally well controlled, error-free sentences frequent. Few errors persist but do not impede communication.
+6: Mix of simple and complex sentence forms but flexibility limited. Complex structures not marked by same level of accuracy as simple ones. Errors in grammar/punctuation occur but rarely impede communication.
+5: Range of structures limited and rather repetitive. Complex sentences attempted but tend to be faulty. Greatest accuracy on simple sentences. Grammatical errors frequent and cause difficulty. Punctuation may be faulty.
+4: Very limited range of structures. Subordinate clauses rare, simple sentences predominate. Some structures accurate but grammatical errors frequent and may impede meaning. Punctuation often faulty or inadequate.
+3: Sentence forms attempted but errors in grammar/punctuation predominate → prevents most meaning. Length may be insufficient.
+`;
+
 async function gradeEssay() {
-  // Sync essay from textarea first (in case render hasn't fired yet)
+  // Sync essay from textarea first
   const ea = document.getElementById('essay-area');
   if (ea) S.essay = ea.value;
 
   const words = wc(S.essay);
-  const minW = S.taskType === '1' ? 150 : 250;
-  if (words < 50) { toast(`Avval esse yozing (hozir: ${words} so'z)`, 'err'); return; }
-  if (words < minW) { toast(`Kamida ${minW} so'z talab etiladi (hozir: ${words})`, 'err'); return; }
+  const minW = S.taskType === '1' ? 150 : 230;
+  if (words < 50)  { toast(`Avval esse yozing (hozir: ${words} so'z)`, 'err'); return; }
+  if (words < minW) { toast(`Kamida ${minW} so'z yozing (hozir: ${words})`, 'err'); return; }
   setLoading(true, 'AI esseyingizni tahlil qilmoqda…');
   try {
-    const et = S.taskType === '2' ? getET(S.selEssayType) : null;
-    const taName = S.taskType === '1' ? 'Task Achievement' : 'Task Response';
-    const taGuide = S.taskType === '1'
-      ? 'Are all key features covered? Clear overview? Data accurately described?'
-      : ({
-          opinion:    "Writer's opinion clear and consistently supported?",
-          discussion: 'Both views fairly developed? Opinion clear in conclusion?',
-          problem:    'Problems/causes identified? Practical solutions for each?',
-          advdisadv:  'Both advantages and disadvantages covered with examples?',
-          twopart:    'BOTH questions answered directly with adequate support?',
-        }[S.selEssayType] || 'Task fully addressed?');
+    const et       = S.taskType === '2' ? getET(S.selEssayType) : null;
+    const isTask1  = S.taskType === '1';
+    const bandDesc = isTask1 ? BAND_DESC_T1 : BAND_DESC_T2;
+    const taName   = isTask1 ? 'Task Achievement' : 'Task Response';
 
-    const raw = await callGroq(
-      'You are a strict IELTS examiner. Grade 1-9 using official band descriptors. Return ONLY valid JSON.',
-      `Grade IELTS Writing Task ${S.taskType} ${et ? `(${et.label})` : ''}:
+    // Task-type specific Task Achievement guidance
+    const taFocus = isTask1
+      ? `TASK ACHIEVEMENT CHECKLIST (Task 1 Academic):
+- Is there a clear OVERVIEW paragraph (not just restating the question)?
+- Are the KEY FEATURES selected and highlighted (not just a list of all data)?
+- Is the data ACCURATELY described with specific figures?
+- Are COMPARISONS made where relevant?
+- Is there NO opinion or personal view added?`
+      : `TASK RESPONSE CHECKLIST (Task 2 ${et?.label || ''}):
+${S.selEssayType === 'opinion'    ? '- Is a clear personal opinion stated in the introduction AND maintained throughout?\n- Are BOTH sides mentioned even if one is favoured?\n- Is each body paragraph focused on ONE argument supporting the position?' : ''}
+${S.selEssayType === 'discussion' ? '- Are BOTH views fairly discussed (not one-sided)?\n- Is the writer\'s own opinion given in the conclusion?\n- Is each view in a separate body paragraph?' : ''}
+${S.selEssayType === 'problem'    ? '- Are specific PROBLEMS/CAUSES clearly identified?\n- Is a concrete SOLUTION proposed for each problem?\n- Are causes and solutions logically linked?' : ''}
+${S.selEssayType === 'advdisadv'  ? '- Are BOTH advantages AND disadvantages covered with equal depth?\n- Does each body paragraph focus on one side only?\n- Are specific examples given for each point?' : ''}
+${S.selEssayType === 'twopart'    ? '- Are BOTH questions answered directly and fully?\n- Does each body paragraph address one question?\n- Are both answers adequately developed?' : ''}`;
 
+    const wordNote = `\nEssay word count: ${words} words. Assess only the quality of what is written — do not apply any word count penalty. If the essay is short, the Task ${isTask1?'Achievement':'Response'} score will naturally reflect limited coverage of key features/ideas, as per the descriptors.`;
+
+    const systemPrompt = `You are a trained IELTS Writing examiner certified by the British Council and IDP. You grade strictly according to the official IELTS Band Descriptors (May 2023 edition). Your scores must be consistent with real IELTS exam standards — do not inflate scores. Most test-takers score between Band 4.5 and 7.0. A Band 8+ essay is truly exceptional. Return ONLY valid JSON, no other text.`;
+
+    const userPrompt = `${bandDesc}
+
+${taFocus}
+${wordNote}
+
+GRADING INSTRUCTIONS:
+1. Read the essay carefully and identify EVIDENCE for each criterion.
+2. Match the evidence against the band descriptors above — from top (9) downward until you find the BEST match.
+3. A script must FULLY FIT the positive features of a band AND not exhibit the negative features (bolded in descriptors) of that band.
+4. If a script sits between two bands, award the lower band unless it clearly meets the higher band's positive features.
+5. Scores must be whole numbers (1-9). Overall = exact average of 4 scores, rounded to nearest 0.5.
+6. Be STRICT. Most learners are Band 5-6. Only award 7+ if the essay genuinely meets those descriptors.
+7. Feedback must cite SPECIFIC examples from the essay (actual phrases, sentences, or errors found).
+
+TASK: IELTS Writing Task ${S.taskType}${et ? ` — ${et.label}` : ' — Academic'}
 TOPIC: ${S.topic.topic}
-${S.topic.dataDescription ? 'CHART DATA: ' + S.topic.dataDescription : ''}
-ESSAY TYPE: ${et ? et.label : 'Academic Task 1'}
+${S.topic.dataDescription ? `CHART/DATA PROVIDED: ${S.topic.dataDescription}` : ''}
 WORD COUNT: ${words}
-ESSAY:
+
+ESSAY TO GRADE:
+"""
 ${S.essay}
+"""
 
-SCORING:
-- ${taName}: ${taGuide}
-- Coherence & Cohesion: Logical flow, cohesive devices, paragraphing
-- Lexical Resource: Vocabulary range, accuracy, collocations, spelling
-- Grammatical Range & Accuracy: Structure variety, error rate, punctuation
+Return this exact JSON (replace X with scores 1-9, write feedback in Uzbek language citing specific evidence from the essay):
+{
+  "ta":  {"score": X, "feedback": "3-4 gap. Aniq misol keltiring esseydan. Nima yaxshi/yomon qilinganini ayting."},
+  "cc":  {"score": X, "feedback": "3-4 gap. Qaysi cohesive devices ishlatilgan/ishlatilmagan? Paragraflar to'g'rimi?"},
+  "lr":  {"score": X, "feedback": "3-4 gap. Aniq so'z/iborani keltiring. Xato/kuchli so'z ishlatilishini misolda ko'rsating."},
+  "gra": {"score": X, "feedback": "3-4 gap. Aniq grammatik xatolarni keltiring. Qaysi strukturalar yaxshi/yomon?"},
+  "overall": X.X,
+  "summary": "2-3 gap umumiy baho. Esse darajasini to'g'ri ifodalang.",
+  "strengths": ["kuchli1 — aniq misol bilan", "kuchli2 — aniq misol bilan"],
+  "improvements": ["1-ustuvor yaxshilash — aniq maslahat", "2-yaxshilash — aniq maslahat", "3-yaxshilash — aniq maslahat"]
+}`;
 
-JSON (no other text):
-{"ta":{"score":X,"feedback":"3-4 konkret gap Uzbek tilida"},"cc":{"score":X,"feedback":"3-4 gap Uzbek tilida"},"lr":{"score":X,"feedback":"3-4 gap Uzbek tilida"},"gra":{"score":X,"feedback":"3-4 gap Uzbek tilida"},"overall":X.X,"summary":"2-3 gap umumiy baho Uzbek tilida","strengths":["kuchli1","kuchli2"],"improvements":["yaxshilash1","yaxshilash2","yaxshilash3"]}`,
-      2000
-    );
+    const raw = await callGroq(systemPrompt, userPrompt, 2500, 0.1);
 
     const res = JSON.parse(raw.replace(/```json|```/g, '').trim());
     res.overall = avg([res.ta.score, res.cc.score, res.lr.score, res.gra.score]);
@@ -1032,6 +1882,11 @@ function viewLanding() {
           Hoziroq boshlash — bepul →
         </button>
         <p class="muted" style="text-align:center;margin-top:12px;font-size:11px">Parolsiz, faqat Telegram username bilan</p>
+        <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px;text-align:center">
+          <button class="btn btn-secondary" data-action="go-auth" data-val="teacher" style="font-size:13px;padding:10px 20px;display:inline-flex;align-items:center;gap:7px">
+            ${IC.shield}&nbsp; O'qituvchi paneli
+          </button>
+        </div>
       </div>
     </div>
   </div>`;
@@ -1100,6 +1955,13 @@ function viewAuth() {
         </button>
         ` : `
         <!-- TEACHER: full login with password -->
+        <div class="alert" style="background:rgba(200,16,46,.07);border:1px solid rgba(200,16,46,.25);border-radius:10px;padding:12px 14px;margin-bottom:4px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:22px">👨‍🏫</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">O'qituvchi paneli</div>
+            <div style="font-size:11px;color:var(--text3)">Barcha o'quvchilar natijalarini boshqarish</div>
+          </div>
+        </div>
         <div>
           <label class="label">Telegram username</label>
           <div style="position:relative">
@@ -1112,8 +1974,11 @@ function viewAuth() {
           <input class="inp" type="password" data-field="authForm.password" placeholder="Parolingiz" value="${esc(S.authForm.password)}" autocomplete="current-password">
         </div>
         ${S.authErr ? `<div class="alert alert-err">${esc(S.authErr)}</div>` : ''}
-        <button class="btn btn-primary btn-block" data-action="login">Kirish →</button>
-        <p class="muted" style="text-align:center;font-size:12px">Demo: <b style="color:var(--text)">teacher_demo</b> · parol: <b style="color:var(--text)">1234</b></p>
+        <button class="btn btn-primary btn-block" data-action="login" style="background:linear-gradient(135deg,#C8102E,#a50d24)">${IC.shield}&nbsp; O'qituvchi sifatida kirish →</button>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px">
+          <p class="muted" style="font-size:11px;margin-bottom:3px">🔑 Demo kirish:</p>
+          <p style="font-size:12px;color:var(--text2)">Username: <b style="color:var(--text)">teacher_demo</b> · Parol: <b style="color:var(--text)">1234</b></p>
+        </div>
         `}
       </div>
     </div>
@@ -1125,23 +1990,69 @@ function viewStudentHome() {
   const mySubs = mySubsOf(S.user.id);
   const avgBand = mySubs.length ? avg(mySubs.map(s => s.scores.overall)).toFixed(1) : '—';
   const recent  = mySubs.slice(0, 3);
+  const streak  = getStreak(mySubs);
+  const badges  = getBadges(mySubs);
+  const motivMsg = getMotivMsg(mySubs);
+  const nextBandTarget = mySubs.length ? Math.ceil(avg(mySubs.slice(0,3).map(s=>s.scores.overall)) + 0.5) : 5;
+  const lastBand = mySubs.length ? mySubs[0].scores.overall : 0;
+  const progressToNext = mySubs.length ? Math.min(100, Math.round(((lastBand % 1) / 0.5) * 100)) : 0;
+
   return `${studentTopBar()}<div class="page">
-    <div style="margin-bottom:22px">
+    <div style="margin-bottom:18px">
       <h1 class="h1" style="margin-bottom:4px">Salom, ${esc(S.user.name.split(' ')[0])} 👋</h1>
       <p class="muted">IELTS Writing imtihoniga tayyorlanmoqdasiz</p>
     </div>
 
-    <!-- Stats -->
-    <div class="grid2" style="margin-bottom:16px">
-      <div class="card" style="display:flex;align-items:center;gap:12px">
-        <div style="width:42px;height:42px;border-radius:12px;background:var(--blue2);display:flex;align-items:center;justify-content:center;flex-shrink:0">${IC.write}</div>
-        <div><div class="h2" style="font-size:24px">${mySubs.length}</div><div class="muted">Urinish</div></div>
+    ${S.motivMsg ? `
+    <!-- Ustoz motivatsiya xabari -->
+    <div class="student-motiv-badge" data-action="toggle-fairy">
+      <div style="font-size:30px;flex-shrink:0;animation:fairyFloat 3s ease-in-out infinite">${fairySVG().replace('width="56" height="56"','width="36" height="36"')}</div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:#c084fc;margin-bottom:2px">${esc(S.motivTitle || '✨ Bugungi maslahat — Ustoz')}</div>
+        <div style="font-size:13px;color:#e8d9ff;line-height:1.5">${esc(S.motivMsg.length > 80 ? S.motivMsg.slice(0,80)+'…' : S.motivMsg)}</div>
       </div>
-      <div class="card" style="display:flex;align-items:center;gap:12px">
-        <div style="width:42px;height:42px;border-radius:12px;background:var(--amber2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--amber)">${IC.star}</div>
-        <div><div class="h2" style="font-size:24px">${avgBand}</div><div class="muted">O'rtacha</div></div>
+    </div>` : ''}
+
+    <!-- Motivational alert -->
+    <div class="alert alert-info" style="margin-bottom:16px;font-size:14px">
+      ${motivMsg}
+    </div>
+
+    <!-- Stats row -->
+    <div class="grid3" style="margin-bottom:16px">
+      <div class="card" style="text-align:center;padding:14px 8px">
+        <div style="font-size:22px;font-weight:800;color:var(--blue)">${mySubs.length}</div>
+        <div class="muted" style="font-size:11px">Urinish</div>
+      </div>
+      <div class="card" style="text-align:center;padding:14px 8px">
+        <div style="font-size:22px;font-weight:800;color:var(--amber)">${avgBand}</div>
+        <div class="muted" style="font-size:11px">O'rtacha band</div>
+      </div>
+      <div class="card" style="text-align:center;padding:14px 8px">
+        <div style="font-size:22px;font-weight:800;color:var(--green)">${streak}</div>
+        <div class="muted" style="font-size:11px">🔥 Streak kun</div>
       </div>
     </div>
+
+    <!-- Progress to next band -->
+    ${mySubs.length ? `<div class="card" style="margin-bottom:16px">
+      <div class="flex-between" style="margin-bottom:8px">
+        <span style="font-size:13px;font-weight:600">Band ${Math.floor(lastBand)} → Band ${Math.min(9,Math.floor(lastBand)+1)}</span>
+        <span style="font-size:12px;color:var(--green);font-weight:700">${progressToNext}%</span>
+      </div>
+      <div class="progress-bar" style="height:6px">
+        <div class="progress-fill" style="width:${progressToNext}%;background:var(--green)"></div>
+      </div>
+      <p class="muted" style="margin-top:7px;font-size:11px">Keyingi bandga yetish uchun ko'proq yozing va o'rganib boring 📚</p>
+    </div>` : ''}
+
+    <!-- Badges -->
+    ${badges.length ? `<div class="card" style="margin-bottom:16px">
+      <div style="font-size:12px;font-weight:700;color:var(--text3);margin-bottom:10px;letter-spacing:.5px">🏅 YUTUQLAR</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${badges.map(b => `<span style="background:var(--amber2);color:var(--amber);border:1px solid rgba(245,158,11,.25);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:5px">${b.icon} ${b.label}</span>`).join('')}
+      </div>
+    </div>` : ''}
 
     <!-- CTA card -->
     <div class="card card-accent" style="margin-bottom:20px">
@@ -1274,17 +2185,20 @@ function viewGenerate() {
     </div>
 
     ${S.task1Mode === 'academic' ? `
-    <!-- Academic: chart type picker -->
+    <!-- Academic: chart type picker with real SVG charts -->
     <div style="margin-bottom:18px">
       <label class="label">Grafik turi tanlang</label>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
         ${TASK1_TYPES.map(t => `<div class="essay-card${S.selTask1Type===t.id?' on':''}"
-          style="--accent:${t.color};--accent-rgb:${t.rgb};display:flex;align-items:center;gap:10px;padding:11px 13px"
+          style="--accent:${t.color};--accent-rgb:${t.rgb};padding:10px 10px 9px;display:flex;flex-direction:column;align-items:stretch;gap:7px;cursor:pointer"
           data-action="set-task1-type" data-val="${t.id}">
-          <div style="font-size:20px;flex-shrink:0">${t.icon}</div>
-          <div>
-            <div class="ec-label" style="font-size:12px">${t.label}</div>
-            <div class="ec-desc">${t.desc}</div>
+          <div style="border-radius:8px;overflow:hidden;border:1.5px solid ${S.selTask1Type===t.id?t.color:'var(--border2)'};background:#0E0E0E;transition:border-color .15s;line-height:0">${miniChartSVG(t.id)}</div>
+          <div style="display:flex;align-items:center;gap:6px;padding:0 1px">
+            <span style="font-size:14px;flex-shrink:0">${t.icon}</span>
+            <div>
+              <div style="font:700 11.5px var(--font-head);color:var(--text)">${t.label}</div>
+              <div style="font-size:9.5px;color:var(--text3);margin-top:1px">${t.desc}</div>
+            </div>
           </div>
         </div>`).join('')}
       </div>
@@ -1411,8 +2325,9 @@ function viewWrite() {
         </div>
         ${S.practiceMode !== 'exam' ? `<button class="btn-icon" data-action="nav" data-val="generate" title="Yangi mavzu" style="flex-shrink:0">${IC.refresh}</button>` : ''}
       </div>
-      <p style="font-size:14px;line-height:1.8;color:var(--text);margin-bottom:${t.dataDescription?'10px':'0'}">${esc(t.topic)}</p>
-      ${t.dataDescription ? `<div style="background:var(--bg3);border-radius:9px;padding:10px 13px;margin-bottom:10px">
+      <p style="font-size:14px;line-height:1.8;color:var(--text);margin-bottom:${t.chartData||t.dataDescription?'10px':'0'}">${esc(t.topic)}</p>
+      ${t.chartData ? `<div style="margin-bottom:10px;border-radius:10px;overflow:hidden">${renderChartSVG(t)}</div>` : ''}
+      ${t.dataDescription && !t.chartData ? `<div style="background:var(--bg3);border-radius:9px;padding:10px 13px;margin-bottom:10px">
         <span class="muted">${IC.chart}&nbsp;</span><span style="font-size:13px;color:var(--text2)">${esc(t.dataDescription)}</span>
       </div>` : ''}
       ${t.tip_uz ? `<div class="struct-tip" style="${et?'--accent:'+et.color:''}">
@@ -1650,6 +2565,16 @@ function viewSubDetail(isTeacher) {
   const et      = sub.essayType ? getET(sub.essayType) : null;
   const taLabel = sub.taskType === '1' ? 'Task Achievement' : 'Task Response';
   const back    = isTeacher ? 't-home' : 'history';
+  const isEditing = isTeacher && S.teacherEdit;
+  const editScores = S.teacherEditScores || sub.scores;
+
+  const criteriaKeys = [
+    [taLabel, 'ta'],
+    ['Coherence & Cohesion', 'cc'],
+    ['Lexical Resource', 'lr'],
+    ['Grammatical Range & Accuracy', 'gra'],
+  ];
+
   return `${isTeacher ? teacherTopNav() : studentTopBar()}<div class="${isTeacher?'page-wide':'page'}">
     <button class="btn-ghost" data-action="nav" data-val="${back}" style="display:flex;align-items:center;gap:4px;margin-bottom:16px">${IC.back} Orqaga</button>
 
@@ -1662,8 +2587,19 @@ function viewSubDetail(isTeacher) {
         </div>
         <p class="muted" style="font-size:12px">${fmtDate(sub.timestamp)} · ${sub.wordCount} so'z</p>
       </div>
-      ${getBandBadge(sub.scores.overall)}
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        ${getBandBadge(isEditing ? avg([editScores.ta.score,editScores.cc.score,editScores.lr.score,editScores.gra.score]) : sub.scores.overall)}
+        ${isTeacher && !isEditing ? `<button class="btn btn-secondary" data-action="teacher-edit-start" style="font-size:12px;padding:8px 14px">✏️ Tahrirlash</button>` : ''}
+        ${isTeacher && isEditing ? `
+          <button class="btn btn-primary" data-action="teacher-edit-save" style="font-size:12px;padding:8px 16px">💾 Saqlash</button>
+          <button class="btn btn-secondary" data-action="teacher-edit-cancel" style="font-size:12px;padding:8px 14px">✕ Bekor</button>
+        ` : ''}
+      </div>
     </div>
+
+    ${isTeacher && isEditing ? `<div class="alert alert-warn" style="margin-bottom:14px">
+      ✏️ <b>Tahrirlash rejimi</b> — O'quvchi ball va izohlarini o'zgartiring, so'ng saqlang.
+    </div>` : ''}
 
     <div class="card card-accent" style="margin-bottom:12px">
       <p class="muted" style="font-size:11px;margin-bottom:7px">Mavzu:</p>
@@ -1676,6 +2612,35 @@ function viewSubDetail(isTeacher) {
       <p style="font-size:13px;line-height:1.85;white-space:pre-wrap;color:var(--text2)">${esc(sub.essay)}</p>
     </div>
 
+    ${isEditing ? `
+    <!-- TEACHER EDIT PANEL -->
+    <div class="card-lg" style="margin-bottom:12px;border-color:var(--red3);background:linear-gradient(135deg,#130707,var(--bg2))">
+      <h3 class="h3" style="margin-bottom:16px;display:flex;align-items:center;gap:8px">✏️ Ball va izohlarni tahrirlash</h3>
+
+      ${criteriaKeys.map(([lbl, k]) => `
+      <div style="margin-bottom:18px;padding:14px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border2)">
+        <div class="flex-between" style="margin-bottom:10px">
+          <span style="font-weight:700;font-size:13px">${lbl}</span>
+          <span style="font-weight:800;font-size:22px;color:${bandColor(editScores[k]?.score||5)}">${editScores[k]?.score||5}</span>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+          ${[1,2,3,4,5,6,7,8,9].map(n => `<button style="width:34px;height:34px;border-radius:8px;border:2px solid ${editScores[k]?.score===n?bandColor(n):'var(--border2)'};background:${editScores[k]?.score===n?bandColor(n)+'22':'var(--bg4)'};color:${editScores[k]?.score===n?bandColor(n):'var(--text3)'};font-weight:700;font-size:13px;cursor:pointer" data-action="teacher-set-score" data-val="${k}:${n}">${n}</button>`).join('')}
+        </div>
+        <label class="label">Izoh (o'zbek tilida):</label>
+        <textarea class="inp" style="min-height:80px;font-size:13px" data-field="teacherEditScores.${k}.feedback" placeholder="${lbl} bo'yicha izoh...">${esc(editScores[k]?.feedback||'')}</textarea>
+      </div>`).join('')}
+
+      <div style="margin-bottom:14px">
+        <label class="label">Ustoz izohi (o'quvchiga):</label>
+        <textarea class="inp" style="min-height:70px;font-size:13px" data-field="teacherEditNote" placeholder="Umumiy maslahat va ko'rsatma...">${esc(S.teacherEditNote)}</textarea>
+      </div>
+
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-primary" data-action="teacher-edit-save" style="flex:1">💾 O'zgarishlarni saqlash</button>
+        <button class="btn btn-secondary" data-action="teacher-edit-cancel">Bekor</button>
+      </div>
+    </div>
+    ` : `
     <div class="card" style="margin-bottom:12px">
       <h3 class="h3" style="text-align:center;margin-bottom:14px">Band Scores</h3>
       <div class="score-rings">
@@ -1687,12 +2652,19 @@ function viewSubDetail(isTeacher) {
       </div>
     </div>
 
+    ${sub.scores.teacherNote ? `<div class="alert alert-warn" style="margin-bottom:10px">
+      👨‍🏫 <b>Ustoz izohi:</b> ${esc(sub.scores.teacherNote)}
+    </div>` : ''}
+    ${sub.scores.teacherEdited ? `<div class="alert alert-ok" style="margin-bottom:10px">
+      ✏️ Bu natija ustoz tomonidan tahrirlangan
+    </div>` : ''}
+
     ${sub.scores.summary ? `<div class="card" style="background:#0D1A0D;border-color:rgba(34,197,94,.15);margin-bottom:10px">
       <div style="font-weight:700;font-size:13px;margin-bottom:7px;color:var(--green)">Umumiy baho</div>
       <p style="font-size:13px;color:var(--text2);line-height:1.65">${esc(sub.scores.summary)}</p>
     </div>` : ''}
 
-    ${[[taLabel,'ta'],['Coherence & Cohesion','cc'],['Lexical Resource','lr'],['Grammatical Range & Accuracy','gra']].map(([lbl, k]) => `
+    ${criteriaKeys.map(([lbl, k]) => `
     <div class="card" style="margin-bottom:9px">
       <div class="flex-between" style="margin-bottom:7px">
         <span style="font-weight:700;font-size:13px">${lbl}</span>
@@ -1700,6 +2672,8 @@ function viewSubDetail(isTeacher) {
       </div>
       <p style="font-size:13px;color:var(--text2);line-height:1.6">${esc(sub.scores[k]?.feedback || '')}</p>
     </div>`).join('')}
+    `}
+
   </div>${!isTeacher ? studentBottomNav() : ''}`;
 }
 
@@ -1763,6 +2737,45 @@ function viewTeacherSettings() {
   return `${teacherTopNav()}<div class="page-wide">
     <h2 class="h2" style="margin-bottom:4px">Sozlamalar</h2>
     <p class="muted" style="margin-bottom:24px">Groq AI va Telegram bot sozlamalari</p>
+
+    <!-- Motivatsiya Pari -->
+    <div class="motiv-card" style="margin-bottom:16px">
+      <h3 class="h3" style="margin-bottom:6px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:22px">${fairySVG().replace('width="56" height="56"','width="30" height="30"')}</span>
+        Motivatsiya Pari 🧚
+      </h3>
+      <p class="muted" style="margin-bottom:16px">O'quvchilar ekranida suzib yuruvchi pari orqali motivatsiya xabarini yuboring</p>
+
+      <div class="stack">
+        <div>
+          <label class="label" style="color:#c084fc">Xabar sarlavhasi</label>
+          <input class="inp" data-field="sf.motivTitle" placeholder="✨ Bugungi maslahat" value="${esc(S.sf.motivTitle || S.settings.motivTitle || '')}" style="border-color:rgba(167,139,250,.3)">
+        </div>
+        <div>
+          <label class="label" style="color:#c084fc">Motivatsiya xabari</label>
+          <textarea class="inp" data-field="sf.motivMsg" placeholder="O'quvchilarga motivatsiya xabari yozing… Masalan: Bugun ham qo'lingizdan keladi! Har bir esse sizni oldinga olib boradi 🚀" rows="4" style="border-color:rgba(167,139,250,.3);min-height:100px">${esc(S.sf.motivMsg || S.settings.motivMsg || '')}</textarea>
+        </div>
+
+        ${S.sf.motivMsg || S.settings.motivMsg ? `
+        <div>
+          <div style="font-size:11px;font-weight:700;color:#c084fc;margin-bottom:6px;letter-spacing:.5px">👁 O'QUVCHI KO'RINISHI:</div>
+          <div class="motiv-preview">
+            <div style="font-size:10px;font-weight:700;color:#c084fc;margin-bottom:4px">${esc(S.sf.motivTitle || S.settings.motivTitle || '✨ Bugungi maslahat')}</div>
+            ${esc(S.sf.motivMsg || S.settings.motivMsg || '')}
+            <div style="margin-top:6px;font-size:10px;color:rgba(167,139,250,.55)">— Ustoz 👩‍🏫</div>
+          </div>
+        </div>` : ''}
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button class="btn btn-primary" data-action="save-motiv" style="background:linear-gradient(135deg,#7c3aed,#6d28d9)">
+            🧚 Pariga yuborish
+          </button>
+          ${S.settings.motivMsg ? `<button class="btn btn-secondary" data-action="clear-motiv" style="color:#ef4444;border-color:rgba(239,68,68,.3)">🗑 O'chirish</button>` : ''}
+          ${S.motivSaved ? `<span class="badge badge-green">✅ Saqlandi!</span>` : ''}
+        </div>
+        ${S.settings.motivMsg ? `<div class="alert alert-ok" style="font-size:12px">🧚 Pari hozir o'quvchilar ekranida uchib yurmoqda!</div>` : ''}
+      </div>
+    </div>
 
     <!-- Groq -->
     <div class="card-lg" style="margin-bottom:16px">
@@ -1843,6 +2856,277 @@ function viewTeacherSettings() {
 }
 
 /* ══════════════════════════════════════════
+   📊 CHART RENDERER — Pure SVG
+══════════════════════════════════════════ */
+function drawBarChart(d) {
+  const W=480,H=280,ml=52,mr=16,mt=28,mb=56;
+  const cW=W-ml-mr, cH=H-mt-mb;
+  const allVals=d.series.flatMap(s=>s.data);
+  const maxV=Math.ceil(Math.max(...allVals)*1.1/10)*10||10;
+  const grps=d.labels.length, sN=d.series.length;
+  const grpW=cW/grps, barW=Math.min(26,(grpW*0.82)/sN);
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:280px;display:block">
+    <style>text{font-family:'DM Sans',sans-serif;fill:#B0B0A8;font-size:10px}</style>
+    <rect width="${W}" height="${H}" fill="#131313" rx="10"/>`;
+  for(let i=0;i<=5;i++){
+    const v=(maxV*i/5), y=mt+cH-(cH*i/5);
+    svg+=`<line x1="${ml}" y1="${y.toFixed(1)}" x2="${W-mr}" y2="${y.toFixed(1)}" stroke="#262626" stroke-width="${i===0?1.5:.6}"/>`;
+    svg+=`<text x="${ml-5}" y="${(y+3.5).toFixed(1)}" text-anchor="end">${v%1===0?v:v.toFixed(1)}</text>`;
+  }
+  d.labels.forEach((lbl,gi)=>{
+    const gx=ml+gi*grpW+grpW/2, totalW=barW*sN+(sN-1)*2;
+    const sx=gx-totalW/2;
+    d.series.forEach((s,si)=>{
+      const val=s.data[gi]||0, bH=(val/maxV)*cH;
+      const bx=sx+si*(barW+2), by=mt+cH-bH;
+      svg+=`<rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${barW}" height="${Math.max(1,bH).toFixed(1)}" fill="${s.color}" rx="3" opacity=".88"/>`;
+    });
+    const shortLbl=lbl.length>10?lbl.slice(0,9)+'…':lbl;
+    svg+=`<text x="${gx.toFixed(1)}" y="${mt+cH+17}" text-anchor="middle">${shortLbl}</text>`;
+  });
+  if(sN>1){let lx=ml; d.series.forEach(s=>{svg+=`<rect x="${lx}" y="${H-18}" width="10" height="10" fill="${s.color}" rx="2"/>`;svg+=`<text x="${lx+14}" y="${H-9}" fill="#B0B0A8">${s.name}</text>`;lx+=s.name.length*6.5+22;});}
+  if(d.title)svg+=`<text x="${W/2}" y="17" text-anchor="middle" font-size="11" font-weight="600" fill="#E0E0DC">${d.title}</text>`;
+  return svg+'</svg>';
+}
+
+function drawLineChart(d) {
+  const W=480,H=280,ml=52,mr=16,mt=28,mb=56;
+  const cW=W-ml-mr, cH=H-mt-mb;
+  const allVals=d.series.flatMap(s=>s.data);
+  const minV=Math.min(...allVals), maxV=Math.max(...allVals);
+  const range=maxV-minV||1, pad=range*0.12;
+  const lo=minV-pad, hi=maxV+pad, span=hi-lo;
+  const pts=d.labels.length;
+  const xP=i=>ml+(i/(pts-1||1))*cW;
+  const yP=v=>mt+cH-((v-lo)/span)*cH;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:280px;display:block">
+    <style>text{font-family:'DM Sans',sans-serif;fill:#B0B0A8;font-size:10px}</style>
+    <rect width="${W}" height="${H}" fill="#131313" rx="10"/>`;
+  for(let i=0;i<=5;i++){
+    const v=lo+span*i/5, y=mt+cH-(cH*i/5);
+    svg+=`<line x1="${ml}" y1="${y.toFixed(1)}" x2="${W-mr}" y2="${y.toFixed(1)}" stroke="#262626" stroke-width="${i===0?1.5:.6}"/>`;
+    svg+=`<text x="${ml-5}" y="${(y+3.5).toFixed(1)}" text-anchor="end">${v%1===0?Math.round(v):v.toFixed(1)}</text>`;
+  }
+  d.series.forEach(s=>{
+    const pts_str=s.data.map((v,i)=>`${xP(i).toFixed(1)},${yP(v).toFixed(1)}`).join(' ');
+    svg+=`<polyline points="${pts_str}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    s.data.forEach((v,i)=>{svg+=`<circle cx="${xP(i).toFixed(1)}" cy="${yP(v).toFixed(1)}" r="4" fill="${s.color}" stroke="#131313" stroke-width="2"/>`;});
+  });
+  d.labels.forEach((lbl,i)=>{const shortLbl=lbl.length>7?lbl.slice(0,6)+'…':lbl;svg+=`<text x="${xP(i).toFixed(1)}" y="${mt+cH+17}" text-anchor="middle">${shortLbl}</text>`;});
+  if(d.series.length>1){let lx=ml;d.series.forEach(s=>{svg+=`<line x1="${lx}" y1="${H-12}" x2="${lx+14}" y2="${H-12}" stroke="${s.color}" stroke-width="2.5"/>`;svg+=`<text x="${lx+18}" y="${H-8}" fill="#B0B0A8">${s.name}</text>`;lx+=s.name.length*6.5+28;});}
+  if(d.title)svg+=`<text x="${W/2}" y="17" text-anchor="middle" font-size="11" font-weight="600" fill="#E0E0DC">${d.title}</text>`;
+  return svg+'</svg>';
+}
+
+function drawPieChart(d) {
+  const W=480,H=260,cx=160,cy=130,r=110,ir=58;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:260px;display:block">
+    <style>text{font-family:'DM Sans',sans-serif;fill:#B0B0A8;font-size:11px}</style>
+    <rect width="${W}" height="${H}" fill="#131313" rx="10"/>`;
+  const total=d.segments.reduce((a,s)=>a+s.value,0);
+  let angle=-Math.PI/2;
+  d.segments.forEach(seg=>{
+    const sweep=(seg.value/total)*2*Math.PI;
+    const x1=cx+r*Math.cos(angle),y1=cy+r*Math.sin(angle);
+    const x2=cx+r*Math.cos(angle+sweep),y2=cy+r*Math.sin(angle+sweep);
+    const xi1=cx+ir*Math.cos(angle),yi1=cy+ir*Math.sin(angle);
+    const xi2=cx+ir*Math.cos(angle+sweep),yi2=cy+ir*Math.sin(angle+sweep);
+    const lg=sweep>Math.PI?1:0;
+    svg+=`<path d="M${xi1.toFixed(1)},${yi1.toFixed(1)} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${lg},1 ${x2.toFixed(1)},${y2.toFixed(1)} L${xi2.toFixed(1)},${yi2.toFixed(1)} A${ir},${ir} 0 ${lg},0 ${xi1.toFixed(1)},${yi1.toFixed(1)}" fill="${seg.color}" opacity=".9"/>`;
+    if(seg.value/total>0.07){const ma=angle+sweep/2;svg+=`<text x="${(cx+(r*0.72)*Math.cos(ma)).toFixed(1)}" y="${(cy+(r*0.72)*Math.sin(ma)+4).toFixed(1)}" text-anchor="middle" font-weight="700" fill="white" font-size="11">${seg.value}%</text>`;}
+    angle+=sweep;
+  });
+  let ly=30;
+  d.segments.forEach(seg=>{
+    if(ly>H-14)return;
+    svg+=`<rect x="292" y="${ly-9}" width="12" height="12" fill="${seg.color}" rx="2"/>`;
+    const lbl=seg.label.length>20?seg.label.slice(0,19)+'…':seg.label;
+    svg+=`<text x="310" y="${ly+1}">${lbl}</text>`;
+    ly+=20;
+  });
+  if(d.title)svg+=`<text x="${cx}" y="${H-8}" text-anchor="middle" font-size="10" fill="#6E6E66">${d.title}</text>`;
+  return svg+'</svg>';
+}
+
+function drawTableChart(d) {
+  const W=480, cols=d.headers.length, colW=(W-32)/cols;
+  const rowH=34, headerH=38;
+  const H=headerH+d.rows.length*rowH+20;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:${H}px;display:block">
+    <style>text{font-family:'DM Sans',sans-serif;fill:#B0B0A8;font-size:11px}</style>
+    <rect width="${W}" height="${H}" fill="#131313" rx="10"/>
+    <rect x="16" y="10" width="${W-32}" height="${headerH}" fill="#1E1E1E" rx="8"/>`;
+  d.headers.forEach((h,i)=>{svg+=`<text x="${(16+i*colW+colW/2).toFixed(1)}" y="${10+headerH/2+4}" text-anchor="middle" font-weight="700" fill="#F0F0EC" font-size="11">${h}</text>`;});
+  d.rows.forEach((row,ri)=>{
+    const ry=headerH+10+ri*rowH;
+    if(ri%2===0)svg+=`<rect x="16" y="${ry}" width="${W-32}" height="${rowH}" fill="#181818" rx="4"/>`;
+    row.forEach((cell,ci)=>{
+      const isFirst=ci===0, col=isFirst?'#E0E0DC':'#B0B0A8';
+      const c=String(cell); const shortC=c.length>16?c.slice(0,15)+'…':c;
+      svg+=`<text x="${(16+ci*colW+colW/2).toFixed(1)}" y="${(ry+rowH/2+4).toFixed(1)}" text-anchor="middle" fill="${col}" font-weight="${isFirst?'600':'400'}">${shortC}</text>`;
+    });
+  });
+  return svg+'</svg>';
+}
+
+function drawProcessChart(d) {
+  const steps=d.steps, W=480, boxH=48, gap=22, ml=14;
+  const H=steps.length*(boxH+gap)+16;
+  const cols=['#C8102E','#e06030','#d4880a','#15803d','#0891B2','#7C3AED','#be185d'];
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:${Math.min(H,500)}px;display:block">
+    <style>text{font-family:'DM Sans',sans-serif;fill:#B0B0A8;font-size:12px}</style>
+    <rect width="${W}" height="${H}" fill="#131313" rx="10"/>`;
+  steps.forEach((step,i)=>{
+    const y=8+i*(boxH+gap), col=cols[i%cols.length];
+    svg+=`<rect x="${ml}" y="${y}" width="${W-ml*2}" height="${boxH}" fill="${col}1A" stroke="${col}55" stroke-width="1.5" rx="10"/>`;
+    svg+=`<circle cx="${ml+22}" cy="${y+boxH/2}" r="13" fill="${col}"/>`;
+    svg+=`<text x="${ml+22}" y="${y+boxH/2+5}" text-anchor="middle" font-size="12" font-weight="800" fill="white">${i+1}</text>`;
+    const max=54, lines=[];
+    let rem=step;
+    while(rem.length>max){let idx=rem.lastIndexOf(' ',max);if(idx<0)idx=max;lines.push(rem.slice(0,idx));rem=rem.slice(idx+1);}
+    lines.push(rem);
+    lines.forEach((ln,li)=>{svg+=`<text x="${ml+44}" y="${y+boxH/2-(lines.length-1)*7+li*15+4}" fill="#E0E0DC">${ln}</text>`;});
+    if(i<steps.length-1){
+      svg+=`<line x1="${W/2}" y1="${y+boxH+2}" x2="${W/2}" y2="${y+boxH+gap-2}" stroke="${col}66" stroke-width="2" stroke-dasharray="3,3"/>`;
+      svg+=`<polygon points="${W/2},${y+boxH+gap} ${W/2-5},${y+boxH+gap-7} ${W/2+5},${y+boxH+gap-7}" fill="${col}66"/>`;
+    }
+  });
+  return svg+'</svg>';
+}
+
+function drawMapChart(d) {
+  const W=480, H=Math.max(260, 60+Math.max((d.before.items||[]).length,(d.after.items||[]).length)*32);
+  const colW=(W-48)/2;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:${H}px;display:block">
+    <style>text{font-family:'DM Sans',sans-serif;fill:#B0B0A8;font-size:11px}</style>
+    <rect width="${W}" height="${H}" fill="#131313" rx="10"/>
+    <rect x="14" y="12" width="${colW}" height="${H-24}" fill="#1A1A1A" rx="10" stroke="#262626"/>
+    <rect x="14" y="12" width="${colW}" height="34" fill="#C8102E22" rx="10"/>
+    <text x="${14+colW/2}" y="33" text-anchor="middle" font-size="13" font-weight="700" fill="#F0F0EC">${d.before.year}</text>`;
+  (d.before.items||[]).forEach((item,i)=>{
+    const y=60+i*30;if(y>H-16)return;
+    svg+=`<circle cx="28" cy="${y}" r="4" fill="#C8102E"/>`;
+    const lbl=item.length>26?item.slice(0,25)+'…':item;
+    svg+=`<text x="38" y="${y+4}">${lbl}</text>`;
+  });
+  const ax=14+colW+20;
+  svg+=`<rect x="${ax}" y="12" width="${colW}" height="${H-24}" fill="#1A1A1A" rx="10" stroke="#262626"/>
+    <rect x="${ax}" y="12" width="${colW}" height="34" fill="#22C55E22" rx="10"/>
+    <text x="${ax+colW/2}" y="33" text-anchor="middle" font-size="13" font-weight="700" fill="#F0F0EC">${d.after.year}</text>`;
+  (d.after.items||[]).forEach((item,i)=>{
+    const y=60+i*30;if(y>H-16)return;
+    svg+=`<circle cx="${ax+14}" cy="${y}" r="4" fill="#22C55E"/>`;
+    const lbl=item.length>26?item.slice(0,25)+'…':item;
+    svg+=`<text x="${ax+24}" y="${y+4}">${lbl}</text>`;
+  });
+  svg+=`<text x="${W/2}" y="${H/2}" text-anchor="middle" font-size="18" fill="#6E6E66">→</text>`;
+  return svg+'</svg>';
+}
+
+function renderChartSVG(topic) {
+  if(!topic||!topic.chartData) return '';
+  const d=topic.chartData;
+  try {
+    switch(d.type) {
+      case 'bar':     return drawBarChart(d);
+      case 'line':    return drawLineChart(d);
+      case 'pie':     return drawPieChart(d);
+      case 'table':   return drawTableChart(d);
+      case 'process': return drawProcessChart(d);
+      case 'map':     return drawMapChart(d);
+      case 'mixed':
+        return (d.charts||[]).map(c=>{
+          switch(c.type){
+            case 'bar':  return drawBarChart(c);
+            case 'line': return drawLineChart(c);
+            case 'pie':  return drawPieChart(c);
+            default:     return '';
+          }
+        }).join('<div style="height:10px"></div>');
+      default: return '';
+    }
+  } catch(e){ console.warn('Chart render error:',e); return ''; }
+}
+
+/* ══════════════════════════════════════════
+   🧚 MOTIVATSIYA PARI
+══════════════════════════════════════════ */
+function fairySVG() {
+  return `<svg width="56" height="56" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Glow -->
+    <defs>
+      <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#c084fc" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="blur"><feGaussianBlur stdDeviation="2"/></filter>
+    </defs>
+    <ellipse cx="50" cy="88" rx="22" ry="6" fill="url(#glow)" filter="url(#blur)"/>
+    <!-- Wings -->
+    <ellipse cx="28" cy="48" rx="18" ry="11" fill="#e9d5ff" opacity="0.75" transform="rotate(-30 28 48)"/>
+    <ellipse cx="72" cy="48" rx="18" ry="11" fill="#e9d5ff" opacity="0.75" transform="rotate(30 72 48)"/>
+    <ellipse cx="26" cy="58" rx="11" ry="7" fill="#ddd6fe" opacity="0.55" transform="rotate(-20 26 58)"/>
+    <ellipse cx="74" cy="58" rx="11" ry="7" fill="#ddd6fe" opacity="0.55" transform="rotate(20 74 58)"/>
+    <!-- Body dress -->
+    <ellipse cx="50" cy="68" rx="14" ry="16" fill="#7c3aed"/>
+    <ellipse cx="50" cy="68" rx="14" ry="16" fill="url(#glow)" opacity="0.3"/>
+    <!-- Dress sparkle -->
+    <circle cx="46" cy="64" r="2" fill="#c084fc" opacity="0.8"/>
+    <circle cx="54" cy="70" r="1.5" fill="#e9d5ff" opacity="0.9"/>
+    <circle cx="48" cy="74" r="1.5" fill="#c084fc" opacity="0.7"/>
+    <!-- Head -->
+    <circle cx="50" cy="38" r="15" fill="#fde68a"/>
+    <circle cx="50" cy="38" r="15" fill="#f59e0b" opacity="0.15"/>
+    <!-- Hair -->
+    <ellipse cx="50" cy="26" rx="14" ry="8" fill="#7c3aed"/>
+    <ellipse cx="38" cy="30" rx="6" ry="9" fill="#7c3aed"/>
+    <ellipse cx="62" cy="30" rx="6" ry="9" fill="#7c3aed"/>
+    <!-- Eyes -->
+    <ellipse cx="44" cy="38" rx="3" ry="3.5" fill="#1e1b4b"/>
+    <ellipse cx="56" cy="38" rx="3" ry="3.5" fill="#1e1b4b"/>
+    <circle cx="45" cy="37" r="1" fill="white"/>
+    <circle cx="57" cy="37" r="1" fill="white"/>
+    <!-- Smile -->
+    <path d="M44 44 Q50 50 56 44" stroke="#92400e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <!-- Cheeks -->
+    <circle cx="40" cy="43" r="4" fill="#fca5a5" opacity="0.5"/>
+    <circle cx="60" cy="43" r="4" fill="#fca5a5" opacity="0.5"/>
+    <!-- Star wand -->
+    <line x1="65" y1="55" x2="80" y2="30" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round"/>
+    <polygon points="80,22 82,28 88,28 83,32 85,38 80,34 75,38 77,32 72,28 78,28" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.5"/>
+    <!-- Sparkles -->
+    <circle cx="20" cy="35" r="2" fill="#c084fc" opacity="0.8"/>
+    <circle cx="15" cy="50" r="1.5" fill="#e9d5ff" opacity="0.6"/>
+    <circle cx="85" cy="55" r="1.5" fill="#c084fc" opacity="0.7"/>
+  </svg>`;
+}
+
+function renderFairy() {
+  if (!S.motivMsg) return '';
+  const msg  = esc(S.motivMsg);
+  const title = esc(S.motivTitle || '✨ Bugungi maslahat');
+  if (!S.fairyOpen) {
+    // Show just the fairy icon (clickable)
+    return `<div id="fairy-wrap">
+      <button class="fairy-btn" data-action="toggle-fairy" title="Motivatsiya xabarini ko'rish">
+        <div class="fairy-char">${fairySVG()}</div>
+      </button>
+    </div>`;
+  }
+  return `<div id="fairy-wrap">
+    <div class="fairy-bubble">
+      <button class="fairy-close" data-action="toggle-fairy">×</button>
+      <div style="font-size:11px;font-weight:700;color:#c084fc;margin-bottom:5px;letter-spacing:.5px;text-transform:uppercase">${title}</div>
+      <div>${msg}</div>
+      <div style="margin-top:8px;font-size:11px;color:rgba(167,139,250,.55)">— Ustoz 👩‍🏫</div>
+    </div>
+    <button class="fairy-btn" data-action="toggle-fairy">
+      <div class="fairy-char">${fairySVG()}</div>
+    </button>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════
    🎨 MAIN RENDER
 ══════════════════════════════════════════ */
 function render() {
@@ -1870,6 +3154,14 @@ function render() {
   }
 
   app.innerHTML = html;
+
+  // 🧚 Inject fairy on student pages
+  const studentViews = ['s-home','generate','write','result','history','profile','sub-detail','exam-task1-result'];
+  if (S.user && S.user.role === 'student' && studentViews.includes(S.view) && S.motivMsg) {
+    const fairyEl = document.createElement('div');
+    fairyEl.innerHTML = renderFairy();
+    document.body.appendChild(fairyEl.firstElementChild);
+  }
 
   // Restore essay textarea value (innerHTML doesn't restore it)
   const ea = document.getElementById('essay-area');
@@ -1904,7 +3196,12 @@ document.addEventListener('input', e => {
   const f = e.target.dataset.field;
   if (!f) return;
   const parts = f.split('.');
-  if (parts.length === 2) {
+  if (parts.length === 3) {
+    // e.g. teacherEditScores.ta.feedback
+    if (!S[parts[0]]) S[parts[0]] = {};
+    if (!S[parts[0]][parts[1]]) S[parts[0]][parts[1]] = {};
+    S[parts[0]][parts[1]][parts[2]] = e.target.value;
+  } else if (parts.length === 2) {
     if (!S[parts[0]]) S[parts[0]] = {};
     S[parts[0]][parts[1]] = e.target.value;
   } else {
@@ -2015,13 +3312,95 @@ document.addEventListener('click', async e => {
 
     case 'open-sub': {
       const sub = S.subs.find(s => s.id === val);
-      if (sub) { S.selSub = sub; S.view = 'sub-detail'; render(); }
+      if (sub) { S.selSub = sub; S.teacherEdit = false; S.teacherEditScores = null; S.view = 'sub-detail'; render(); }
       break;
     }
 
     case 'open-sub-teacher': {
       const sub = S.subs.find(s => s.id === val);
-      if (sub) { S.selSub = sub; S.view = 'sub-detail-teacher'; render(); }
+      if (sub) { S.selSub = sub; S.teacherEdit = false; S.teacherEditScores = null; S.view = 'sub-detail-teacher'; render(); }
+      break;
+    }
+
+    case 'teacher-edit-start': {
+      if (!S.selSub) break;
+      // Deep clone scores for editing
+      S.teacherEditScores = JSON.parse(JSON.stringify(S.selSub.scores));
+      S.teacherEditNote = S.selSub.scores.teacherNote || '';
+      S.teacherEdit = true;
+      render(); break;
+    }
+
+    case 'teacher-edit-cancel': {
+      S.teacherEdit = false;
+      S.teacherEditScores = null;
+      S.teacherEditNote = '';
+      render(); break;
+    }
+
+    case 'teacher-set-score': {
+      // val = "ta:7" or "cc:5" etc.
+      const [key, scoreStr] = val.split(':');
+      const score = parseInt(scoreStr);
+      if (!S.teacherEditScores) break;
+      if (!S.teacherEditScores[key]) S.teacherEditScores[key] = {};
+      S.teacherEditScores[key].score = score;
+      // Recalculate overall
+      const sc = S.teacherEditScores;
+      sc.overall = avg([sc.ta.score, sc.cc.score, sc.lr.score, sc.gra.score]);
+      render(); break;
+    }
+
+    case 'teacher-edit-save': {
+      if (!S.selSub || !S.teacherEditScores) break;
+      const newScores = {
+        ...S.teacherEditScores,
+        overall: avg([S.teacherEditScores.ta.score, S.teacherEditScores.cc.score, S.teacherEditScores.lr.score, S.teacherEditScores.gra.score]),
+        teacherEdited: true,
+        teacherNote: S.teacherEditNote || '',
+        teacherEditedAt: new Date().toISOString(),
+        teacherName: S.user.name,
+      };
+      await DB.updateSub(S.selSub.id, { scores: newScores });
+      // Refresh selSub
+      S.selSub = S.subs.find(s => s.id === S.selSub.id);
+      S.teacherEdit = false;
+      S.teacherEditScores = null;
+      S.teacherEditNote = '';
+      toast('✅ Natija muvaffaqiyatli yangilandi!', 'ok');
+      render(); break;
+    }
+
+    case 'save-motiv': {
+      const msg   = S.sf.motivMsg   || '';
+      const title = S.sf.motivTitle || '';
+      await DB.saveSettings({ motivMsg: msg, motivTitle: title });
+      S.motivMsg   = msg;
+      S.motivTitle = title;
+      S.motivSaved = true;
+      setTimeout(() => { S.motivSaved = false; render(); }, 2500);
+      toast('🧚 Motivatsiya pari o\'quvchilarga yuborildi!', 'ok');
+      render(); break;
+    }
+
+    case 'clear-motiv': {
+      await DB.saveSettings({ motivMsg: '', motivTitle: '' });
+      S.motivMsg    = '';
+      S.motivTitle  = '';
+      S.sf.motivMsg = '';
+      S.sf.motivTitle = '';
+      toast('Motivatsiya xabari o\'chirildi', 'info');
+      render(); break;
+    }
+
+    case 'toggle-fairy': {
+      S.fairyOpen = !S.fairyOpen;
+      // Remove existing fairy from DOM and re-inject
+      const existing = document.getElementById('fairy-wrap');
+      if (existing) existing.remove();
+      const fairyEl = document.createElement('div');
+      fairyEl.innerHTML = renderFairy();
+      document.body.appendChild(fairyEl.firstElementChild);
       break;
     }
 
@@ -2178,7 +3557,13 @@ async function init() {
     botToken:      S.settings.botToken || '',
     teacherChatId: S.settings.teacherChatId || '',
     groqApiKey:    S.settings.groqApiKey || GROQ_KEY,
+    motivMsg:      S.settings.motivMsg || '',
+    motivTitle:    S.settings.motivTitle || '',
   };
+
+  // Load motivation message
+  S.motivMsg   = S.settings.motivMsg   || '';
+  S.motivTitle = S.settings.motivTitle || '';
 
   // ── Telegram WebApp auto-login ──────────────
   try {
