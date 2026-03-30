@@ -209,6 +209,14 @@ textarea.inp{resize:none;line-height:1.8;min-height:240px;font-size:15px}
 .custom-topic-box{background:var(--bg3);border:1.5px dashed var(--border2);border-radius:var(--r);padding:15px;margin-bottom:16px;transition:border-color .2s}
 .custom-topic-box:focus-within{border-color:var(--red);border-style:solid}
 
+/* ── TOPIC CHOICE CARD ─────────────────── */
+.tc-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 15px;cursor:pointer;transition:all .15s;user-select:none;display:flex;gap:12px;align-items:flex-start}
+.tc-card:active{transform:scale(.98)}
+.tc-card.on{border-color:var(--red);background:var(--red2)}
+.tc-num{min-width:26px;height:26px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font:700 12px var(--font-head);color:var(--text3);flex-shrink:0;margin-top:1px}
+.tc-card.on .tc-num{background:var(--red);border-color:var(--red);color:#fff}
+.tc-text{font-size:13px;color:var(--text2);line-height:1.6}
+
 /* ── RESPONSIVE ─────────────────────── */
 @media(min-width:600px){
   .page{padding:24px 20px 48px}
@@ -300,6 +308,125 @@ const CATS = [
   {id:'global',     label:'Globalization',icon:'🌏'},
   {id:'city',       label:'City',        icon:'🏙️'},
 ];
+
+/* ══════════════════════════════════════════
+   📝 TASK 2 TOPIC BANK — 10 ta har bir kategoriyaga
+   (AI kutmasdan darhol, offline ham ishlaydi)
+══════════════════════════════════════════ */
+const T2_TOPICS = {
+  education: [
+    { topic: "In many countries, children are taught to be competitive at school. Some people think this is beneficial, while others argue that it has negative effects on children's development.\nDiscuss both views and give your own opinion.", essayType:"Discussion", tip_uz:"Ikkala tomonni tengma-teng ko'rib chiqing. O'z fikringizni oxirgi paragrafda aniq ifodalang. 'While some argue...', 'However, others contend...' kabi iboralardan foydalaning." },
+    { topic: "Some people believe that university education should be free for all students, regardless of their financial situation. Others argue that students should pay tuition fees.\nTo what extent do you agree or disagree?", essayType:"Opinion", tip_uz:"Bir tomonga aniq pozitsiya oling. Rozi bo'lsangiz — iqtisodiy adolat va jamiyat foydasi haqida yozing. Rozi bo'lmasangiz — individual mas'uliyat va resurslarni asoslang." },
+    { topic: "The number of students choosing to study abroad has increased significantly in recent decades. What are the reasons for this trend? Do the advantages outweigh the disadvantages?", essayType:"Two-part Question", tip_uz:"Birinchi paragrafda sabablar (xalqaro tajriba, til o'rganish, karyera imkoniyatlari), ikkinchida ijobiy/salbiy tahlil. 'Outweigh' so'ziga aniq javob bering." },
+    { topic: "Technology is increasingly being used in classrooms around the world. Some educators believe it improves learning, while others think it is a distraction.\nDiscuss both views and give your own opinion.", essayType:"Discussion", tip_uz:"Texnologiyaning ijobiy tomonlari (interaktiv ta'lim, resurslar) va salbiy tomonlari (chalg'itish, ekranga qaramlik) ni alohida paragraflarda muhokama qiling." },
+    { topic: "Many schools are now focusing more on STEM subjects (Science, Technology, Engineering and Mathematics) at the expense of arts and humanities. Is this a positive or negative development?", essayType:"Two-part Question", tip_uz:"STEM ustunligining sabablari va ta'siri. Ijodiylik va tanqidiy fikrlash kabi insoniy ko'nikmalar qanchalik muhimligi haqida ham yozing." },
+    { topic: "Some people argue that private schools create social inequality and should be abolished. Others believe that parents should have the right to choose private education for their children.\nTo what extent do you agree or disagree?", essayType:"Opinion", tip_uz:"Ijtimoiy tengsizlik dalili kuchli — lekin individual erkinlik ham muhim. Ikkalasini muvozanatli ko'ring va bir pozitsiyaga keling." },
+    { topic: "In some countries, students are required to study a foreign language from a very young age. What are the advantages and disadvantages of learning a foreign language at an early age?", essayType:"Advantages/Disadvantages", tip_uz:"Afzalliklar: miya rivojlanishi, til o'zlashtirish osonligi. Kamchiliklari: ona tilini zaiflashtirishi, o'qituvchi yetishmasligi. Har birini misollar bilan kuchaytirib yozing." },
+    { topic: "Many young people today are leaving school without the practical life skills they need to function in the modern world. What are the causes of this problem and what can be done to address it?", essayType:"Problem/Solution", tip_uz:"Sabablar: akademik yo'nalish, ota-ona haddan ortiq himoyasi. Yechimlar: maktab dasturiga moliya va muloqot ko'nikmalarini kiritish. Har ikki qismni parallel rivojlantiring." },
+    { topic: "Some educators believe that children should be assessed through continuous coursework rather than formal examinations. Do you think this is a better approach to evaluating students?", essayType:"Opinion", tip_uz:"Doimiy baholash ustunliklari: stress kamayishi, to'liq manzara. Imtihon afzalliklari: ob'ektivlik, standartlashtirish. Aniq bir pozitsiyaga yoqing." },
+    { topic: "There is a growing gap between the quality of education in rural and urban areas. What are the main causes of this inequality, and what measures could governments take to reduce it?", essayType:"Problem/Solution", tip_uz:"Sabablar: moliyalash farqi, malakali o'qituvchi yetishmovchiligi. Yechimlar: onlayn ta'lim, iqtisodiy rag'bat, infratuzilmaga sarmoya. Har yechimni mantiqan asoslang." },
+  ],
+  environment: [
+    { topic: "Some people believe that individuals can do little to protect the environment and that it is primarily the responsibility of governments and large corporations. To what extent do you agree or disagree?", essayType:"Opinion", tip_uz:"Individual harakatlar (isteʼmolni kamaytirish, transport) va hukumat/korporatsiya mas'uliyati (qonunchilik, sanoat chiqindilari) ni solishtiring. Aniq pozitsiya oling." },
+    { topic: "Deforestation is one of the greatest threats to our environment. What are the main reasons for deforestation, and what can be done to prevent it?", essayType:"Problem/Solution", tip_uz:"Sabablar: qishloq xo'jaligi kengayishi, yog'och sanoati, yer muammosi. Yechimlar: xalqaro kelishuvlar, tropik o'rmonlarni muhofaza qilish, qog'oz qayta ishlash." },
+    { topic: "Many people believe that renewable energy is the solution to environmental problems, while others argue that nuclear power is the only realistic alternative to fossil fuels. Discuss both views.", essayType:"Discussion", tip_uz:"Qayta tiklanadigan energiya (quyosh, shamol) va yadro energiyasining afzalliklari va kamchiliklarini alohida paragraflarda tahlil qiling." },
+    { topic: "The amount of waste produced by modern societies has increased dramatically. What are the main reasons for this, and what can be done to reduce the problem?", essayType:"Problem/Solution", tip_uz:"Sabablar: iste'molchi jamiyat, qadoqlash ortiqchaligi, rejalashtirish yetishmasligi. Yechimlar: qayta ishlash tizimi, plastik cheklovlar, iste'molchilar xabardorligi." },
+    { topic: "Some governments are introducing a 'plastic tax' on companies that produce non-recyclable packaging. Do the advantages of this policy outweigh the disadvantages?", essayType:"Advantages/Disadvantages", tip_uz:"Afzalliklar: plastik ishlab chiqarishni kamaytirish, muqobil materiallarni rag'batlantirish. Kamchiliklari: narx oshishi, raqobatbardoshlik kamayishi. Balansingizni aniq ko'rsating." },
+    { topic: "Urbanisation is one of the main drivers of environmental degradation. Is this an inevitable consequence of economic development, or can it be managed sustainably?", essayType:"Two-part Question", tip_uz:"Shaharlashtirish va iqtisodiy o'sish o'rtasidagi bog'liqlikni tahlil qiling. Barqaror shaharlar (yashil binolar, jamoat transporti) misollarini keltiring." },
+    { topic: "Many endangered species are facing extinction due to human activity. Some people argue that saving these species is not a priority when humans face poverty and disease. Do you agree?", essayType:"Opinion", tip_uz:"Biodiversitetning ekotizim uchun ahamiyatini iqtisodiy va ilmiy nuqtadan asoslang. Insoniy muammolar bilan biolandshaft o'rtasidagi bog'liqlikni ko'rsating." },
+    { topic: "Some scientists believe that it is possible to reverse climate change through technology, while others think we must reduce consumption dramatically. Discuss both views.", essayType:"Discussion", tip_uz:"Texnologik yechimlar (carbon capture, geo-engineering) va iste'molni kamaytirish (individual va siyosiy) o'rtasidagi tortishuvni parallel paragraflarda yozing." },
+    { topic: "In many cities, car use is increasing despite efforts to promote public transport. What are the causes of this trend, and what measures could help reduce car dependency?", essayType:"Problem/Solution", tip_uz:"Sabablar: noqulaylik, statusni ko'rsatish, jamoat transporti sifati. Yechimlar: ko'ngil ochar transport (velosiped, elektrosafe), texnologiya (ride-sharing, autopilot)." },
+    { topic: "Some countries are experiencing water shortages, while others have more water than they need. What are the causes of water scarcity, and how can the problem be addressed globally?", essayType:"Problem/Solution", tip_uz:"Sabablar: iqlim o'zgarishi, ortiqcha qishloq xo'jaligi sug'orishi, chiqindilar. Yechimlar: desalinatsiya, xalqaro suv shartnomasi, suv samaradorligi texnologiyalari." },
+  ],
+  technology: [
+    { topic: "Artificial intelligence is increasingly being used to make important decisions in areas such as healthcare, law and finance. Do the advantages of using AI in these fields outweigh the disadvantages?", essayType:"Advantages/Disadvantages", tip_uz:"AI afzalliklari: tezlik, xatoliklarni kamaytirish. Kamchiliklari: algoritmik noxolislik, javobgarlik yo'qligi, shaxsiy maʼlumot xavfi. Misollar bilan kuchaytirib yozing." },
+    { topic: "Social media platforms have transformed communication, but they have also been linked to increasing levels of anxiety and depression, particularly among young people. To what extent do you agree with this view?", essayType:"Opinion", tip_uz:"Ijtimoiy tarmoqlar va ruhiy sog'liq o'rtasidagi tadqiqot dalillarini ishlating. Solishtirish madaniyati, uyqu buzilishi va ijobiy jihatlari (aloqa)ni tahlil qiling." },
+    { topic: "Some people believe that robots and automation will eventually eliminate the need for human workers. Others think new technologies always create more jobs than they destroy. Discuss both views.", essayType:"Discussion", tip_uz:"Avtomatlashtirish tahdidi (ishlab chiqarish, transport, xizmat ko'rsatish) va yangi ish o'rinlari (IT, kiberxavfsizlik, ma'lumotlar fani) ni muvozanatli muhokama qiling." },
+    { topic: "The Internet has made it possible for people to work from home. Some people think this has more advantages than disadvantages. Do you agree or disagree?", essayType:"Opinion", tip_uz:"Afzalliklar: vaqt tejalishi, oila-ish muvozinat. Kamchiliklari: izolyatsiya, chegaralar yo'qligi, hamkorlik qiyinligi. Dalillaringizni oydinlashtirish uchun turli kasblarni misol qiling." },
+    { topic: "Many people are concerned about the amount of personal data that companies collect and store online. What are the main risks of this, and how can individuals and governments protect privacy?", essayType:"Problem/Solution", tip_uz:"Xavflar: identifikatsiyani o'g'irlash, nishonlangan reklama, hukumat kuzatuvi. Yechimlar: GDPR kabi qonunchilik, shifrlash, foydalanuvchi xabardorligi." },
+    { topic: "Video games are becoming increasingly popular among children and teenagers. Some parents and educators are concerned about their effects, while others argue they can be educational. Discuss both views.", essayType:"Discussion", tip_uz:"Salbiy tomonlar: zo'ravonlik, qaramlik, o'qishga taʼsir. Ijobiy tomonlar: muammo hal qilish, ijodiylik, jamoaviy o'yin. Har bir fikrni dalillar bilan mustahkamlang." },
+    { topic: "Self-driving cars are predicted to become mainstream within the next decade. What are the potential benefits and risks of this technology becoming widely used?", essayType:"Advantages/Disadvantages", tip_uz:"Afzalliklar: baxtsiz hodisalarni kamaytirish, yoqilg'i samaradorligi, nogironlar uchun mobillik. Kamchiliklari: haydovchi ishi yo'qolishi, xavfsizlik buzilishlari, etik qarorlar." },
+    { topic: "Some people argue that space exploration is a waste of resources and that the money should be spent on solving problems on Earth. To what extent do you agree?", essayType:"Opinion", tip_uz:"Kosmosga sarmoya yer muammolarini amalda qanday hal qilmaydi yoki qiladi deganida o'ziga xos misollar (GPS, ob-havo prognozi, tibbiy texnologiyalar) keltiring." },
+    { topic: "The rise of online shopping has led to the decline of traditional high-street stores. What are the causes of this shift, and what are the consequences for local communities?", essayType:"Two-part Question", tip_uz:"Sabablar: qulay, narz solishtirish, keng tanlov. Oqibatlar: ish o'rinlari, mahalliy iqtisod, shahar markazlarining tanazzuli. Ikkinchi qismni kengroq yozing." },
+    { topic: "Cybercrime is increasing at an alarming rate, threatening individuals, businesses and governments. What are the main causes of cybercrime, and what solutions can be implemented to tackle it?", essayType:"Problem/Solution", tip_uz:"Sabablar: anonim internet, kiberxavfsizlik etishmovchiligi, qonunchilik bo'shliqlari. Yechimlar: xalqaro hamkorlik, xodimlarni o'qitish, ikki faktorli autentifikatsiya." },
+  ],
+  society: [
+    { topic: "The gap between the rich and the poor is growing in many countries. What are the main reasons for this inequality, and what can be done to reduce it?", essayType:"Problem/Solution", tip_uz:"Sabablar: kapital daromadi, ta'limdagi tengsizlik, soliq tizimlari. Yechimlar: progressiv soliq, ijtimoiy dasturlar, minimum ish haqi. Har yechimning samaradorligini muhokama qiling." },
+    { topic: "In many countries, the elderly population is growing while the birth rate is declining. What are the consequences of this demographic shift, and what measures can governments take?", essayType:"Problem/Solution", tip_uz:"Oqibatlar: pensiya tizimiga tazyiq, tibbiy xarajatlar, ish kuchi yetishmasligi. Yechimlar: immigratsiya siyosati, pensiya yoshi oshirish, mehnatni avtomatlashtirishdan foydalanish." },
+    { topic: "Some people believe that the traditional family model (two parents with children) is no longer relevant in modern society. To what extent do you agree or disagree?", essayType:"Opinion", tip_uz:"Oila shakllarining xilma-xilligi (bir ota-onali, bir jinsli juftlik) va an'anaviy oila qadriyatlari o'rtasidagi dalillarni solishtiring. Ijtimoiy o'zgarishlarga asoslaning." },
+    { topic: "Crime rates are rising in many cities around the world. Some people believe harsher punishments would reduce crime, while others think education and social programmes are more effective. Discuss both views.", essayType:"Discussion", tip_uz:"Qattiq jazo (qamoq, o'lim jazosi) va ijtimoiy dasturlar (qayta integratsiya, ta'lim) samaradorligini taqqoslaydigan tadqiqot misollarini keltiring." },
+    { topic: "Gender equality has improved significantly in many countries, but significant gaps remain in pay, political representation and social expectations. What are the main barriers to full gender equality?", essayType:"Problem/Solution", tip_uz:"To'siqlar: stereotiplar, parvarish mas'uliyati, tarmoq imtiyozlari. Yechimlar: ota-onalarni qonuniy himoya, kvota tizimi, madaniy o'zgarish. Har yondashuvni baholang." },
+    { topic: "Many people think that celebrities, such as musicians and sports stars, are given too much attention by the media and earn too much money. To what extent do you agree?", essayType:"Opinion", tip_uz:"Mashhurlarga e'tiborning sabablari (madaniy ta'sir, iqtisodiy foyda) va salbiy oqibatlar (yolg'on rol modellari, muhim muammolardan chalg'ish) ni tahlil qiling." },
+    { topic: "Volunteering and community service are increasingly valued in modern society. Some argue it should be made compulsory for young people. Do the advantages outweigh the disadvantages?", essayType:"Advantages/Disadvantages", tip_uz:"Majburiy ko'ngillilik afzalliklari: fuqarolik mas'uliyati, empat rivojlanishi. Kamchiliklari: undov yo'qolishi, majburlash etikasi. Ixtiyoriy tizim alternativani ham ko'rib chiqing." },
+    { topic: "Social media has changed the way people communicate and form relationships. Some argue it has made people more connected; others believe it has made society lonelier. Discuss both views.", essayType:"Discussion", tip_uz:"Aloqa (masofaviy do'stlar, onlayn jamoalar) va yolg'izlik (yuzma-yuz munosabatlar kamayishi, yuzaki ulanish) o'rtasidagi ziddiyatni dalillar bilan ko'rsating." },
+    { topic: "Many people believe that modern life has become too stressful and that people are less happy today than they were in the past. Do you agree with this view?", essayType:"Opinion", tip_uz:"Zamonaviy hayot stressi (ish bosimi, ijtimoiy tarmoq) va tarixiy solishtirma (kasallik, qashshoqlik, urush) o'rtasida muvozanat o'rnating. Baxt tadqiqot dalillaridan foydalaning." },
+    { topic: "In many societies, people are increasingly choosing to live alone. What are the reasons for this trend, and what impact does it have on individuals and society?", essayType:"Two-part Question", tip_uz:"Sabablar: individualizm, iqtisodiy imkoniyat, kechroq uylashish. Taʼsirlar: yolg'izlik, uy-joy talabining o'sishi, ijtimoiy tarmoqlarga bog'liqlik. Ikkinchi qismda jamiyat darajasiga kiring." },
+  ],
+  health: [
+    { topic: "Obesity rates have risen sharply in many developed countries. What are the main causes of this problem, and what can governments and individuals do to tackle it?", essayType:"Problem/Solution", tip_uz:"Sabablar: ishlov berilgan oziq-ovqat, sedanter turmush tarzi, reklama. Yechimlar: qand solig'i, oziq-ovqat yorliqlari, maktab dasturlari. Yechimlarni shaxs va hukumat darajasida ajrating." },
+    { topic: "Some people believe that the best way to improve public health is through major lifestyle changes such as diet and exercise. Others think government policies are more important. Discuss both views.", essayType:"Discussion", tip_uz:"Individual yondashuv (motivatsiya, xabardorlik) va hukumat siyosati (sog'liqni saqlash moliyalash, sog'lom muhit) o'rtasida parallel paragraflarda muhokama yuriting." },
+    { topic: "The increasing use of social media has been linked to rising rates of mental health problems, particularly among young people. To what extent do you agree with this view?", essayType:"Opinion", tip_uz:"Munosabatni taxminan 'part cause' sifatida asoslang. Ijtimoiy taqqoslov, uyqu yo'qotilishi, kiberhujum — ruhiy sog'liqqa aloqasini tadqiqot bilan kuchaytirib yozing." },
+    { topic: "Many countries are facing a shortage of medical professionals. What are the reasons for this, and what measures can be taken to address the problem?", essayType:"Problem/Solution", tip_uz:"Sabablar: ta'lim narxi, qiyin sharoitlar, boy mamlakatlar brain drain. Yechimlar: ta'lim subsidiyasi, ish sharoitini yaxshilash, telemedicine. Har yechimni aniq asoslang." },
+    { topic: "Some people think that a universal, government-funded healthcare system is the fairest way to provide medical treatment for all citizens. Others believe a private healthcare system is more effective. Discuss both views.", essayType:"Discussion", tip_uz:"Davlat tibbiyoti (umumiy qamrov, teng imkoniyat) va xususiy tizim (samaradorlik, innovatsiya, tezkor xizmat) o'rtasidagi muvozanatni ishlab chiqing." },
+    { topic: "Fast food companies are often blamed for the rise in obesity and diet-related diseases. Do you think fast food companies have a responsibility to make their products healthier?", essayType:"Opinion", tip_uz:"Korporativ javobgarlik (reklama strategiyasi, bolalarga ta'sir) va shaxsiy tanlov o'rtasidagi bahsni muhokama qiling. Hukumat nazoratini ham ko'rib chiqing." },
+    { topic: "Alternative medicine, such as herbal remedies and acupuncture, is becoming increasingly popular. Some people believe these treatments can be as effective as conventional medicine. Do you agree?", essayType:"Opinion", tip_uz:"Muqobil tabobat uchun dalillar (psixosomatik foyda, yon ta'sir yo'qligi) va qarshi dalillar (ilmiy asoslanmaganlik, kechiktirilgan conventional davolash) ni asosing." },
+    { topic: "The world is experiencing an increase in the prevalence of lifestyle diseases such as heart disease, diabetes and cancer. What are the causes of this, and what changes are needed to reverse this trend?", essayType:"Problem/Solution", tip_uz:"Sabablar: nofaol hayot tarzi, o'ta ishlov berilgan oziq-ovqat, stress. O'zgarishlar: jamoat salomatlik kampaniyalari, shahar rejalashtirishi (velosiped yo'llari), ish joyida sog'liqni saqlash." },
+    { topic: "Some people believe that vaccination should be made compulsory for all children. Others think that parents should have the right to choose whether to vaccinate their children. Discuss both views.", essayType:"Discussion", tip_uz:"Majburiy vaksinatsiya (jamoat immunitetini saqlash) va ota-ona tanlov huquqi (tibbiy avtonomiya) o'rtasidagi etik tortishuvni dalillar bilan muhokama qiling." },
+    { topic: "Governments in many countries spend large amounts of money on healthcare, yet diseases such as cancer and Alzheimer's still affect millions of people. Is it better to focus funding on prevention or cure?", essayType:"Opinion", tip_uz:"Oldini olish (arzonroq, tezroq natija) va davolash (mavjud bemorlar, ilmiy tadqiqot) o'rtasida xarajat-foyda tahlili qiling. Amaliy misol bilan asoslantirib yozing." },
+  ],
+  work: [
+    { topic: "In many countries, people are working longer hours than ever before. What are the reasons for this trend, and what are the effects on individuals and society?", essayType:"Two-part Question", tip_uz:"Sabablar: iqtisodiy bosim, texnologiya, korporativ madaniyat. Ta'sirlar: sog'liq, oila hayoti, ijodiy kamayish. Ikkinchi qism uchun ish-hayot muvozanatiga qarating." },
+    { topic: "Some people believe that everyone should be able to work from home, while others argue that there are significant benefits to working in an office. Discuss both views.", essayType:"Discussion", tip_uz:"Uy ishi (moslashuvchanlik, xarajat kamayishi) va ofis ishi (hamkorlik, professionallik, chegaralar) ni asoslash uchun konkret ish sohalari misolini keltiring." },
+    { topic: "There is a growing trend of people changing careers multiple times throughout their lives. What are the advantages and disadvantages of this trend?", essayType:"Advantages/Disadvantages", tip_uz:"Afzalliklar: shaxsiy rivojlanish, yangi ko'nikmalar, turli tajriba. Kamchiliklari: pensiya yo'qolishi, stabil daromad, ixtisoslik chuqurligi. Yosh avlod uchun ahamiyatni ta'kidlang." },
+    { topic: "Many young people today prioritise job satisfaction and personal fulfilment over high salaries when choosing a career. Is this a positive or negative development?", essayType:"Two-part Question", tip_uz:"Bu hodisaning sabablari (ta'lim darajasi, qadriyatlar o'zgarishi) va ijtimoiy oqibatlarini (xizmat ko'rsatish sektori, innovatsiya) tahlil qiling. Iqtisodiy jihatni ham kiriting." },
+    { topic: "Some companies offer their employees the opportunity to work a four-day week. To what extent do you agree that this is beneficial for both employers and employees?", essayType:"Opinion", tip_uz:"To'rt kunlik ish haftasi samaradorligi, xodimlar farovonligi va iqtisodiy ta'sirini islandiya va microsoft tadqiqotlari bilan asoslab bering. Salbiy tomonlarni ham ko'rib chiqing." },
+    { topic: "Automation and artificial intelligence are transforming the workplace, eliminating many jobs while creating others. Do you think the benefits of this technological shift outweigh the drawbacks?", essayType:"Advantages/Disadvantages", tip_uz:"Yo'qolgan ish o'rinlari (ishlab chiqarish, transport) va yangi imkoniyatlar (ma'lumotlar fani, robotexnika) ni taqqoslang. Ta'lim va qayta tayyorlash siyosatini ko'ring." },
+    { topic: "Some people think that the best way to reduce unemployment is to encourage companies to move their operations to areas of high unemployment. Do the advantages outweigh the disadvantages?", essayType:"Advantages/Disadvantages", tip_uz:"Afzalliklar: mahalliy ish o'rinlari, infratuzilma, iqtisodiy faollik. Kamchiliklari: tabiiy resurslar muammosi, mahalliy iste'molchi etishmovchiligi, subsidiyaga qaramlik." },
+    { topic: "Women are still underrepresented in senior management positions in many industries. What are the reasons for this, and what measures can be taken to address the issue?", essayType:"Problem/Solution", tip_uz:"Sabablar: homiladorlik tanaffusi, rahbarlik stereotiplari, tarmoq bias. Yechimlar: kvota tizimi, mentoring dasturlari, parvarish siyosati. Korxona va hukumat darajasini ajrating." },
+    { topic: "Some employers feel that social media profiles of job applicants are a useful source of information, while others think that this is an invasion of privacy. Discuss both views.", essayType:"Discussion", tip_uz:"Ish beruvchi nuqtai nazari (xarakter, professional obro') va shaxsiy maxfiylik huquqi (individual hayot, diskriminatsiya xavfi) ni parallel paragraflarda muhokama qiling." },
+    { topic: "The gig economy, where workers are employed on a freelance or contract basis, is growing rapidly. What are the advantages and disadvantages for workers in this type of employment?", essayType:"Advantages/Disadvantages", tip_uz:"Afzalliklar: moslashuvchanlik, mustaqillik, ko'p daromad manbalari. Kamchiliklari: ijtimoiy himoya yo'qligi, nobarqaror daromad, karyera o'sishi imkoniyatsizligi." },
+  ],
+  global: [
+    { topic: "Globalisation has brought many benefits, but it has also increased inequality between and within countries. Do you think the advantages of globalisation outweigh the disadvantages?", essayType:"Advantages/Disadvantages", tip_uz:"Afzalliklar: erkin savdo, texnologiya tarqalishi, madaniy almashinuv. Kamchiliklari: mahalliy sanoat, madaniy yo'qolish, mehnat ekspluatatsiyasi. Dalillaringizni statistik misollar bilan asosing." },
+    { topic: "English has become the dominant language of international business, science and politics. Some people see this as beneficial, while others argue it leads to the loss of other languages and cultures. Discuss both views.", essayType:"Discussion", tip_uz:"Ingliz tilining universal qulayligi (aloqa, ilm) va mahalliy tillarning yo'qolishi (madaniy xotira, identitet) o'rtasida muvozanat topib yozing." },
+    { topic: "Many people believe that international travel is one of the most effective ways to promote global understanding and peace. To what extent do you agree with this view?", essayType:"Opinion", tip_uz:"Sayohat orqali madaniy empat va o'zaro tushunish ehtimolini tarixiy va psixologik misollar bilan asoslang. Salbiy tomonlar (turizm salbiy ta'siri, stereotiplanish) ni ham ko'ring." },
+    { topic: "Some people think that wealthy nations have a moral obligation to provide financial aid to poorer countries. Others believe that aid creates dependency. Discuss both views.", essayType:"Discussion", tip_uz:"Xalqaro yordamning ijobiy natijalari (fojia oldini olish, rivojlanish) va qaramlik xavfi (mahalliy sanoatni zaiflashtirish, hukumat mas'uliyatsizligi) ni solishtiring." },
+    { topic: "Global migration has increased significantly in recent decades. What are the main push and pull factors that cause people to migrate, and what are the effects on both host and home countries?", essayType:"Two-part Question", tip_uz:"Push omillari: kambag'allik, mojaro, iqlim. Pull omillari: iqtisodiy imkoniyatlar, xavfsizlik. Ta'sirlar: qabul qiluvchi mamlakat (ko'p madaniyat, mehnat) va o'z mamlakati (brain drain, pul o'tkazmalar) uchun." },
+    { topic: "Some people argue that multinational companies have a negative impact on developing countries. Others believe they bring economic benefits. Discuss both views and give your own opinion.", essayType:"Discussion", tip_uz:"Salbiy ta'sir (soliq qochish, ish sharoiti, mahalliy raqobatni yo'q qilish) va ijobiy ta'sir (ish o'rinlari, texnologiya, infratuzilma) ni teng miqdorda tahlil qiling." },
+    { topic: "There is a growing debate about whether countries should prioritise national interests or global cooperation when addressing major world problems such as climate change and pandemics. Discuss both views.", essayType:"Discussion", tip_uz:"Milliy manfaatlar (suvereniteti, mahalliy iqtisod) va global hamkorlik (COVID-19, iqlim shartnomalar) o'rtasidagi tortishuvni jahon voqealari misolida muhokama qiling." },
+    { topic: "The movement of refugees and asylum seekers has become one of the most controversial issues in global politics. What are the causes of this crisis, and how can it best be managed?", essayType:"Problem/Solution", tip_uz:"Sabablar: urush, iqtisodiy nochorlik, iqlim muhojiratlari. Boshqaruv: xalqaro qonunlar, yukni taqsimlash mexanizmlari, rivojlanish yordami oldindan oldini olish sifatida." },
+    { topic: "Some people believe that free trade between countries benefits the global economy. Others argue that it harms developing nations and leads to the exploitation of workers. To what extent do you agree?", essayType:"Opinion", tip_uz:"Erkin savdoning nazariy afzalliklari (ixtisoslashtirish, narz pasayishi) va amaliy muammolari (tengsiz shartnomalar, mehnat huquqlari, mahalliy sanoat qulashi) ni tahlil qiling." },
+    { topic: "Cultural exchange is seen by many as one of the most positive aspects of globalisation. However, some people fear that it is leading to a homogenisation of world cultures. Discuss both views.", essayType:"Discussion", tip_uz:"Madaniy almashinuv (yangi ovqatlar, musiqa, g'oyalar) va bir xillashuv (mahalliy an'analar, tillar yo'qolishi) o'rtasidagi ziddiyatni aniq sivilizatsiya misollarida ko'rsating." },
+  ],
+  city: [
+    { topic: "Many cities around the world are experiencing rapid population growth. What are the main problems this creates, and what can be done to manage urban growth sustainably?", essayType:"Problem/Solution", tip_uz:"Muammolar: uy-joy tiqilishi, tiqilinch transport, zararli chiqindilar. Yechimlar: aqlli shaharlar, koʻchma markazlar, qishloq rivojlantirishni rag'batlantirish. Har yechimni asoslab yozing." },
+    { topic: "Public transport systems are struggling to meet the demands of growing city populations. What are the reasons for this, and what measures can be taken to improve urban transport?", essayType:"Problem/Solution", tip_uz:"Sabablar: moliyalash yetishmovchiligi, infratuzilma eskirishi, shaharsozlik rejasi. Yechimlar: elektr avtobuslar, metro kengaytirish, velosiped infratuzilmasi, iqtisodiy rag'bat." },
+    { topic: "Many people believe that city life offers more opportunities than rural life, yet urban areas face serious problems such as pollution, crime and overcrowding. Discuss both views.", essayType:"Discussion", tip_uz:"Shahar hayotining imkoniyatlari (ish, ta'lim, madaniyat) va muammolari (ifloslanish, aholiyla tiqilish, turmush narxi) ni parallel ravishda muhokama qiling. Real shaharlar misolida." },
+    { topic: "Urban green spaces such as parks and gardens are disappearing as cities expand. Some people think this is a problem. To what extent do you agree?", essayType:"Opinion", tip_uz:"Yashil hududlarning ruhiy sog'liq, havo sifati va ijtimoiy aloqa uchun ahamiyatini tibbiy va ekologik dalillar bilan asoslab yozing. Iqtisodiy bosim sabablarini ham ko'ring." },
+    { topic: "Some city planners are promoting the idea of 15-minute cities, where all essential services are accessible within a 15-minute walk or cycle ride. What are the potential benefits and challenges of this approach?", essayType:"Advantages/Disadvantages", tip_uz:"Afzalliklar: transport kamaytirish, sog'lom hayot, jamoatchilik. Qiyinchiliklar: arzon uy-joy yetishmasligi, infratuzilma xarajati, shahar merkezini markazsizlashtirish." },
+    { topic: "Homelessness is a significant and growing problem in many of the world's major cities. What are the main causes of homelessness, and what can governments do to address it?", essayType:"Problem/Solution", tip_uz:"Sabablar: uy-joy narxi, ruhiy salomatlik muammolari, qayta integratsiya etishmovchiligi. Yechimlar: 'uy birinchi' siyosat, ijtimoiy ko'mak, arzon uy-joy dasturlari." },
+    { topic: "As cities become more congested, some governments are introducing congestion charges for drivers who enter the city centre. Do the advantages of this policy outweigh the disadvantages?", essayType:"Advantages/Disadvantages", tip_uz:"Afzalliklar: transport qisqarishi, ifloslanish, ommaviy transport foydalanish ko'payishi. Kamchiliklari: past daromadlilarga nisbatan nohaqlik, biznes ta'siri. London misolini ishlating." },
+    { topic: "Gentrification — the renovation of deteriorated urban areas — often leads to the displacement of lower-income residents. Is gentrification beneficial or harmful to cities?", essayType:"Opinion", tip_uz:"Yangilanishning iqtisodiy afzalliklari (sarmoya, jinoyat kamayishi) va ijtimoiy zarar (mahalliy aholi ko'chirilishi, madaniy o'zgarish) ni muhokama qiling. Aniq pozitsiya oling." },
+    { topic: "In many cities, historic buildings are being demolished to make way for modern developments. Should governments do more to protect historic architecture?", essayType:"Opinion", tip_uz:"Tarixiy binolarni saqlashning madaniy, turistik va iqtisodiy qiymati bilan zamonaviy rivojlanish ehtiyojini moslashtiring. Kompromis yechimlarni ham ko'rib chiqing." },
+    { topic: "Air pollution in urban areas has reached dangerous levels in many countries. What are the main causes of urban air pollution, and what measures can be taken to reduce it?", essayType:"Problem/Solution", tip_uz:"Sabablar: transport, sanoat, qurilish changi, isitish tizimi. Yechimlar: elektr transport, sanoat me'yori, yashil binolar, havo sifati monitoring. Manbani aniq ajratib yozing." },
+  ],
+};
+
+// Task 2 bankidan tasodifiy mavzu olish
+function getT2Topic(catId, essayTypeId) {
+  const pool = T2_TOPICS[catId] || T2_TOPICS.education;
+  // essayType bo'yicha filter — topilmasa, hammasi orasidan oladi
+  const etLabel = ESSAY_TYPES.find(e => e.id === essayTypeId)?.label || '';
+  const filtered = pool.filter(t => t.essayType === etLabel);
+  const arr = filtered.length ? filtered : pool;
+  // Oxirgi ko'rsatilgandan boshqasini tanlash uchun
+  const last = (window._lastT2Idx || {})[catId] ?? -1;
+  let idx;
+  do { idx = Math.floor(Math.random() * arr.length); } while (arr.length > 1 && idx === last);
+  if (!window._lastT2Idx) window._lastT2Idx = {};
+  window._lastT2Idx[catId] = idx;
+  return arr[idx];
+}
 
 // Academic Task 1 — chart types
 const TASK1_TYPES = [
@@ -427,6 +554,34 @@ const REAL_TOPICS = {
           {name:'Death rate', data:[13,11,10,9,9,8],    color:'#6B7280'}
         ]}
     },
+    {
+      topic: "The graph below shows the number of cars per 1,000 people in four countries between 1970 and 2010.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "USA: rose from 420 to 820 (highest throughout). Germany: 240 → 580. Japan: 90 → 590 (steepest rise). Brazil: 40 → 200. Japan overtook Germany by 2005.",
+      category: "Academic Task 1 — Line Graph",
+      tip_uz: "USA har doim eng yuqori. Japan eng tez o'sdi va Germaniyani quvib o'tdi — bu crossing point ni alohida ta'kidlang. Brazil eng past, lekin o'sdi.",
+      chartData: {type:'line', title:'Cars per 1,000 people',
+        labels:['1970','1975','1980','1985','1990','1995','2000','2005','2010'],
+        series:[
+          {name:'USA',     data:[420,480,530,560,620,680,730,790,820], color:'#C8102E'},
+          {name:'Germany', data:[240,290,350,400,450,490,520,560,580], color:'#38BDF8'},
+          {name:'Japan',   data:[90,150,230,310,390,450,510,570,590],  color:'#F59E0B'},
+          {name:'Brazil',  data:[40,55,70,80,90,110,140,170,200],      color:'#22C55E'}
+        ]}
+    },
+    {
+      topic: "The graph below shows the percentage of adults in the UK who used online banking between 2005 and 2022.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "18–34: rose sharply from 20% (2005) to 92% (2022). 35–54: grew from 12% to 87%. 55–74: climbed slowly from 3% to 58%. 75+: rose marginally from 1% to 22%. Youngest group always highest.",
+      category: "Academic Task 1 — Line Graph",
+      tip_uz: "Barcha guruhlar o'sdi, lekin yosh guruhlar tezroq. 75+ guruh sezilarli darajada orqada qoldi. 'Digital divide' ga ishora qilib yozing.",
+      chartData: {type:'line', title:'Online banking usage (%)',
+        labels:['2005','2008','2011','2014','2017','2020','2022'],
+        series:[
+          {name:'18–34', data:[20,38,58,72,82,88,92], color:'#C8102E'},
+          {name:'35–54', data:[12,25,42,58,70,80,87], color:'#38BDF8'},
+          {name:'55–74', data:[3,8,15,28,40,50,58],   color:'#F59E0B'},
+          {name:'75+',   data:[1,2,4,8,12,17,22],     color:'#22C55E'}
+        ]}
+    },
   ],
 
   bar: [
@@ -504,165 +659,303 @@ const REAL_TOPICS = {
         ]}
     },
     {
-      topic: "The chart below shows the proportion of people's total spending on different items in four European countries in 2002.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "Food: Turkey highest 32%, UK lowest 15%. Clothing: Italy 9%, Sweden 5%. Leisure: UK highest 23%, Turkey 4%. Housing: Germany 27%, Turkey 17%. Clear West/East divide in spending patterns.",
+      topic: "The chart below shows the number of overseas students enrolled in UK universities in four subject areas in 2000 and 2015.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Business: 2000→2015: 45,000→98,000 (biggest increase). Engineering: 28,000→52,000. Life Sciences: 18,000→41,000. Humanities: 22,000→30,000 (smallest growth). All areas increased; Business dominant both years.",
       category: "Academic Task 1 — Bar Chart",
-      tip_uz: "G'arbiy Yevropa (UK, Sweden) — ko'proq leisure ga sarflaydi. Sharqiy (Turkey) — ko'proq oziq-ovqatga. Bu madaniy-iqtisodiy farqni ifodalang.",
-      chartData: {type:'bar', title:'Spending proportions by category (%)',
-        labels:['Food','Housing','Leisure','Clothing'],
+      tip_uz: "Business eng ko'p o'sdi (2 martadan ko'proq). Humanities eng kam o'sdi. Ikki yilni solishtirish uchun 'roughly doubled', 'grew by X%' kabi iboralar ishlating.",
+      chartData: {type:'bar', title:'Overseas students in UK universities (thousands)',
+        labels:['Business','Engineering','Life Sciences','Humanities'],
         series:[
-          {name:'Turkey',  data:[32,17,4,7],  color:'#C8102E'},
-          {name:'Germany', data:[22,27,14,8], color:'#F59E0B'},
-          {name:'Italy',   data:[20,24,16,9], color:'#22C55E'},
-          {name:'UK',      data:[15,25,23,7], color:'#38BDF8'}
+          {name:'2000', data:[45,28,18,22], color:'#38BDF8'},
+          {name:'2015', data:[98,52,41,30], color:'#C8102E'}
         ]}
     },
     {
-      topic: "The bar chart below shows the number of students by subject area who were enrolled in further education in the UK in 2000–2001.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "Sciences: male 80K, female 40K. Engineering: male 150K, female 10K. Business: male 100K, female 110K (female higher). Education: male 30K, female 200K. Humanities: male 60K, female 90K.",
+      topic: "The chart below shows the percentage of households with various consumer goods in a European country in 1980, 1995 and 2010.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "TV: 75%→95%→99%. Washing machine: 55%→76%→92%. Dishwasher: 10%→35%→62%. Mobile phone: 0%→20%→90% (fastest rise from 1995). Computer: 2%→25%→78%.",
       category: "Academic Task 1 — Bar Chart",
-      tip_uz: "Engineering erkaklar ustun (15:1 nisbat). Education — ayollar mutlaq ko'p (200K vs 30K). Business — deyarli teng. Bu dramatic farqlarni ta'kidlang.",
-      chartData: {type:'bar', title:'Students enrolled (thousands)',
-        labels:['Engineering','Education','Business','Sciences','Humanities'],
+      tip_uz: "TV va Washing machine 1980 dan yuqori edi. Mobile phone va Computer eng dramatik o'sish ko'rsatdi. 1995–2010 oralig'i o'zgarishni alohida ta'kidlang.",
+      chartData: {type:'bar', title:'Household consumer goods ownership (%)',
+        labels:['TV','Washing machine','Dishwasher','Mobile phone','Computer'],
         series:[
-          {name:'Male',   data:[150,30,100,80,60],  color:'#38BDF8'},
-          {name:'Female', data:[10,200,110,40,90],  color:'#C8102E'}
+          {name:'1980', data:[75,55,10,0,2],   color:'#6B7280'},
+          {name:'1995', data:[95,76,35,20,25],  color:'#38BDF8'},
+          {name:'2010', data:[99,92,62,90,78],  color:'#C8102E'}
+        ]}
+    },
+    {
+      topic: "The bar chart below shows the average daily temperature and rainfall in Singapore by month.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Temperature: stays relatively stable 26–28°C all year. Rainfall: Jan 240mm, Feb 170mm (lowest), Mar–May 180–190mm, Jun–Aug 155–170mm (driest), Nov–Dec 260–290mm (wettest). Temperature varies minimally despite rain changes.",
+      category: "Academic Task 1 — Bar Chart",
+      tip_uz: "Asosiy xususiyat: harorat deyarli o'zgarmaydi, lekin yog'ingarchilik sezilarli farq qiladi. Bu kontrastni overview da ifodalang. Nov–Dec — eng nam, Jun–Aug — eng quruq.",
+      chartData: {type:'bar', title:'Singapore: temperature (°C) & rainfall (mm)',
+        labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        series:[
+          {name:'Rainfall (mm)', data:[240,170,185,195,190,165,155,160,170,195,265,290], color:'#38BDF8'},
+          {name:'Temp (°C)',     data:[26,27,27,28,28,28,28,27,27,27,26,26],             color:'#C8102E'}
+        ]}
+    },
+    {
+      topic: "The chart below shows the number of students studying different foreign languages at a UK secondary school in 2005 and 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "French: 520→310 (biggest fall). Spanish: 180→380 (biggest rise). German: 240→190 (slight fall). Mandarin: 30→160 (sharpest % rise). Arabic: 15→85. French remained most popular in 2005; Spanish took over by 2020.",
+      category: "Academic Task 1 — Bar Chart",
+      tip_uz: "French ustunlikni yo'qotdi, Spanish birinchi o'ringa chiqdi. Mandarin va Arabic kichik raqamlardan dramatik o'sdi. '%' o'zgarishni va mutlaq raqamlarni alohida ifodalang.",
+      chartData: {type:'bar', title:'Foreign language students (UK secondary school)',
+        labels:['French','Spanish','German','Mandarin','Arabic'],
+        series:[
+          {name:'2005', data:[520,180,240,30,15],  color:'#38BDF8'},
+          {name:'2020', data:[310,380,190,160,85], color:'#C8102E'}
         ]}
     },
   ],
 
   pie: [
     {
-      topic: "The pie charts below show the proportion of income earned from different sectors of the economy in three developing countries in 2018.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "Country A: Agriculture 45%, Industry 30%, Services 25%. Country B: Agriculture 20%, Industry 45%, Services 35%. Country C: Agriculture 10%, Industry 35%, Services 55%. Shift from agriculture to services as development increases.",
+      topic: "The pie chart below shows how the average student in a UK university spent their monthly budget of £900 in 2022.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Rent: 35% (£315). Food: 22% (£198). Transport: 12% (£108). Entertainment: 14% (£126). Clothing: 8% (£72). Study materials: 9% (£81). Rent by far the largest expense.",
       category: "Academic Task 1 — Pie Chart",
-      tip_uz: "Rivojlanish darajasi oshgani sari qishloq xo'jaligi ulushi kamayadi, xizmat ko'rsatish o'sadi. Bu pattern ni overview da aniq ifodalang.",
-      chartData: {type:'pie', title:'Country A economy sectors',
-        segments:[{label:'Agriculture',value:45,color:'#22C55E'},{label:'Industry',value:30,color:'#C8102E'},{label:'Services',value:25,color:'#38BDF8'}]}
+      tip_uz: "Rent eng katta ulush (35%). 'The largest proportion' bilan boshlang. Kichik ulushlarni 'combined' qilib aytish mumkin. Har foizni £ ga aylantirish qo'shimcha baho beradi.",
+      chartData: {type:'pie', title:'Student monthly budget (£900)',
+        segments:[
+          {label:'Rent',          value:35, color:'#C8102E'},
+          {label:'Food',          value:22, color:'#38BDF8'},
+          {label:'Entertainment', value:14, color:'#F59E0B'},
+          {label:'Transport',     value:12, color:'#22C55E'},
+          {label:'Study materials',value:9, color:'#7C3AED'},
+          {label:'Clothing',      value:8,  color:'#0891B2'}
+        ]}
     },
     {
-      topic: "The pie charts below show the main reasons why people moved to and from the UK in 2007.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "Moving IN: Work (27%), Formal study (22%), Accompany/join family (18%), Looking for work (14%), Other (19%). Moving OUT: Going home (24%), Work (30%), Accompany family (15%), No reason stated (31%).",
+      topic: "The chart below shows the energy consumption by sector in the United States in 2019.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Transportation: 28%. Industrial: 32% (largest). Residential: 20%. Commercial: 18%. Others: 2%. Industrial sector consumes the most; Transportation second; Residential and Commercial roughly similar.",
       category: "Academic Task 1 — Pie Chart",
-      tip_uz: "Kelganlar asosiy sababi — ish va ta'lim. Ketganlar — uyga qaytish va ish. 'No reason stated' — 31% ni alohida ta'kidlang. Ikkita chartni solishtiring.",
-      chartData: {type:'pie', title:'Why people moved IN to UK (2007)',
-        segments:[{label:'Work',value:27,color:'#C8102E'},{label:'Formal study',value:22,color:'#38BDF8'},{label:'Family',value:18,color:'#22C55E'},{label:'Looking for work',value:14,color:'#F59E0B'},{label:'Other',value:19,color:'#6B7280'}]}
+      tip_uz: "Industrial eng katta (32%), Transportation ikkinchi. Residential va Commercial o'xshash. Sanoat va transportning yig'indisi 60% — bu muhim nuqta.",
+      chartData: {type:'pie', title:'US energy consumption by sector (2019)',
+        segments:[
+          {label:'Industrial',    value:32, color:'#C8102E'},
+          {label:'Transportation',value:28, color:'#38BDF8'},
+          {label:'Residential',   value:20, color:'#F59E0B'},
+          {label:'Commercial',    value:18, color:'#22C55E'},
+          {label:'Others',        value:2,  color:'#6B7280'}
+        ]}
     },
     {
-      topic: "The charts below show the electricity generated in Germany and France from all sources and from renewable energy in 2009.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "Germany total: Coal 29%, Natural gas 14%, Nuclear 22%, Renewables 17%, Other 18%. France total: Nuclear 76%, Hydro 10%, Gas 5%, Other 9%. Germany renewable breakdown: Wind 38%, Biomass 25%, Solar 17%, Hydro 20%.",
+      topic: "The pie charts below show the proportion of income spent on different categories in the UK in 1960 and 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1960: Food 40%, Housing 25%, Clothing 15%, Leisure 8%, Other 12%. 2020: Housing 30%, Food 22%, Leisure 24%, Clothing 10%, Other 14%. Food share halved; Leisure tripled.",
       category: "Academic Task 1 — Pie Chart",
-      tip_uz: "France — yadroga qaramlik (76%) dramatic. Germany — diversifitsiya, renewables 17%. Ikki mamlakatning energy strategiyasi tubdan farqli.",
-      chartData: {type:'pie', title:'Germany electricity sources (2009)',
-        segments:[{label:'Coal',value:29,color:'#6B7280'},{label:'Nuclear',value:22,color:'#EF4444'},{label:'Other',value:18,color:'#A78BFA'},{label:'Renewables',value:17,color:'#22C55E'},{label:'Gas',value:14,color:'#38BDF8'}]}
+      tip_uz: "Ikkita pie chartni solishtiring: Food ulushi keskin kamaydi (40%→22%), Leisure sezilarli oshdi (8%→24%). Housing o'sdi. Bu o'zgarishlarni 'whereas', 'by contrast' bilan bog'lang.",
+      chartData: {type:'pie', title:'UK household spending 1960 vs 2020',
+        segments:[
+          {label:'Housing 1960',  value:25, color:'#C8102E'},
+          {label:'Food 1960',     value:40, color:'#38BDF8'},
+          {label:'Leisure 1960',  value:8,  color:'#F59E0B'},
+          {label:'Clothing 1960', value:15, color:'#22C55E'},
+          {label:'Other 1960',    value:12, color:'#6B7280'}
+        ]}
     },
     {
-      topic: "The pie charts compare the proportion of males and females studying different subjects at a UK university in 2010.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "Males: Engineering 35%, Sciences 30%, Social sciences 20%, Arts 15%. Females: Arts 30%, Social sciences 28%, Sciences 25%, Engineering 17%. Clear gender preference: males favour STEM, females favour arts.",
+      topic: "The chart shows the main reasons why people visited a public library in a UK city during one week in 2015.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Borrow books: 42%. Use computers/internet: 23%. Study/do homework: 18%. Attend events: 8%. Read newspapers: 6%. Other: 3%. Book borrowing clearly dominates; digital use second.",
       category: "Academic Task 1 — Pie Chart",
-      tip_uz: "Erkaklar — Engineering dominant. Ayollar — Arts va Social sciences ustun. Sciences da farq kichik. 'In contrast', 'whereas' kabi so'zlar bilan solishtirib boring.",
-      chartData: {type:'pie', title:'Male students by subject (2010)',
-        segments:[{label:'Engineering',value:35,color:'#38BDF8'},{label:'Sciences',value:30,color:'#22C55E'},{label:'Social sci.',value:20,color:'#F59E0B'},{label:'Arts',value:15,color:'#C8102E'}]}
+      tip_uz: "Kitob olish (42%) aniq ustunlik qiladi. Kompyuter/internet ikkinchi (23%). Kitob va kompyuterning yig'indisi 65% — bu asosiy xulosa.",
+      chartData: {type:'pie', title:'Reasons for visiting the library (%)',
+        segments:[
+          {label:'Borrow books',     value:42, color:'#C8102E'},
+          {label:'Use computers',    value:23, color:'#38BDF8'},
+          {label:'Study/homework',   value:18, color:'#F59E0B'},
+          {label:'Attend events',    value:8,  color:'#22C55E'},
+          {label:'Read newspapers',  value:6,  color:'#7C3AED'},
+          {label:'Other',            value:3,  color:'#6B7280'}
+        ]}
     },
     {
-      topic: "The pie chart below shows how a typical family in the UK spent their weekly budget in 2012.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "Housing 30%, Food & drink 18%, Transport 14%, Recreation & culture 11%, Clothing 6%, Health 5%, Education 4%, Other 12%. Housing accounts for nearly a third of total expenditure.",
+      topic: "The pie chart below shows the percentage of water used for different purposes in a country in 2018.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Agriculture: 70%. Industry: 22%. Domestic: 8%. Agriculture overwhelmingly dominates. Industry second. Domestic use surprisingly small.",
       category: "Academic Task 1 — Pie Chart",
-      tip_uz: "Turar joy (30%) — eng katta ulush. Oziq-ovqat ikkinchi (18%). Ta'lim eng kam (4%). Top 3 kategoriya jami 62% ni tashkil etadi — bu asosiy nuqta.",
-      chartData: {type:'pie', title:'UK family weekly budget (2012)',
-        segments:[{label:'Housing',value:30,color:'#C8102E'},{label:'Food & drink',value:18,color:'#F59E0B'},{label:'Transport',value:14,color:'#38BDF8'},{label:'Other',value:12,color:'#6B7280'},{label:'Recreation',value:11,color:'#22C55E'},{label:'Clothing',value:6,color:'#A78BFA'},{label:'Health',value:5,color:'#EC4899'},{label:'Education',value:4,color:'#14B8A6'}]}
+      tip_uz: "Qishloq xo'jaligi 70% — bu eng muhim fakt. Uy xo'jaligi atigi 8% — bu ajablanarli. 'Accounts for nearly three-quarters', 'a mere 8%' kabi ta'sirchan iboralar ishlating.",
+      chartData: {type:'pie', title:'Water usage by sector (%)',
+        segments:[
+          {label:'Agriculture', value:70, color:'#22C55E'},
+          {label:'Industry',    value:22, color:'#38BDF8'},
+          {label:'Domestic',    value:8,  color:'#C8102E'}
+        ]}
     },
     {
-      topic: "The charts below show the percentage of water used for different purposes in six world regions in 2000.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "North America: Industrial 48%, Agricultural 39%, Domestic 13%. Central Asia: Agricultural 88%, Industrial 7%, Domestic 5%. Europe: Industrial 53%, Agricultural 31%, Domestic 16%. South Asia: Agricultural 94%, Industrial 2%, Domestic 4%.",
+      topic: "The chart below shows the percentage of different types of housing in a city in 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Flats/apartments: 38%. Detached houses: 26%. Semi-detached: 20%. Terraced houses: 12%. Other: 4%. Flats are the most common type; more than half the housing is multi-unit (flats + other).",
       category: "Academic Task 1 — Pie Chart",
-      tip_uz: "Rivojlanayotgan mintaqalar (Central Asia, South Asia) — qishloq xo'jaligi 88–94%. Rivojlangan (North America, Europe) — sanoat 48–53%. Bu ziddiyat asosiy xulosa.",
-      chartData: {type:'pie', title:'South Asia water use (2000)',
-        segments:[{label:'Agricultural',value:94,color:'#22C55E'},{label:'Domestic',value:4,color:'#38BDF8'},{label:'Industrial',value:2,color:'#C8102E'}]}
+      tip_uz: "Flats eng kichik uy turiga ega (38%). 'Detached' va 'Semi-detached' ni birlashtirish mumkin (46%). Shahar hayoti va zich qurilishni ko'rsatuvchi xususiyatlarni ifodalang.",
+      chartData: {type:'pie', title:'Housing types in the city (%)',
+        segments:[
+          {label:'Flats/Apartments', value:38, color:'#C8102E'},
+          {label:'Detached',         value:26, color:'#38BDF8'},
+          {label:'Semi-detached',    value:20, color:'#F59E0B'},
+          {label:'Terraced',         value:12, color:'#22C55E'},
+          {label:'Other',            value:4,  color:'#6B7280'}
+        ]}
     },
     {
-      topic: "The two pie charts below show the favourite leisure activities of men and women in a survey conducted in Canada in 2015.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "Men: Sports 35%, Gaming 25%, Reading 15%, Cooking 10%, Other 15%. Women: Shopping 28%, Reading 25%, Cooking 20%, Sports 15%, Other 12%. Reading common for both. Sports dominant for men; shopping for women.",
+      topic: "The pie chart shows the proportion of waste produced by different sectors in a European country in 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Construction: 36%. Agriculture: 25%. Households: 18%. Mining: 10%. Manufacturing: 8%. Services: 3%. Construction sector produces the most waste, nearly double agriculture.",
       category: "Academic Task 1 — Pie Chart",
-      tip_uz: "Reading — ikkala guruhda ham muhim (lekin ayollar ko'proq). Sports erkaklar uchun 1-o'rin, ayollar uchun 4-o'rin. Bu katta farqni ta'kidlang.",
-      chartData: {type:'pie', title:"Men's leisure activities (Canada)",
-        segments:[{label:'Sports',value:35,color:'#38BDF8'},{label:'Gaming',value:25,color:'#7C3AED'},{label:'Other',value:15,color:'#6B7280'},{label:'Reading',value:15,color:'#22C55E'},{label:'Cooking',value:10,color:'#F59E0B'}]}
+      tip_uz: "Qurilish sektori (36%) umumiy tasavvurdan ko'p chiqindi chiqaradi — bu ajablanarli fakt. Uy xo'jaligi atigi 18%. 'Contrary to expectations' kabi iborani ishlating.",
+      chartData: {type:'pie', title:'Waste production by sector (%)',
+        segments:[
+          {label:'Construction', value:36, color:'#C8102E'},
+          {label:'Agriculture',  value:25, color:'#22C55E'},
+          {label:'Households',   value:18, color:'#38BDF8'},
+          {label:'Mining',       value:10, color:'#F59E0B'},
+          {label:'Manufacturing',value:8,  color:'#7C3AED'},
+          {label:'Services',     value:3,  color:'#6B7280'}
+        ]}
+    },
+    {
+      topic: "The pie chart below shows the main causes of deforestation in a tropical country.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Cattle ranching: 38%. Subsistence farming: 32%. Commercial agriculture (soy, palm oil): 14%. Logging: 9%. Infrastructure: 5%. Other: 2%. Farming-related causes account for over 84% combined.",
+      category: "Academic Task 1 — Pie Chart",
+      tip_uz: "Chorvachililik va dehqonchilik birgalikda 70% ni tashkil etadi — bu asosiy xulosa. 'Agriculture-related activities account for the vast majority' kabi umumlashtirib yozing.",
+      chartData: {type:'pie', title:'Causes of deforestation (%)',
+        segments:[
+          {label:'Cattle ranching',  value:38, color:'#C8102E'},
+          {label:'Subsistence farming',value:32,color:'#22C55E'},
+          {label:'Commercial agriculture',value:14,color:'#F59E0B'},
+          {label:'Logging',          value:9,  color:'#92400E'},
+          {label:'Infrastructure',   value:5,  color:'#38BDF8'},
+          {label:'Other',            value:2,  color:'#6B7280'}
+        ]}
+    },
+    {
+      topic: "The pie chart shows how a university allocates its annual budget across different departments and services.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Academic staff salaries: 40%. Facilities/maintenance: 18%. Research: 16%. Student services: 12%. Administration: 9%. IT & library: 5%. Staff costs dominate nearly half the budget.",
+      category: "Academic Task 1 — Pie Chart",
+      tip_uz: "Akademik hodimlar maoshi (40%) yarmi. Research va Student services ni birlashtirish mumkin (28%). Universitetning talabaga qaragan profiliga e'tibor bering.",
+      chartData: {type:'pie', title:'University annual budget allocation (%)',
+        segments:[
+          {label:'Academic salaries', value:40, color:'#C8102E'},
+          {label:'Facilities',        value:18, color:'#38BDF8'},
+          {label:'Research',          value:16, color:'#F59E0B'},
+          {label:'Student services',  value:12, color:'#22C55E'},
+          {label:'Administration',    value:9,  color:'#7C3AED'},
+          {label:'IT & Library',      value:5,  color:'#6B7280'}
+        ]}
+    },
+    {
+      topic: "The pie chart below illustrates the proportion of different types of crimes reported to police in a city in 2021.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Theft & burglary: 34%. Drug offences: 21%. Violent crime: 18%. Fraud & cybercrime: 15%. Criminal damage: 9%. Other: 3%. Theft the most common; digital crimes (fraud/cybercrime) notably high.",
+      category: "Academic Task 1 — Pie Chart",
+      tip_uz: "O'g'irlik eng ko'p (34%). Kiberjinoyat va firibgarlik (15%) hozirgi zamonning muhim jihati — buni ta'kidlang. 'A significant proportion' kabi iboralar qo'shing.",
+      chartData: {type:'pie', title:'Types of reported crimes (%)',
+        segments:[
+          {label:'Theft & burglary', value:34, color:'#C8102E'},
+          {label:'Drug offences',    value:21, color:'#7C3AED'},
+          {label:'Violent crime',    value:18, color:'#EF4444'},
+          {label:'Fraud/Cybercrime', value:15, color:'#38BDF8'},
+          {label:'Criminal damage',  value:9,  color:'#F59E0B'},
+          {label:'Other',            value:3,  color:'#6B7280'}
+        ]}
     },
   ],
 
   map: [
     {
-      topic: "The maps below show the town of Chorleywood, a village near London, in 1868, 1994 and 2005.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "1868: small settlement near river. 1994: railway added (south side), residential expansion east and west, new roads built. 2005: motorway added (north bypass), industrial area developed in the northeast, retail park in south.",
+      topic: "The maps below show the changes that were made to a university campus between 2005 and 2023.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "2005: main building (north), open fields (south), single sports hall (east), car park (west). 2023: main building extended eastward, sports complex replaced sports hall, student accommodation built on south fields, car park converted to garden, new library added (northwest).",
       category: "Academic Task 1 — Map",
-      tip_uz: "Uch davr bor: 1868 → 1994 → 2005. Railway (1994) va motorway (2005) rivojlanishni tezlashtirdi. Shimol-Janub-Sharq-G'arb yo'nalishlarida o'zgarishlarni tasvirlab bering.",
+      tip_uz: "Yo'nalishlardan foydalaning: north, south, east, west. O'zgarishlar: extended, replaced, converted, constructed, demolished. 1-2 o'zgarmagan narsani ham ta'kidlang.",
       chartData: {type:'map',
-        before:{year:'1868', items:['Small settlement near river','No railway','No roads','Farmland all around']},
-        after: {year:'2005', items:['Railway (south, added 1994)','Residential expansion E & W','Motorway bypass (north)','Industrial area (northeast)','Retail park (south)']}}
+        before:{year:'2005', items:['Main building (north)','Open fields (south)','Sports hall (east)','Car park (west)']},
+        after: {year:'2023', items:['Extended main building','Student accommodation (south)','Sports complex (east)','Garden (was car park)','New library (northwest)']}}
     },
     {
-      topic: "The diagrams below show the layout of a sports centre as it is now, and plans for its development in the future.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "Now: main entrance (south), swimming pool (west), gym (east), car park (north), small café (centre). Future: café to be extended into restaurant, new dance studio replacing car park, gym expanded, outdoor sports area added (east).",
+      topic: "The maps show the development of a coastal village into a tourist resort over a 40-year period.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1980: small fishing village, 12 houses near shore, one road, natural beach. 2020: beach hotel (north), water park (east), 50+ houses expanded inland, main road widened, marina added (south), nature area retained (northwest).",
       category: "Academic Task 1 — Map",
-      tip_uz: "Mavjud → kelajak. 'Will be replaced by', 'is to be extended', 'will be added' kabi future iboralar ishlat. Har o'zgarishni joylashuv bilan ifodalang.",
+      tip_uz: "Qishloqdan turistik shaharchaga o'zgarishni umumiy overview da ko'rsating. 'What was formerly a fishing village has been transformed into...' kabi iboralar ishlating.",
       chartData: {type:'map',
-        before:{year:'Now', items:['Main entrance (south)','Swimming pool (west)','Gym (east)','Car park (north)','Small café (centre)']},
-        after: {year:'Future', items:['Restaurant (extended café)','Dance studio (was car park)','Gym expanded (east)','Outdoor sports area added','Main entrance unchanged']}}
+        before:{year:'1980', items:['12 houses near shore','Fishing boats & dock','Natural sandy beach','Single road (north–south)','Woodland (northwest)']},
+        after: {year:'2020', items:['Beach hotel (north)','Water park (east)','50+ houses (expanded inland)','Marina added (south)','Widened main road','Woodland preserved (northwest)']}}
     },
     {
-      topic: "The maps below show an island before and after the construction of some tourist facilities.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "Before: uninhabited, trees covering most of the island, one sandy beach (west coast), coral reef (south). After: reception (centre), 6 beach huts (west beach), restaurant (east), pier and boat trips (south), footpaths throughout, trees mostly cleared.",
+      topic: "The plans below show the layout of a town centre in 1990 and the present day.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1990: department store (centre), cinema (north), bank, post office, open market (east). Present: department store → shopping mall, cinema → multiplex, bank remains, post office demolished (replaced by café), market → pedestrian plaza.",
       category: "Academic Task 1 — Map",
-      tip_uz: "Before — tabiiy, uninhabited. After — to'liq o'zgargan. 'Previously', 'now', 'has been replaced by', 'has been built' kabi iboralar qo'llang. Daraxtlar yo'qolganini ta'kidlang.",
+      tip_uz: "Markaziy do'kon va kino kengaytirildi. Pochta yo'q qilindi. Bozor piyodalar maydoniga aylandi. 'Has been replaced by', 'remains unchanged', 'has been demolished' iboralarini ishlating.",
       chartData: {type:'map',
-        before:{year:'Before', items:['Uninhabited island','Trees cover most island','Sandy beach (west coast)','Coral reef (south)','No facilities at all']},
-        after: {year:'After', items:['Reception building (centre)','6 beach huts (west beach)','Restaurant (east side)','Pier & boat trips (south)','Footpaths throughout','Trees mostly cleared']}}
+        before:{year:'1990', items:['Department store (centre)','Cinema (north)','Bank (west)','Post office (south)','Open market (east)']},
+        after: {year:'Present', items:['Shopping mall (expanded centre)','Multiplex cinema (north)','Bank (unchanged)','Café (was post office)','Pedestrian plaza (was market)']}}
     },
     {
-      topic: "The maps show a small industrial town called Whitley in 1965 and 2005.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "1965: factory (north), farmland (west), terraced houses (south), river and bridge (east), small school (centre). 2005: factory demolished → housing estate, farmland → supermarket, new primary and secondary schools, bridge widened, river park created.",
+      topic: "The maps below illustrate how a forest area was used in the past and how it is currently being used.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Past: dense forest covering entire area, single trail, one small lake (southeast). Present: northern third cleared for farming, picnic area and car park (north), nature trail expanded, lake area developed with visitor centre, southern forest preserved.",
       category: "Academic Task 1 — Map",
-      tip_uz: "Fabrika turar joyga, qishloq xo'jaligi savdo markaziga aylandi. 'Has been demolished', 'has been converted into', 'has been replaced by' — passiv iboralar ishlating.",
+      tip_uz: "Shimoliy qism o'rmon kesildi, janubiy qism saqlanib qoldi. Mehmon markazi qurildi. O'zgarishlarni qismlarga bo'lib yozing: north, south, centre.",
       chartData: {type:'map',
-        before:{year:'1965', items:['Factory (north)','Farmland (west)','Terraced houses (south)','River & bridge (east)','Small school (centre)']},
-        after: {year:'2005', items:['Housing estate (was factory)','Supermarket (was farmland)','2 new schools added','Bridge widened','River park created']}}
+        before:{year:'Past', items:['Dense forest (entire area)','Single walking trail','Small lake (southeast)','No visitor facilities']},
+        after: {year:'Present', items:['Farm (northern third)','Picnic area & car park (north)','Expanded nature trail','Visitor centre (near lake)','Forest preserved (south)']}}
     },
     {
-      topic: "The diagrams below show the floor plan of a public library in 2001 and how it looks following a refurbishment in 2023.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "2001: large reading room (centre), reference section (north), children's area (east), periodicals (west), one computer terminal, main desk at entrance. 2023: children's area doubled, 20 computer stations, café added (where periodicals were), self-service kiosks, reading room slightly reduced.",
+      topic: "The diagrams below show the layout of a hospital ward before and after renovation.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Before: 20-bed open ward, one nurses' station (centre), shared bathrooms (east), small waiting area (entrance). After: 10 private rooms, nurses' station relocated (south), private bathrooms each room, larger family waiting room, new consultation room added (north).",
       category: "Academic Task 1 — Map",
-      tip_uz: "Texnologiya va zamonaviy xizmat: kompyuterlar ko'paydi (1→20), self-service qo'shildi. Bolalar bo'limi kengaydi. Periodicals ko'tarildi — kutubxona zamonaviylashtirdi.",
+      tip_uz: "Ochiq palata xususiy xonalarga aylandi — bu asosiy o'zgarish. Hamshiralar stansiyasi ko'chirildi. 'Has been converted', 'relocated', 'subdivided into' iboralarini ishlating.",
       chartData: {type:'map',
-        before:{year:'2001', items:['Reading room (centre)','Reference section (north)','Children\'s area (east)','Periodicals (west)','1 computer terminal','Main desk at entrance']},
-        after: {year:'2023', items:['Children\'s area doubled','20 computer stations','Café (was periodicals)','Self-service kiosks','Reading room reduced','Main desk unchanged']}}
+        before:{year:'Before renovation', items:['20-bed open ward','Nurses\' station (centre)','Shared bathrooms (east)','Small waiting area (entrance)']},
+        after: {year:'After renovation', items:['10 private rooms','Nurses\' station (south)','En-suite bathrooms each room','Family waiting room (larger)','Consultation room (north)']}}
     },
     {
-      topic: "The two maps below show changes in a coastal town called Frettenham between 1975 and 2015.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "1975: fishing harbour (west), hotel (north cliff), small promenade, residential area (east). 2015: harbour expanded into marina, hotel extended with spa, promenade doubled in length with shops added, beach parking constructed, new coastal path (north to south), residential area expanded further east.",
+      topic: "The maps below show an island before and after the construction of tourist facilities.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Before: untouched island, beach on west coast, coral reef (surrounding), palm trees throughout. After: hotel complex (north coast), pier & boat dock (west), beach restaurants, footpath around island, two beaches designated for swimming, airport (east).",
       category: "Academic Task 1 — Map",
-      tip_uz: "Turizm rivojlangani ko'rinib turibdi: marina, spa, do'konlar. Harbour → marina — bu asosiy o'zgarish. Promenade ikki barobar kengaydi — sanab o'ting.",
+      tip_uz: "Tabiiy oroldan turistik markazga o'zgarish. Dengiz bo'yi tabiiy holda qoldi (reef) — bu muhim. Yangi qurilmalarni 'has been constructed/built/developed' bilan ifodalang.",
       chartData: {type:'map',
-        before:{year:'1975', items:['Fishing harbour (west)','Hotel (north cliff)','Small promenade','Residential area (east)','No parking']},
-        after: {year:'2015', items:['Marina (was harbour)','Hotel extended + spa','Promenade doubled + shops','Beach car park added','Coastal path (N→S)','Residential area expanded']}}
+        before:{year:'Before', items:['Untouched natural island','Natural beach (west coast)','Coral reef (surrounding)','Dense palm trees throughout']},
+        after: {year:'After development', items:['Hotel complex (north coast)','Pier & boat dock (west)','Beach restaurants','Footpath around island','Airport (east)']}}
     },
     {
-      topic: "The maps show the village of Stokeford in 1930 and in 2010.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "1930: church (west), farmland (large, north), post office & shop (centre), handful of houses, river (south), mill (south by river). 2010: farmland → large housing estate, mill demolished, supermarket replaced post office, new road bypasses village, school added (northeast), church remained.",
+      topic: "The plans show the changes made to a shopping area in a city between 2000 and now.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "2000: single-level shopping street, car-dominated, no greenery, factory (north). Now: pedestrianised street, bus lane, trees and benches added, factory converted to art gallery, cycle path along east side, outdoor market space (centre).",
       category: "Academic Task 1 — Map",
-      tip_uz: "Church — o'zgarmadi (remained unchanged). Mill — ko'tarildi. Qishloq xo'jaligi yerlar turar joyga aylandi. 'Remained', 'was demolished', 'was replaced by' — farqlang.",
+      tip_uz: "Piyodalar uchun qulay muhit yaratildi. Zavod galereyaga aylandi. 'Has been pedestrianised', 'converted into', 'replaced by' iboralarini ishlating. Umumiy tomonga ta'kidlang.",
       chartData: {type:'map',
-        before:{year:'1930', items:['Church (west) ✓','Large farmland (north)','Post office & shop (centre)','River (south)','Mill by river','A few houses']},
-        after: {year:'2010', items:['Church unchanged ✓','Housing estate (was farmland)','Supermarket (was post office)','Mill demolished','New bypass road','School added (northeast)']}}
+        before:{year:'2000', items:['Car-dominated shopping street','Factory (north)','No greenery','No cycle facilities']},
+        after: {year:'Now', items:['Pedestrianised street','Bus lane (west side)','Trees & benches added','Art gallery (was factory)','Cycle path (east)','Outdoor market (centre)']}}
+    },
+    {
+      topic: "The maps below show the changes to a small town over a 50-year period.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1970: small town centre, farmland surrounding, river to south, railway station (north). 2020: town centre expanded, farmland replaced by housing estates (east & west), industrial zone (northwest), retail park (south of railway), river bridge added.",
+      category: "Academic Task 1 — Map",
+      tip_uz: "50 yil ichida qishloq sanoat va savdo markaziga aylandi. Qishloq xo'jaligi yerlari turar-joy va savdoga berildi. 'Has expanded significantly', 'former farmland has given way to' iboralarini ishlating.",
+      chartData: {type:'map',
+        before:{year:'1970', items:['Small town centre','Farmland (east & west)','River (south)','Railway station (north)']},
+        after: {year:'2020', items:['Expanded town centre','Housing estates (east & west)','Industrial zone (northwest)','Retail park (south)','New bridge over river']}}
+    },
+    {
+      topic: "The diagrams show a proposed development plan for a city park.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Current: large open lawn (centre), duck pond (south), benches along paths, single café (east entrance). Proposed: outdoor performance area (centre), children's playground (northwest), new café expanded (east), boating lake replaces pond, fitness trail added along perimeter.",
+      category: "Academic Task 1 — Map",
+      tip_uz: "Taklif qilingan rejada parkni faol ko'ngilochar joyga aylantirish ko'zlanadi. 'Will be replaced by', 'is proposed to be converted', 'it is planned to add' — kelajak fe'l shakllarini ishlating.",
+      chartData: {type:'map',
+        before:{year:'Current', items:['Open lawn (centre)','Duck pond (south)','Benches along paths','Single café (east entrance)']},
+        after: {year:'Proposed', items:['Outdoor performance area (centre)','Children\'s playground (northwest)','Expanded café (east)','Boating lake (replaces pond)','Fitness trail (perimeter)']}}
+    },
+    {
+      topic: "The maps below show the location of a new supermarket that has been proposed for a town.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Three proposed sites: Site A — north edge of town (near motorway, far from residents, large area available). Site B — town centre (near customers, limited space, traffic problems). Site C — south (brownfield land, good transport links, medium distance from centre).",
+      category: "Academic Task 1 — Map",
+      tip_uz: "Uchta joyni solishtiring: A (motorway yaqin, uzoq), B (markaziy, juda tor), C (qulay yer, aralash). Har birining afzalliklari va kamchiliklarini ta'kidlab yozing.",
+      chartData: {type:'map',
+        before:{year:'Site A (North)', items:['Near motorway access','Far from town residents','Large available land','Low traffic impact']},
+        after: {year:'Site B/C options', items:['Site B: Town centre location','Site B: Limited space / traffic','Site C: Brownfield south site','Site C: Good transport links']}}
     },
   ],
 
   process: [
     {
-      topic: "The diagram below shows the process of making cement and how it is used in the production of concrete.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
-      dataDescription: "Step 1: limestone and clay crushed. Step 2: mixed in 80:20 ratio. Step 3: heated in rotating kiln at 1450°C. Step 4: clinker formed, cooled. Step 5: ground with gypsum → cement powder. Concrete: 15% cement + 10% water + 25% sand + 50% small stones mixed and ready.",
+      topic: "The diagram below shows the process of making glass from raw materials.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1: Raw materials collected (sand 72%, soda ash 13%, limestone 11%, other 4%). 2: Materials mixed in batch. 3: Melted in furnace at 1500°C. 4: Molten glass floated on tin bath. 5: Cooled slowly (annealing). 6: Cut to required sizes. 7: Inspected and packaged.",
       category: "Academic Task 1 — Process",
-      tip_uz: "Ikkita jarayon: cement ishlab chiqarish va beton tayyorlash. Passive voice ishlating: 'is crushed', 'are mixed', 'is heated'. Harorat (1450°C) va nisbatlarni aniq keltiring.",
-      chartData: {type:'process', steps:['Limestone & clay are crushed','Mixed in 80:20 ratio','Heated in rotating kiln (1450°C)','Clinker is formed & cooled','Ground with gypsum → cement powder','Mixed: 15% cement + 10% water + 25% sand + 50% gravel = Concrete']}
+      tip_uz: "7 bosqich — hammani qamra. Harorat (1500°C) muhim detal. Har bosqichni passiv bilan yozing: 'are mixed', 'is melted', 'is floated'. Jarayon bir yo'nalishli.",
+      chartData: {type:'process', steps:['Raw materials collected (sand, soda ash, limestone)','Ingredients mixed in correct proportions','Melted in furnace at 1,500°C','Molten glass floated on tin bath → flat surface','Cooled slowly in annealing oven','Cut to required sizes','Quality inspection & packaging']}
     },
     {
       topic: "The diagram below shows the life cycle of a salmon, from egg to adult fish.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
@@ -677,6 +970,55 @@ const REAL_TOPICS = {
       category: "Academic Task 1 — Process",
       tip_uz: "Suv — energiyaga aylanish jarayoni. Har bosqichni passiv bilan yozing: 'is collected', 'flows through', 'is converted'. Jarayonning siklik emasligini (bir yo'nalishli) ta'kidlang.",
       chartData: {type:'process', steps:['Rainwater collected in reservoir (behind dam)','Water flows through intake gate','Passes down penstock at high speed','Turbines are spun by water force','Generator converts rotation → electricity','Electricity stepped up by transformer','Transmitted via power lines to homes']}
+    },
+    {
+      topic: "The diagram below shows how bricks are manufactured for use in the building industry.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1: Clay dug from ground. 2: Sand and water added and mixed. 3: Clay shaped by wire cutting or moulding. 4: Bricks dried in drying oven (1–2 days). 5: Fired in kiln (870–1300°C). 6: Cooled in cooling chamber. 7: Quality checked and sorted. 8: Packaged and delivered.",
+      category: "Academic Task 1 — Process",
+      tip_uz: "8 bosqich — ikki paragrafda 4-4 taqsimlab yozing. Harorat (870–1300°C) va vaqt (1–2 kun) muhim detallar. 'Is extracted', 'is mixed', 'is fired' — passive voice ishlating.",
+      chartData: {type:'process', steps:['Clay extracted from ground','Sand and water added and mixed','Clay shaped by wire cutting or moulding','Dried in drying oven (1–2 days)','Fired in kiln at 870–1,300°C','Cooled in cooling chamber','Quality checked and sorted','Packaged and delivered to construction sites']}
+    },
+    {
+      topic: "The diagram shows how a solar panel system works to provide electricity for a house.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1: Solar panels on roof absorb sunlight. 2: DC electricity generated. 3: Inverter converts DC to AC electricity. 4: AC electricity distributed to appliances. 5: Surplus sent to grid (earn credit). 6: At night/cloudy: electricity drawn from grid. Optional: battery storage unit saves excess for later use.",
+      category: "Academic Task 1 — Process",
+      tip_uz: "Ikkita yo'nalish bor: kunduzi ortiqcha → grid. Kechasi/bulutli → griddan olish. Bu ikki yo'nalishliligi overview da ta'kidlang. 'Is generated', 'is converted', 'is fed into' — passive.",
+      chartData: {type:'process', steps:['Solar panels on roof absorb sunlight','DC electricity generated','Inverter converts DC → AC electricity','AC electricity powers home appliances','Surplus electricity fed into national grid','At night: electricity drawn from grid (or battery)','Optional battery stores excess daytime energy']}
+    },
+    {
+      topic: "The diagram below illustrates the process by which rainwater is collected, treated and supplied to homes as drinking water.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1: Rainfall → rivers and underground aquifers. 2: Water pumped to treatment plant. 3: Large solids removed (screening). 4: Chemicals added to clump particles (coagulation). 5: Particles settle (sedimentation). 6: Water filtered through sand & gravel. 7: Chlorine added (disinfection). 8: Clean water stored in reservoir. 9: Pumped to homes.",
+      category: "Academic Task 1 — Process",
+      tip_uz: "9 bosqich — ikki paragrafga bo'ling. Tozalash bosqichlari (screening, coagulation, sedimentation, filtration, disinfection) eng muhim qism. Har birini passiv bilan yozing.",
+      chartData: {type:'process', steps:['Rainfall collected in rivers and aquifers','Water pumped to treatment plant','Screened to remove large solids','Chemicals added → particles coagulate','Particles settle (sedimentation)','Filtered through sand and gravel','Chlorine added for disinfection','Stored in clean water reservoir','Pumped to homes and businesses']}
+    },
+    {
+      topic: "The diagram shows the process of recycling plastic bottles.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1: Used bottles collected (kerbside bins or recycling centres). 2: Transported to MRF (sorting facility). 3: Sorted by type and colour. 4: Washed to remove labels and residue. 5: Shredded into flakes. 6: Melted into pellets. 7: Pellets used to make new products (fleece fabric, new bottles, carpet).",
+      category: "Academic Task 1 — Process",
+      tip_uz: "Yig'ish → saralash → tozalash → qayta ishlash sikli. So'nggi bosqichda yangi mahsulotlar (kiyim, gilam, yangi shisha) ta'kidlang. 'Are collected', 'sorted', 'shredded', 'melted' — passive.",
+      chartData: {type:'process', steps:['Used bottles collected (bins/recycling centres)','Transported to sorting facility (MRF)','Sorted by plastic type and colour','Washed to remove labels and residue','Shredded into small flakes','Melted and formed into plastic pellets','Pellets manufactured into new products (fleece, bottles, carpet)']}
+    },
+    {
+      topic: "The diagram below shows the process of how coffee is produced, from plant to cup.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1: Coffee plants grown in tropical regions (18 months to first harvest). 2: Red coffee cherries picked by hand. 3: Pulp removed, beans extracted. 4: Beans fermented and washed. 5: Dried in sun (2–6 weeks) or machine. 6: Hulled to remove outer layer. 7: Green beans roasted (200°C). 8: Ground and packaged. 9: Brewed in homes/cafés.",
+      category: "Academic Task 1 — Process",
+      tip_uz: "9 bosqich — 3 paragrafda yozing: o'sish (1–2), hosilni yig'ish (3–6), qayta ishlash (7–9). Vaqt (18 oy, 2–6 hafta) va harorat (200°C) detallarini kiriting.",
+      chartData: {type:'process', steps:['Coffee plants grown in tropical regions (18 months)','Ripe red cherries picked by hand','Pulp removed — beans extracted','Beans fermented and washed','Dried in sun or machine (2–6 weeks)','Hulled to remove parchment layer','Roasted at 200°C','Ground and packaged','Brewed and served']}
+    },
+    {
+      topic: "The diagram below shows how paper is recycled.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1: Used paper collected from homes/offices. 2: Transported to paper mill. 3: Sorted by grade (newspaper, cardboard, office paper). 4: Mixed with water → pulp. 5: Contaminants (staples, ink) removed. 6: Pulp bleached (if white paper needed). 7: Pressed into sheets on rollers. 8: Dried and cut. 9: New paper rolls packaged.",
+      category: "Academic Task 1 — Process",
+      tip_uz: "Yig'ish → surtma sifatida qayta ishlash sikli. Har bosqichni passiv bilan yozing. 'Is sorted', 'is mixed', 'is bleached', 'is pressed'. Agar kerak bo'lsa, 6-bosqich o'tkazilishi mumkin.",
+      chartData: {type:'process', steps:['Used paper collected from homes/offices','Transported to paper mill','Sorted by paper grade (newspaper, cardboard, office)','Mixed with water to form pulp','Contaminants removed (staples, ink)','Pulp bleached if white paper required','Pressed into sheets on rollers','Dried and cut to size','Packaged as new paper rolls']}
+    },
+    {
+      topic: "The diagram shows how a wind turbine generates electricity.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "1: Wind blows against rotor blades. 2: Blades spin rotor shaft. 3: Low-speed shaft connected to gearbox. 4: Gearbox increases rotation speed (x100). 5: High-speed shaft spins generator. 6: Generator produces AC electricity. 7: Transformer steps up voltage. 8: Electricity transmitted to grid via cables.",
+      category: "Academic Task 1 — Process",
+      tip_uz: "Shamol → mexanik energiya → elektr energiya o'zgarishi. Gearbox (tezlashtirish x100) muhim detal. 'Is spun', 'is increased', 'is generated', 'is transmitted' — passive voice ishlating.",
+      chartData: {type:'process', steps:['Wind strikes rotor blades','Blades spin the rotor shaft','Low-speed shaft enters gearbox','Gearbox increases rotation speed (~×100)','High-speed shaft drives the generator','Generator produces AC electricity','Transformer steps up the voltage','Electricity transmitted to national grid']}
     },
   ],
 
@@ -705,6 +1047,62 @@ const REAL_TOPICS = {
       chartData: {type:'table', headers:['Day','Week 1 (£)','Week 2 (£)','Change'],
         rows:[['Monday','2,420','2,795','↑ +375'],['Tuesday','2,935','3,145','↑ +210'],['Wednesday','3,026','3,423','↑ +397'],['Thursday','3,357','3,705','↑ +348'],['Friday','4,106','4,898','↑ +792'],['Saturday 🔺','4,827','5,096 🔺','↑ +269'],['Sunday','3,221','3,568','↑ +347']]}
     },
+    {
+      topic: "The table below shows the proportion of national income spent on education in five countries in 1990, 2000 and 2015.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Finland: 5.9%, 6.1%, 6.8% (consistent rise). Brazil: 3.5%, 4.0%, 6.2% (sharpest rise). USA: 5.2%, 5.0%, 5.4% (fluctuation). India: 2.8%, 3.3%, 4.7% (steady rise). Japan: 4.8%, 4.5%, 4.2% (steady fall). Finland highest overall; Japan declining.",
+      category: "Academic Task 1 — Table",
+      tip_uz: "Finland va Braziliya oshdi. Yaponiya kamaydi — eng noodatiy holat. Braziliyaning sezilarli o'sishi (3.5%→6.2%) ta'kidlang. Uch yilni ketma-ket solishtiring.",
+      chartData: {type:'table', headers:['Country','1990','2000','2015','Trend'],
+        rows:[['Finland','5.9%','6.1%','6.8%','↑ Rising'],['Brazil','3.5%','4.0%','6.2%','↑↑ Sharp rise'],['USA','5.2%','5.0%','5.4%','~ Fluctuating'],['India','2.8%','3.3%','4.7%','↑ Steady rise'],['Japan','4.8%','4.5%','4.2%','↓ Declining']]}
+    },
+    {
+      topic: "The table shows average house prices in different regions of the UK in 2005, 2010 and 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "London: £250k→£310k→£490k (highest & fastest growth). South East: £195k→£230k→£340k. Midlands: £130k→£140k→£195k. North East: £95k→£100k→£130k (lowest). Wales: £110k→£115k→£170k. All regions grew; London-North East gap widened dramatically.",
+      category: "Academic Task 1 — Table",
+      tip_uz: "London eng yuqori va eng tez o'sdi. Shimoliy-Sharq eng arzon va sekin o'sdi. Mintaqalar o'rtasidagi farq kengaydi — bu asosiy xulosa. '% change' ni hisoblang.",
+      chartData: {type:'table', headers:['Region','2005','2010','2020','% Change'],
+        rows:[['London','£250k','£310k','£490k 🔺','+96%'],['South East','£195k','£230k','£340k','+74%'],['Midlands','£130k','£140k','£195k','+50%'],['Wales','£110k','£115k','£170k','+55%'],['North East','£95k','£100k','£130k 🔻','+37%']]}
+    },
+    {
+      topic: "The table below shows the results of a survey on how people in different age groups spend their free time each week in the UK.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "18–30: Social media 12hrs, Gaming 7hrs, Sport 5hrs, Reading 2hrs. 31–50: Social media 6hrs, Gaming 2hrs, Sport 6hrs, Reading 5hrs, TV 8hrs. 51–70: TV 14hrs, Reading 9hrs, Gardening 6hrs, Social media 3hrs. 71+: TV 18hrs, Reading 12hrs, Gardening 8hrs.",
+      category: "Academic Task 1 — Table",
+      tip_uz: "Yoshlar ijtimoiy tarmoq va o'yinga ko'proq vaqt sarflaydi. Keksalar TV va kitob o'qishni afzal ko'radi. Yoshga qarab turli faoliyatlarning qanday o'zgarishini taqqoslang.",
+      chartData: {type:'table', headers:['Activity','18–30','31–50','51–70','71+'],
+        rows:[['TV watching','3 hrs','8 hrs','14 hrs','18 hrs 🔺'],['Social media','12 hrs 🔺','6 hrs','3 hrs','1 hr'],['Reading','2 hrs','5 hrs','9 hrs','12 hrs'],['Sport/Exercise','5 hrs','6 hrs','4 hrs','2 hrs'],['Gaming','7 hrs','2 hrs','1 hr','0 hrs']]}
+    },
+    {
+      topic: "The table gives information about the top five coffee-producing countries in 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Brazil: 3,558k tonnes, 37% world share. Vietnam: 1,542k tonnes, 16%. Colombia: 858k tonnes, 9%. Indonesia: 762k tonnes, 8%. Ethiopia: 471k tonnes, 5%. Brazil dominates at more than double Vietnam. Top 2 countries = 53% of world production.",
+      category: "Academic Task 1 — Table",
+      tip_uz: "Brazil yetakchi (37%) — Vietnamdan ikki baravar ko'p. Birinchi ikkita mamlakat dunyo ishlab chiqarishining 53% ni tashkil etadi — bu muhim yig'ma ko'rsatkich.",
+      chartData: {type:'table', headers:['Country','Production (k tonnes)','World share','Rank'],
+        rows:[['Brazil 🔺','3,558','37%','#1'],['Vietnam','1,542','16%','#2'],['Colombia','858','9%','#3'],['Indonesia','762','8%','#4'],['Ethiopia','471','5%','#5']]}
+    },
+    {
+      topic: "The table shows the number and percentage of overweight adults in five countries in 2000 and 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "USA: 54%→72% (+18pp). UK: 46%→63% (+17pp). Australia: 48%→67% (+19pp). Japan: 18%→28% (+10pp, still lowest). Mexico: 55%→74% (+19pp, highest 2020). All countries rose; Mexico overtook USA.",
+      category: "Academic Task 1 — Table",
+      tip_uz: "Barcha mamlakatlar o'sdi. Mexico 2020 da birinchi o'ringa chiqdi (USA dan oldinga). Yaponiya eng past, lekin u ham o'sdi. 'Percentage point increase' iborasini ishlating.",
+      chartData: {type:'table', headers:['Country','2000 (%)','2020 (%)','Change (pp)'],
+        rows:[['Mexico','55%','74% 🔺','+19 pp'],['USA','54%','72%','+18 pp'],['Australia','48%','67%','+19 pp'],['UK','46%','63%','+17 pp'],['Japan 🔻','18%','28%','+10 pp']]}
+    },
+    {
+      topic: "The table shows information about five of the world's longest bridges.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Danyang–Kunshan (China): 164.8km, rail, 2011. Changhua–Kaohsiung (Taiwan): 157.3km, rail, 2007. Cangde Grand Bridge (China): 116.0km, rail, 2010. Tianjin Grand Bridge (China): 113.7km, rail, 2010. Weinan Weihe (China): 79.7km, rail, 2008. All are Chinese except Taiwan's. All are rail bridges.",
+      category: "Academic Task 1 — Table",
+      tip_uz: "Barcha uzun ko'priklar temir yo'l ko'priklari. To'rttasi Xitoyda, bittasi Tayvanda. Danyang–Kunshan eng uzun (165km). Bu geografik va texnik naqshni overview da ta'kidlang.",
+      chartData: {type:'table', headers:['Bridge','Country','Length (km)','Type','Year'],
+        rows:[['Danyang–Kunshan 🔺','China','164.8','Rail','2011'],['Changhua–Kaohsiung','Taiwan','157.3','Rail','2007'],['Cangde Grand','China','116.0','Rail','2010'],['Tianjin Grand','China','113.7','Rail','2010'],['Weinan Weihe','China','79.7','Rail','2008']]}
+    },
+    {
+      topic: "The table below shows the number of international students enrolled at four UK universities in 2010 and 2022, and their tuition fee income from international students.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Oxford: 6,200→9,800 students, £180M→£310M income. UCL: 8,500→14,200, £210M→£480M (highest income 2022). Manchester: 7,100→12,000, £175M→£395M. Edinburgh: 4,800→8,600, £120M→£265M. UCL showed biggest absolute growth in both students and income.",
+      category: "Academic Task 1 — Table",
+      tip_uz: "UCL xalqaro talabalar soni va daromadda eng katta o'sishni ko'rsatdi. Barcha universitetlar oshdi. 'Roughly doubled', 'more than doubled' kabi iboralar mos keladi.",
+      chartData: {type:'table', headers:['University','Students 2010','Students 2022','Income 2010','Income 2022'],
+        rows:[['UCL 🔺','8,500','14,200','£210M','£480M 🔺'],['Manchester','7,100','12,000','£175M','£395M'],['Oxford','6,200','9,800','£180M','£310M'],['Edinburgh','4,800','8,600','£120M','£265M']]}
+    },
   ],
 
   mixed: [
@@ -732,15 +1130,185 @@ const REAL_TOPICS = {
           segments:[{label:'UK tourists',value:40,color:'#C8102E'},{label:'Local residents',value:35,color:'#38BDF8'},{label:'Overseas',value:25,color:'#22C55E'}]}
       ]}
     },
+    {
+      topic: "The line graph below shows electricity consumption in four sectors in the UK from 2000 to 2020, and the pie chart shows the proportion of electricity generated from different sources in 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Line: Industrial fell sharply 180→90TWh. Residential steady 110–115TWh. Commercial rose 90→120TWh. Transport rose 5→35TWh (electric vehicles). Pie (2020 sources): Gas 38%, Wind 24%, Nuclear 16%, Solar 12%, Coal 3%, Other 7%.",
+      category: "Academic Task 1 — Mixed Charts",
+      tip_uz: "Sanoat iste'moli keskin kamaydi. Transport oshdi (elektr avtomobillar). Pie: gaz hali dominant, lekin shamol energiyasi 24% — sezilarli. Ikkita grafikni bir xulosa bilan bog'lang.",
+      chartData: {type:'mixed', charts:[
+        {type:'line', title:'UK electricity consumption by sector (TWh)', labels:['2000','2005','2010','2015','2020'],
+          series:[
+            {name:'Industrial',  data:[180,160,140,110,90],  color:'#C8102E'},
+            {name:'Residential', data:[110,112,115,113,115], color:'#38BDF8'},
+            {name:'Commercial',  data:[90,95,100,110,120],   color:'#F59E0B'},
+            {name:'Transport',   data:[5,7,10,18,35],        color:'#22C55E'}
+          ]},
+        {type:'pie', title:'Electricity generation sources 2020',
+          segments:[
+            {label:'Gas',     value:38, color:'#6B7280'},
+            {label:'Wind',    value:24, color:'#38BDF8'},
+            {label:'Nuclear', value:16, color:'#F59E0B'},
+            {label:'Solar',   value:12, color:'#F59E0B'},
+            {label:'Coal',    value:3,  color:'#92400E'},
+            {label:'Other',   value:7,  color:'#22C55E'}
+          ]}
+      ]}
+    },
+    {
+      topic: "The bar chart shows the number of graduates from three universities in 2010 and 2022, and the pie chart shows the employment status of all graduates in 2022.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Bar: University A 3200→4800, B 2600→3500, C 4100→4200 (barely changed). Pie (2022 employment): Full-time employed 58%, Part-time 16%, Further study 14%, Unemployed 8%, Other 4%.",
+      category: "Academic Task 1 — Mixed Charts",
+      tip_uz: "A universiteti eng ko'p o'sdi. C deyarli o'zgarmadi. Pie: ko'pchilik (58%) to'liq bandlik. Ikkita grafikni bog'lang: artan mezunlar muvaffaqiyatli ishlayotgan.",
+      chartData: {type:'mixed', charts:[
+        {type:'bar', title:'University graduates (thousands)', labels:['University A','University B','University C'],
+          series:[{name:'2010',data:[3.2,2.6,4.1],color:'#38BDF8'},{name:'2022',data:[4.8,3.5,4.2],color:'#C8102E'}]},
+        {type:'pie', title:'Graduate employment status 2022',
+          segments:[
+            {label:'Full-time employed',value:58,color:'#22C55E'},
+            {label:'Part-time employed',value:16,color:'#38BDF8'},
+            {label:'Further study',     value:14,color:'#F59E0B'},
+            {label:'Unemployed',        value:8, color:'#C8102E'},
+            {label:'Other',             value:4, color:'#6B7280'}
+          ]}
+      ]}
+    },
+    {
+      topic: "The bar chart shows the number of road traffic accidents in a city by month in 2022, and the pie chart shows the main causes of accidents in the same year.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Bar: Jan 420, Feb 350, Mar 310, Apr 280, May 270, Jun 260, Jul 250, Aug 245, Sep 290, Oct 350, Nov 430, Dec 510 (highest). Pie: Speeding 32%, Distracted driving 28%, Drunk driving 18%, Poor road conditions 12%, Mechanical failure 6%, Other 4%.",
+      category: "Academic Task 1 — Mixed Charts",
+      tip_uz: "Dekabr eng ko'p baxtsiz hodisa (qish, muz yo'l). Yoz eng xavfsiz. Pie: tezlik va chalg'ish birgalikda 60%. Ikkita grafikni muammo tahlili sifatida bog'lang.",
+      chartData: {type:'mixed', charts:[
+        {type:'bar', title:'Road accidents by month (2022)', labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+          series:[{name:'Accidents',data:[420,350,310,280,270,260,250,245,290,350,430,510],color:'#C8102E'}]},
+        {type:'pie', title:'Causes of accidents',
+          segments:[
+            {label:'Speeding',         value:32, color:'#C8102E'},
+            {label:'Distracted driving',value:28,color:'#F59E0B'},
+            {label:'Drunk driving',     value:18, color:'#7C3AED'},
+            {label:'Road conditions',   value:12, color:'#38BDF8'},
+            {label:'Mechanical failure',value:6,  color:'#22C55E'},
+            {label:'Other',             value:4,  color:'#6B7280'}
+          ]}
+      ]}
+    },
+    {
+      topic: "The graph shows changes in the amount of time teenagers spent on different activities per day in the UK between 2005 and 2020, and the pie chart shows how they used their screen time in 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Line: Screen time rose 2hrs→7.5hrs. Sleep fell 9hrs→7.5hrs. Outdoor activity dropped 3hrs→1.5hrs. Reading: 1.5hrs→0.5hrs. Pie (2020 screen use): Social media 38%, Streaming video 32%, Gaming 18%, Other internet 8%, Messaging 4%.",
+      category: "Academic Task 1 — Mixed Charts",
+      tip_uz: "Ekran vaqti 3.75 marta oshdi, uyqu va tashqi faoliyat kamaydi — bu asosiy ziddiyat. Pie: ijtimoiy tarmoq dominant (38%). Ikkita grafikni o'smir sog'lig'iga bog'lang.",
+      chartData: {type:'mixed', charts:[
+        {type:'line', title:'Daily time use — UK teenagers (hours)', labels:['2005','2010','2015','2020'],
+          series:[
+            {name:'Screen time',      data:[2,3.5,5.5,7.5],  color:'#C8102E'},
+            {name:'Sleep',            data:[9,8.5,8,7.5],    color:'#38BDF8'},
+            {name:'Outdoor activity', data:[3,2.5,2,1.5],    color:'#22C55E'},
+            {name:'Reading',          data:[1.5,1.2,0.8,0.5],color:'#F59E0B'}
+          ]},
+        {type:'pie', title:'Screen time breakdown 2020',
+          segments:[
+            {label:'Social media',   value:38, color:'#C8102E'},
+            {label:'Streaming video',value:32, color:'#7C3AED'},
+            {label:'Gaming',         value:18, color:'#38BDF8'},
+            {label:'Other internet', value:8,  color:'#F59E0B'},
+            {label:'Messaging',      value:4,  color:'#22C55E'}
+          ]}
+      ]}
+    },
+    {
+      topic: "The bar chart shows the number of cars sold by three manufacturers over five years, and the pie chart shows each company's market share in the final year.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Bar (millions): AutoX: 2.1, 2.4, 2.8, 3.2, 3.8 (steady growth). DriveWell: 3.5, 3.4, 3.0, 2.6, 2.2 (decline). SpeedCo: 1.2, 1.5, 2.0, 2.8, 3.5 (rapid rise, nearly matches AutoX). Pie (Year 5): AutoX 40%, SpeedCo 37%, DriveWell 23%.",
+      category: "Academic Task 1 — Mixed Charts",
+      tip_uz: "AutoX barqaror o'sdi. DriveWell quladi. SpeedCo eng tez o'sdi va 5-yilda AutoX bilan deyarli tenglashdi. Pie bu o'zgarishni tasdiqlaydi. Ikkita grafikni bog'lang.",
+      chartData: {type:'mixed', charts:[
+        {type:'bar', title:'Cars sold (millions)', labels:['Year 1','Year 2','Year 3','Year 4','Year 5'],
+          series:[
+            {name:'AutoX',    data:[2.1,2.4,2.8,3.2,3.8], color:'#C8102E'},
+            {name:'SpeedCo',  data:[1.2,1.5,2.0,2.8,3.5], color:'#22C55E'},
+            {name:'DriveWell',data:[3.5,3.4,3.0,2.6,2.2], color:'#38BDF8'}
+          ]},
+        {type:'pie', title:'Market share — Year 5',
+          segments:[
+            {label:'AutoX',    value:40, color:'#C8102E'},
+            {label:'SpeedCo',  value:37, color:'#22C55E'},
+            {label:'DriveWell',value:23, color:'#38BDF8'}
+          ]}
+      ]}
+    },
+    {
+      topic: "The chart below shows the average monthly earnings for workers in four sectors in 2022, and the pie chart shows the proportion of workers employed in each sector.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Bar (avg monthly earnings): Finance £4,800, Technology £4,200, Healthcare £2,900, Retail £1,950. Pie (% workers): Retail 35%, Healthcare 28%, Finance 12%, Technology 10%, Other 15%. Despite highest pay, Finance employs fewest.",
+      category: "Academic Task 1 — Mixed Charts",
+      tip_uz: "Finance eng yuqori maosh, lekin eng kam xodim. Retail eng ko'p xodim, lekin eng past maosh — bu paradoksni overview da ta'kidlang. Ikkita grafikni bog'lab yozing.",
+      chartData: {type:'mixed', charts:[
+        {type:'bar', title:'Average monthly earnings by sector (£)', labels:['Finance','Technology','Healthcare','Retail'],
+          series:[{name:'Avg salary (£)',data:[4800,4200,2900,1950],color:'#22C55E'}]},
+        {type:'pie', title:'Proportion of workforce by sector',
+          segments:[
+            {label:'Retail',     value:35, color:'#C8102E'},
+            {label:'Healthcare', value:28, color:'#38BDF8'},
+            {label:'Other',      value:15, color:'#6B7280'},
+            {label:'Finance',    value:12, color:'#22C55E'},
+            {label:'Technology', value:10, color:'#F59E0B'}
+          ]}
+      ]}
+    },
+    {
+      topic: "The line graph shows the percentage of households with access to the internet in three regions from 2000 to 2020, and the pie chart shows how households in these regions used the internet in 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Line: North America rose from 42%→92%. Europe: 20%→85%. Africa: 1%→28% (still far behind). Pie (2020 all regions combined): Shopping 25%, Social media 28%, Work/study 24%, Entertainment 16%, News 7%.",
+      category: "Academic Task 1 — Mixed Charts",
+      tip_uz: "Afrika hali ham orqada (28%). Shimoliy Amerika va Yevropa deyarli yetdi (90%+). Pie: ijtimoiy tarmoq (28%) birinchi, lekin ish/o'qish (24%) yaqin. Ikkita grafikni bog'lang.",
+      chartData: {type:'mixed', charts:[
+        {type:'line', title:'Household internet access (%)', labels:['2000','2004','2008','2012','2016','2020'],
+          series:[
+            {name:'North America', data:[42,60,74,82,88,92], color:'#C8102E'},
+            {name:'Europe',        data:[20,38,55,67,76,85], color:'#38BDF8'},
+            {name:'Africa',        data:[1,2,5,11,18,28],    color:'#F59E0B'}
+          ]},
+        {type:'pie', title:'Internet usage purpose 2020',
+          segments:[
+            {label:'Social media',  value:28, color:'#C8102E'},
+            {label:'Shopping',      value:25, color:'#F59E0B'},
+            {label:'Work/Study',    value:24, color:'#38BDF8'},
+            {label:'Entertainment', value:16, color:'#7C3AED'},
+            {label:'News',          value:7,  color:'#22C55E'}
+          ]}
+      ]}
+    },
+    {
+      topic: "The bar chart shows the number of people participating in different sports in a city in 2010 and 2023, and the pie chart shows the age breakdown of participants in 2023.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+      dataDescription: "Bar: Football 12k→9k (fell). Swimming 8k→12k (rose most). Cycling 5k→14k (biggest % rise). Gym 6k→11k. Running 3k→9k. Pie (2023 ages): Under 18: 22%, 18–35: 38%, 36–55: 28%, 55+: 12%.",
+      category: "Academic Task 1 — Mixed Charts",
+      tip_uz: "Velosport eng ko'p o'sdi (180%). Futbol kamaydi (yagona). Pie: 18–35 dominant (38%). 55+ atigi 12% — keksa guruhning faolligi past. Ikkita grafikni birlashtiring.",
+      chartData: {type:'mixed', charts:[
+        {type:'bar', title:'Sports participation (thousands)', labels:['Football','Swimming','Cycling','Gym','Running'],
+          series:[
+            {name:'2010',data:[12,8,5,6,3],  color:'#38BDF8'},
+            {name:'2023',data:[9,12,14,11,9],color:'#C8102E'}
+          ]},
+        {type:'pie', title:'Age breakdown of sports participants 2023',
+          segments:[
+            {label:'18–35',    value:38, color:'#C8102E'},
+            {label:'36–55',    value:28, color:'#38BDF8'},
+            {label:'Under 18', value:22, color:'#22C55E'},
+            {label:'55+',      value:12, color:'#F59E0B'}
+          ]}
+      ]}
+    },
   ],
 };
 
-// Pick a random real topic by chart type
+// Pick a random real topic (no repeat in a row)
 function getRealTopic(chartTypeId) {
   const bank = REAL_TOPICS[chartTypeId];
   if (!bank || bank.length === 0) return null;
-  return bank[Math.floor(Math.random() * bank.length)];
+  const last = (window._lastT1Idx || {})[chartTypeId] ?? -1;
+  let idx;
+  do { idx = Math.floor(Math.random() * bank.length); } while (bank.length > 1 && idx === last);
+  if (!window._lastT1Idx) window._lastT1Idx = {};
+  window._lastT1Idx[chartTypeId] = idx;
+  return bank[idx];
 }
+
 
 // General Training Task 1 — letter types
 const LETTER_TYPES = [
@@ -1089,6 +1657,8 @@ const S = {
   selCat: null,
   selEssayType: null,
   topic: null,
+  topicChoices: [],      // 10 ta mavzu tanlash uchun
+  topicChoiceSelIdx: null,
   essay: '',
   result: null,
   selSub: null,
@@ -1244,6 +1814,63 @@ const DB = {
     if (sb) sb.from('ielts_settings').upsert({ id: 1, ...S.settings }).then().catch(e => console.warn('SB saveSettings:', e));
   },
 };
+
+/* ══════════════════════════════════════════
+   🔴 SUPABASE REALTIME — Ustoz uchun jonli yangilanish
+   O'quvchi esse topshirishi bilanoq ustoz sahifasi
+   avtomatik yangilanadi — sahifani yangilash shart emas!
+══════════════════════════════════════════ */
+function setupRealtime() {
+  if (!sb) return;
+
+  sb.channel('ielts-realtime')
+    // Yangi submission kelganda
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'ielts_submissions'
+    }, payload => {
+      const r = payload.new;
+      // Agar bu sub allaqachon S.subs da bo'lsa, qayta qo'shmaymiz
+      if (S.subs.find(s => s.id === r.id)) return;
+      const newSub = {
+        id: r.id, userId: r.user_id, userName: r.user_name,
+        userTelegram: r.user_telegram, taskType: r.task_type,
+        essayType: r.essay_type, topic: r.topic, essay: r.essay,
+        wordCount: r.word_count, scores: r.scores, timestamp: r.timestamp
+      };
+      S.subs = [newSub, ...S.subs];
+      LS.set('is', S.subs);
+      // Ustoz sahifada bo'lsa — xabar va render
+      if (S.user?.role === 'teacher') {
+        toast(`📥 Yangi natija: ${newSub.userName || "O'quvchi"} · ${newSub.wordCount} so'z · Band ${newSub.scores?.overall ?? '?'}`, 'info', 5000);
+        if (S.view === 't-home') render();
+      }
+    })
+    // Submission yangilanganda (ustoz tahrirladi yoki AI baholadi)
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'ielts_submissions'
+    }, payload => {
+      const r = payload.new;
+      S.subs = S.subs.map(s => s.id === r.id ? {
+        id: r.id, userId: r.user_id, userName: r.user_name,
+        userTelegram: r.user_telegram, taskType: r.task_type,
+        essayType: r.essay_type, topic: r.topic, essay: r.essay,
+        wordCount: r.word_count, scores: r.scores, timestamp: r.timestamp
+      } : s);
+      LS.set('is', S.subs);
+      if (S.user?.role === 'teacher' && (S.view === 't-home' || S.view === 'sub-detail-teacher')) {
+        render();
+      }
+    })
+    .subscribe(status => {
+      if (status === 'SUBSCRIBED') {
+        console.log('✅ Supabase Realtime ulandi — ustoz sahifasi jonli yangilanadi');
+      }
+    });
+}
 
 /* ══════════════════════════════════════════
    🍞 TOAST NOTIFICATIONS
@@ -1451,64 +2078,56 @@ JSON: {"topic":"The ${t} below shows [complete description]. Summarise the infor
 
   // ─── Exam mode: Task 2 after Task 1 ───
   if (pm === 'exam' && S.examPhase === 2) {
-    setLoading(true, 'Task 2 mavzu yaratilmoqda…');
-    try {
-      const et  = getET(S.selEssayType);
-      const cat = getCat(S.selCat);
-      const endings = {
-        opinion:    'To what extent do you agree or disagree?',
-        discussion: 'Discuss both views and give your own opinion.',
-        problem:    'What are the main causes? What solutions can be suggested?',
-        advdisadv:  'Discuss the advantages and disadvantages of this trend.',
-        twopart:    'Why is this happening? Is this a positive or negative development?',
-      };
-      const raw = await callGroq(
-        'You are an IELTS expert. Return ONLY valid JSON.',
-        `Generate a realistic IELTS Writing Task 2 ${et.label} question for: ${cat.label}.
-Must end with: "${endings[S.selEssayType] || endings.opinion}"
-JSON: {"topic":"<2-3 sentence IELTS question>","essayType":"${et.label}","category":"${cat.label}","tip_uz":"<2-sentence writing tip in Uzbek for this essay type>"}`
-      );
-      S.taskType = '2';
-      S.topic    = JSON.parse(raw.replace(/```json|```/g, '').trim());
-      S.essay    = '';
-      S.examTimer   = 40 * 60; // 40 minutes
-      S.examRunning = true;
-      S.view = 'write';
-      setLoading(false);
-      render();
-    } catch(e) {
-      setLoading(false);
-      toast('Task 2 mavzu yaratishda xatolik: ' + e.message, 'err');
-    }
+    const t2 = getT2Topic(S.selCat, S.selEssayType);
+    const et  = getET(S.selEssayType);
+    const cat = getCat(S.selCat);
+    S.taskType    = '2';
+    S.topic       = { ...t2, essayType: t2.essayType || et.label, category: cat.label };
+    S.essay       = '';
+    S.examTimer   = 40 * 60;
+    S.examRunning = true;
+    S.view = 'write';
+    render();
     return;
   }
 
   // ─── Task 1 or Task 2 only ─────────────
-  setLoading(true, 'Groq AI mavzu yaratmoqda…');
+  setLoading(true, 'Mavzular tayyorlanmoqda…');
   try {
-    let raw;
     if (pm === 'task2') {
       S.taskType = '2';
       const et  = getET(S.selEssayType);
       const cat = getCat(S.selCat);
-      const endings = {
-        opinion:    'To what extent do you agree or disagree?',
-        discussion: 'Discuss both views and give your own opinion.',
-        problem:    'What are the main causes? What solutions can be suggested?',
-        advdisadv:  'Discuss the advantages and disadvantages of this trend.',
-        twopart:    'Why is this happening? Is this a positive or negative development?',
-      };
-      raw = await callGroq(
-        'You are an IELTS expert. Return ONLY valid JSON.',
-        `Generate a realistic IELTS Writing Task 2 ${et.label} question for: ${cat.label}.
-Must end with: "${endings[S.selEssayType] || endings.opinion}"
-JSON: {"topic":"<2-3 sentence IELTS question>","essayType":"${et.label}","category":"${cat.label}","tip_uz":"<2-sentence writing tip in Uzbek for this essay type>"}`
-      );
+      // Build pool of 10 unique topics for this category
+      const pool = T2_TOPICS[S.selCat] || T2_TOPICS.education;
+      const etLabel = et.label;
+      const filtered = pool.filter(t => t.essayType === etLabel);
+      const baseArr  = filtered.length >= 5 ? filtered : pool;
+      // Shuffle and take up to 10
+      const shuffled = [...baseArr].sort(() => Math.random() - 0.5);
+      const choices  = shuffled.slice(0, Math.min(10, shuffled.length))
+        .map(t => ({ ...t, essayType: t.essayType || etLabel, category: cat.label }));
+      // Pad to 10 if needed (cycle through pool)
+      if (choices.length < 10) {
+        const extra = [...pool].sort(() => Math.random() - 0.5);
+        for (const t of extra) {
+          if (choices.length >= 10) break;
+          if (!choices.find(c => c.topic === t.topic)) {
+            choices.push({ ...t, essayType: t.essayType || etLabel, category: cat.label });
+          }
+        }
+      }
+      S.topicChoices      = choices.slice(0, 10);
+      S.topicChoiceSelIdx = null;
+      S.view = 'topic-select';
+      setLoading(false);
+      render();
+      return;
     } else {
       // Task 1 — Academic or General Training
       S.taskType = '1';
       if (S.task1Mode === 'general') {
-        // General Training: Letter
+        // General Training: Letter — generate 1 topic via AI (no large bank)
         const lt = LETTER_TYPES.find(l => l.id === S.selTask1Type) || LETTER_TYPES[0];
         const situations = {
           formal:     ['complain to a company about a faulty product','apply for a job you saw advertised','request information from a local council'],
@@ -1517,21 +2136,39 @@ JSON: {"topic":"<2-3 sentence IELTS question>","essayType":"${et.label}","catego
         };
         const sit = situations[lt.id][Math.floor(Math.random()*3)];
         const ltHint = lt.hint.replace(/"/g, "'");
-        raw = await callGroq(
+        const raw = await callGroq(
           'You are an IELTS expert. Return ONLY valid JSON.',
           `Generate IELTS General Training Writing Task 1 — ${lt.label} letter.
 Situation: ${sit}
 JSON: {"topic":"You should spend about 20 minutes on this task.\\n\\n[2-3 sentence situation description requiring the student to ${sit}. Include 3 bullet points of what to cover.]\\n\\nWrite at least 150 words.","letterType":"${lt.label}","category":"General Training Task 1","tip_uz":"${ltHint}"}`
         );
+        S.topic  = JSON.parse(raw.replace(/```json|```/g, '').trim());
+        S.essay  = '';
+        S.view   = 'write';
+        setLoading(false);
+        render();
+        return;
       } else {
-        // Academic: pick from real IELTS topic bank (no AI needed)
+        // Academic: show 10 topics from real bank
         const ct = TASK1_TYPES.find(t => t.id === S.selTask1Type) || TASK1_TYPES[0];
-        const realTopic = getRealTopic(ct.id);
-        if (realTopic) {
-          S.taskType = '1';
-          S.topic    = { ...realTopic, chartType: ct.label };
-          S.essay    = '';
-          S.view     = 'write';
+        const bank = REAL_TOPICS[ct.id] || [];
+        if (bank.length > 0) {
+          const shuffled = [...bank].sort(() => Math.random() - 0.5);
+          const choices  = shuffled.slice(0, Math.min(10, shuffled.length))
+            .map(t => ({ ...t, chartType: ct.label }));
+          // Pad to 10 by cycling if needed
+          if (choices.length < 10) {
+            const extra = [...bank].sort(() => Math.random() - 0.5);
+            for (const t of extra) {
+              if (choices.length >= 10) break;
+              if (!choices.find(c => c.topic === t.topic)) {
+                choices.push({ ...t, chartType: ct.label });
+              }
+            }
+          }
+          S.topicChoices      = choices.slice(0, 10);
+          S.topicChoiceSelIdx = null;
+          S.view = 'topic-select';
           setLoading(false);
           render();
           return;
@@ -1542,20 +2179,21 @@ JSON: {"topic":"You should spend about 20 minutes on this task.\\n\\n[2-3 senten
           ? 'a bar chart and a line graph'
           : `a ${ct.label.toLowerCase()}`;
         const ctHint = ct.hint.replace(/"/g, "'");
-        raw = await callGroq(
+        const raw = await callGroq(
           'You are an IELTS expert. Return ONLY valid JSON.',
           `Generate IELTS Academic Writing Task 1 question about ${chartLabel} showing ${topic}.
 ${ct.id === 'process' ? 'Use passive voice. The diagram shows a process.' : ''}
 ${ct.id === 'map' ? 'Show before and after changes to a place.' : ''}
 JSON: {"topic":"The ${ct.id==='process'?'diagram':'chart/graph'} below shows [complete description]. ${ct.id==='process'?'Describe the process.':'Summarise the information selecting main features and make comparisons where relevant.'} Write at least 150 words.","chartType":"${ct.label}","dataDescription":"<3-5 specific fictional numbers/percentages/changes>","category":"Academic Task 1","tip_uz":"${ctHint}"}`
         );
+        S.topic = JSON.parse(raw.replace(/```json|```/g, '').trim());
+        S.essay = '';
+        S.view  = 'write';
+        setLoading(false);
+        render();
+        return;
       }
     }
-    S.topic = JSON.parse(raw.replace(/```json|```/g, '').trim());
-    S.essay = '';
-    S.view  = 'write';
-    setLoading(false);
-    render();
   } catch(e) {
     setLoading(false);
     if (e.message === 'API_KEY_MISSING') { S.view = 'api-setup'; render(); }
@@ -2295,6 +2933,50 @@ function viewGenerate() {
             : 'Mavzu Yaratish →'}
     </button>
     ${S.loading ? `<div style="text-align:center;padding:32px 20px"><p class="muted">${esc(S.loadingTxt)}</p></div>` : ''}
+  </div>${studentBottomNav()}`;
+}
+
+// ── TOPIC SELECT ──────────────────────────────
+function viewTopicSelect() {
+  const choices = S.topicChoices;
+  if (!choices || choices.length === 0) return viewGenerate();
+  const et = S.taskType === '2' ? getET(S.selEssayType) : null;
+  const selIdx = S.topicChoiceSelIdx;
+  const canStart = selIdx !== null;
+
+  return `${studentTopBar()}<div class="page">
+    <div style="margin-bottom:18px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <button class="btn-icon" data-action="nav" data-val="generate">${IC.back}</button>
+        <div>
+          <h2 class="h2" style="margin-bottom:2px">Mavzu tanlang</h2>
+          <p class="muted">10 ta mavzudan birini tanlang</p>
+        </div>
+      </div>
+      ${et ? `<div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag">Task ${S.taskType}</span>
+        <span class="tag" style="background:${et.color}18;color:${et.color};border-color:${et.color}33">${et.icon} ${et.label}</span>
+        ${S.selCat ? `<span class="tag-gray">${getCat(S.selCat).icon} ${getCat(S.selCat).label}</span>` : ''}
+      </div>` : `<div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag">Task ${S.taskType}</span>
+        ${S.selTask1Type ? `<span class="tag-gray">${(TASK1_TYPES.find(t=>t.id===S.selTask1Type)||{}).icon||'📊'} ${(TASK1_TYPES.find(t=>t.id===S.selTask1Type)||{}).label||''}</span>` : ''}
+      </div>`}
+    </div>
+
+    <div class="stack" style="margin-bottom:20px">
+      ${choices.map((t, i) => {
+        const text = t.topic || '';
+        const preview = text.length > 160 ? text.slice(0, 158) + '…' : text;
+        return `<div class="tc-card${selIdx === i ? ' on' : ''}" data-action="select-topic" data-val="${i}">
+          <div class="tc-num">${i + 1}</div>
+          <div class="tc-text">${esc(preview)}</div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <button class="btn btn-primary btn-block" data-action="confirm-topic" ${canStart ? '' : 'disabled'}>
+      ${canStart ? `✍️&nbsp;Yozishni boshlash →` : 'Mavzu tanlang'}
+    </button>
   </div>${studentBottomNav()}`;
 }
 
@@ -3273,6 +3955,7 @@ function render() {
     case 'auth':              html = viewAuth(); break;
     case 's-home':            html = viewStudentHome(); break;
     case 'generate':          html = viewGenerate(); break;
+    case 'topic-select':      html = viewTopicSelect(); break;
     case 'write':             html = viewWrite(); break;
     case 'result':            html = viewResult(); break;
     case 'exam-task1-result': html = viewExamTask1Result(); break;
@@ -3437,9 +4120,11 @@ document.addEventListener('click', async e => {
       if (val === 'task1') S.taskType = '1';
       if (val === 'task2') S.taskType = '2';
       if (val === 'exam')  { S.taskType = '1'; S.examPhase = 1; S.examTask1Result = null; }
-      S.selEssayType = null;
-      S.selCat = null;
-      S.selTask1Type = null;
+      S.selEssayType      = null;
+      S.selCat            = null;
+      S.selTask1Type      = null;
+      S.topicChoices      = [];
+      S.topicChoiceSelIdx = null;
       render(); break;
 
     case 'set-custom-task':
@@ -3459,6 +4144,19 @@ document.addEventListener('click', async e => {
     case 'set-cat':
       S.selCat = val;
       render(); break;
+
+    case 'select-topic':
+      S.topicChoiceSelIdx = parseInt(val);
+      render(); break;
+
+    case 'confirm-topic': {
+      const chosen = S.topicChoices[S.topicChoiceSelIdx];
+      if (!chosen) break;
+      S.topic  = chosen;
+      S.essay  = '';
+      S.view   = 'write';
+      render(); break;
+    }
 
     case 'set-hist-filter':
       S.histFilter = val;
@@ -3672,6 +4370,9 @@ async function init() {
     DB.loadSubs(),
     DB.loadSettings(),
   ]);
+
+  // Supabase Realtime — ustoz sahifasi avtomatik yangilanishi uchun
+  setupRealtime();
 
   // Ensure Groq key is set
   if (!S.settings.groqApiKey) {
