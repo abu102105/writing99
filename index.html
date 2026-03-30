@@ -1689,7 +1689,13 @@ const S = {
   // Settings form
   sf: {groqApiKey:''},
   savedMsg: '',
-
+  // Groq rate limit
+  groqStatus: 'ok',
+  groqRemaining: null,
+  groqResetAt: null,
+  // Auto-save
+  autoSaveAt: null,
+  _autoSaveInterval: null,
 };
 
 /* ══════════════════════════════════════════
@@ -2000,9 +2006,43 @@ async function callGroq(system, userMsg, maxTokens = 1500, temp = 0.4) {
       response_format: { type: 'json_object' },
     }),
   });
+
+  // ── Rate limit headers tracking ──────────
+  const remaining = parseInt(res.headers.get('x-ratelimit-remaining-requests') || '999');
+  const resetAt   = res.headers.get('x-ratelimit-reset-requests') || null;
+  S.groqRemaining = remaining;
+  S.groqResetAt   = resetAt;
+  if (res.status === 429) {
+    S.groqStatus = 'limited';
+    updateGroqBadge();
+    throw new Error('RATE_LIMIT');
+  } else if (remaining <= 2) {
+    S.groqStatus = 'limited';
+  } else if (remaining <= 10) {
+    S.groqStatus = 'warn';
+  } else {
+    S.groqStatus = 'ok';
+  }
+  updateGroqBadge();
+
   const d = await res.json();
-  if (d.error) throw new Error(d.error.message || 'Groq error');
+  if (d.error) {
+    if (d.error.code === 'rate_limit_exceeded') { S.groqStatus = 'limited'; updateGroqBadge(); throw new Error('RATE_LIMIT'); }
+    throw new Error(d.error.message || 'Groq error');
+  }
   return d.choices[0].message.content;
+}
+
+function updateGroqBadge() {
+  const el = document.getElementById('groq-badge');
+  if (!el) return;
+  if (S.groqStatus === 'limited') {
+    el.innerHTML = `<span style="background:rgba(239,68,68,.12);color:#EF4444;border:1px solid rgba(239,68,68,.22);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700">⚠️ Groq limit! ${S.groqResetAt ? 'Reset: '+S.groqResetAt : ''}</span>`;
+  } else if (S.groqStatus === 'warn') {
+    el.innerHTML = `<span style="background:var(--amber2);color:var(--amber);border:1px solid rgba(245,158,11,.22);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700">⚡ Groq: ${S.groqRemaining} so'rov qoldi</span>`;
+  } else {
+    el.innerHTML = '';
+  }
 }
 
 /* ══════════════════════════════════════════
@@ -2071,7 +2111,8 @@ JSON: {"topic":"The ${t} below shows [complete description]. Summarise the infor
     } catch(e) {
       setLoading(false);
       if (e.message === 'API_KEY_MISSING') { S.view = 'api-setup'; render(); }
-      else toast('Mavzu yaratishda xatolik: ' + e.message, 'err');
+      else if (e.message === 'RATE_LIMIT') { S.groqStatus = 'limited'; toast('⚠️ Groq API limiti tugadi! Bir oz kuting va qayta urining.', 'err', 6000); render(); }
+    else toast('Mavzu yaratishda xatolik: ' + e.message, 'err');
     }
     return;
   }
@@ -2098,26 +2139,39 @@ JSON: {"topic":"The ${t} below shows [complete description]. Summarise the infor
       S.taskType = '2';
       const et  = getET(S.selEssayType);
       const cat = getCat(S.selCat);
-      // Build pool of 10 unique topics for this category
-      const pool = T2_TOPICS[S.selCat] || T2_TOPICS.education;
       const etLabel = et.label;
-      const filtered = pool.filter(t => t.essayType === etLabel);
-      const baseArr  = filtered.length >= 5 ? filtered : pool;
-      // Shuffle and take up to 10
-      const shuffled = [...baseArr].sort(() => Math.random() - 0.5);
-      const choices  = shuffled.slice(0, Math.min(10, shuffled.length))
-        .map(t => ({ ...t, essayType: t.essayType || etLabel, category: cat.label }));
-      // Pad to 10 if needed (cycle through pool)
-      if (choices.length < 10) {
-        const extra = [...pool].sort(() => Math.random() - 0.5);
-        for (const t of extra) {
-          if (choices.length >= 10) break;
-          if (!choices.find(c => c.topic === t.topic)) {
-            choices.push({ ...t, essayType: t.essayType || etLabel, category: cat.label });
+
+      // Barcha kategoriyalardan faqat shu esse turi topiclarini yig'amiz
+      const ALL_CATS = Object.keys(T2_TOPICS);
+      let allMatching = [];
+      // Avval tanlangan kategoriyani birinchiga qo'yamiz
+      const orderedCats = [S.selCat, ...ALL_CATS.filter(c => c !== S.selCat)];
+      for (const catKey of orderedCats) {
+        const pool = T2_TOPICS[catKey] || [];
+        const matched = pool.filter(t => t.essayType === etLabel);
+        matched.forEach(t => {
+          allMatching.push({
+            ...t,
+            category: getCat(catKey).label,
+          });
+        });
+        if (allMatching.length >= 10) break;
+      }
+
+      // Agar hali 10 ta topilmasa — tanlangan kategoriyadan boshqa turdagilarni ham qo'shamiz
+      // LEKIN faqat tanlangan kategoriyadan, boshqa essay typeni aralashtiramiz minimal
+      if (allMatching.length < 10) {
+        const selPool = T2_TOPICS[S.selCat] || [];
+        for (const t of selPool) {
+          if (allMatching.length >= 10) break;
+          if (!allMatching.find(c => c.topic === t.topic)) {
+            allMatching.push({ ...t, essayType: t.essayType, category: cat.label });
           }
         }
       }
-      S.topicChoices      = choices.slice(0, 10);
+
+      // Tartiblangan holda (shuffle yo'q), aynan 10 ta
+      S.topicChoices      = allMatching.slice(0, 10);
       S.topicChoiceSelIdx = null;
       S.view = 'topic-select';
       setLoading(false);
@@ -2197,6 +2251,7 @@ JSON: {"topic":"The ${ct.id==='process'?'diagram':'chart/graph'} below shows [co
   } catch(e) {
     setLoading(false);
     if (e.message === 'API_KEY_MISSING') { S.view = 'api-setup'; render(); }
+    else if (e.message === 'RATE_LIMIT') { S.groqStatus = 'limited'; toast('⚠️ Groq API limiti tugadi! Bir oz kuting va qayta urining.', 'err', 6000); render(); }
     else toast('Mavzu yaratishda xatolik: ' + e.message, 'err');
   }
 }
@@ -2418,12 +2473,18 @@ Return this exact JSON (replace X with scores 1-9, write feedback in Uzbek langu
     }
 
     S.result = res;
+    clearAutoSave();   // Muvaffaqiyatli baholangandan keyin draft o'chiriladi
     setLoading(false);
     S.view = 'result';
     render();
   } catch(e) {
     setLoading(false);
     if (e.message === 'API_KEY_MISSING') { S.view = 'api-setup'; render(); }
+    else if (e.message === 'RATE_LIMIT') {
+      S.groqStatus = 'limited';
+      toast('⚠️ Groq API limiti tugadi! Bir oz kuting va qayta urining.', 'err', 6000);
+      render();
+    }
     else toast('Baholashda xatolik: ' + e.message, 'err', 5000);
   }
 }
@@ -2964,12 +3025,16 @@ function viewTopicSelect() {
     </div>
 
     <div class="stack" style="margin-bottom:20px">
-      ${choices.map((t, i) => {
+    ${choices.map((t, i) => {
         const text = t.topic || '';
         const preview = text.length > 160 ? text.slice(0, 158) + '…' : text;
+        const catIcon = CATS.find(c => c.label === t.category)?.icon || '';
         return `<div class="tc-card${selIdx === i ? ' on' : ''}" data-action="select-topic" data-val="${i}">
           <div class="tc-num">${i + 1}</div>
-          <div class="tc-text">${esc(preview)}</div>
+          <div style="flex:1;min-width:0">
+            ${t.category ? `<div style="font-size:10px;font-weight:600;color:var(--text3);margin-bottom:5px;letter-spacing:.3px">${catIcon} ${esc(t.category)}</div>` : ''}
+            <div class="tc-text">${esc(preview)}</div>
+          </div>
         </div>`;
       }).join('')}
     </div>
@@ -3056,7 +3121,13 @@ function viewWrite() {
     <!-- Essay textarea -->
     <textarea class="inp" id="essay-area" data-field="essay"
       placeholder="Bu yerga esseyingizni yozing…&#10;&#10;Minimal ${minW} ta so'z talab etiladi."
-      rows="14" style="margin-bottom:14px"></textarea>
+      rows="14" style="margin-bottom:8px"></textarea>
+
+    <!-- Auto-save & Groq status row -->
+    <div class="flex-between" style="margin-bottom:12px;min-height:20px">
+      <span id="autosave-badge" style="font-size:11px;color:var(--text3);transition:opacity .5s">${S.autoSaveAt ? '💾 ' + S.autoSaveAt.toLocaleTimeString('uz-UZ',{hour:'2-digit',minute:'2-digit'}) + ' da saqlandi' : ''}</span>
+      <span id="groq-badge">${S.groqStatus==='limited' ? '<span style="background:rgba(239,68,68,.12);color:#EF4444;border:1px solid rgba(239,68,68,.22);padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700">⚠️ Groq limit!</span>' : S.groqStatus==='warn' ? '<span style="background:var(--amber2);color:var(--amber);border:1px solid rgba(245,158,11,.22);padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700">⚡ ' + S.groqRemaining + " so'rov qoldi</span>" : ''}</span>
+    </div>
 
     <div style="display:flex;gap:10px">
       <button class="btn btn-primary" style="flex:1" data-action="grade" ${S.loading?'disabled':''}>
@@ -3984,7 +4055,11 @@ function render() {
   }
 
   // Update WC display
-  if (S.view === 'write') updateWC(wc(S.essay));
+  if (S.view === 'write') {
+    updateWC(wc(S.essay));
+    // Auto-save: restore saved draft if essay is empty
+    if (!S.essay) restoreAutoSave();
+  }
 }
 
 /* ══════════════════════════════════════════
@@ -3993,6 +4068,64 @@ function render() {
 function onEssayInput(e) {
   S.essay = e.target.value;
   updateWC(wc(S.essay));
+  // Auto-save debounce — har 10 soniyada bir saqlanadi
+  if (!S._autoSaveTimeout) {
+    S._autoSaveTimeout = setTimeout(() => {
+      autoSaveEssay();
+      S._autoSaveTimeout = null;
+    }, 10000);
+  }
+}
+
+function autoSaveKey() {
+  // Topic matni asosida unikal kalit
+  const t = (S.topic?.topic || '').slice(0, 40);
+  return 'ielts_autosave_' + btoa(encodeURIComponent(t)).slice(0, 20);
+}
+
+function autoSaveEssay() {
+  if (!S.essay || !S.essay.trim()) return;
+  try {
+    const data = { essay: S.essay, savedAt: new Date().toISOString(), topicSnip: (S.topic?.topic||'').slice(0,60) };
+    localStorage.setItem(autoSaveKey(), JSON.stringify(data));
+    S.autoSaveAt = new Date();
+    updateAutoSaveBadge();
+  } catch(e) {}
+}
+
+function restoreAutoSave() {
+  try {
+    const raw = localStorage.getItem(autoSaveKey());
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (data.essay && !S.essay) {
+      S.essay = data.essay;
+      S.autoSaveAt = new Date(data.savedAt);
+      const ea = document.getElementById('essay-area');
+      if (ea) { ea.value = S.essay; updateWC(wc(S.essay)); }
+      updateAutoSaveBadge();
+      toast(`💾 Avvalgi esse tiklandi (${wc(data.essay)} so'z)`, 'info', 4000);
+    }
+  } catch(e) {}
+}
+
+function clearAutoSave() {
+  try { localStorage.removeItem(autoSaveKey()); } catch(e) {}
+  S.autoSaveAt = null;
+  updateAutoSaveBadge();
+}
+
+function updateAutoSaveBadge() {
+  const el = document.getElementById('autosave-badge');
+  if (!el) return;
+  if (S.autoSaveAt) {
+    const t = S.autoSaveAt.toLocaleTimeString('uz-UZ', {hour:'2-digit', minute:'2-digit'});
+    el.textContent = '💾 ' + t + ' da saqlandi';
+    el.style.opacity = '1';
+    setTimeout(() => { if (el) el.style.opacity = '0.5'; }, 2000);
+  } else {
+    el.textContent = '';
+  }
 }
 
 function updateWC(words) {
@@ -4167,6 +4300,7 @@ document.addEventListener('click', async e => {
 
     case 'clear-essay':
       S.essay = '';
+      clearAutoSave();
       const ea = document.getElementById('essay-area');
       if (ea) ea.value = '';
       updateWC(0);
